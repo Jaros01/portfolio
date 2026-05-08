@@ -47,9 +47,14 @@
         <div id="section-admin">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-semibold">Administrer Pools og Fag</h2>
-                <button onclick="addNewPool()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
-                    <i class="fa-solid fa-plus"></i> <span>Legg til ny dag/pool</span>
-                </button>
+                <div class="flex gap-3">
+                    <button onclick="addRandomSubjects()" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
+                        <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
+                    </button>
+                    <button onclick="addNewPool()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
+                        <i class="fa-solid fa-plus"></i> <span>Legg til ny dag/pool</span>
+                    </button>
+                </div>
             </div>
             <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
@@ -225,14 +230,43 @@
 
             nameInput.value = '';
             renderSubjectsForPool(poolIndex);
-            
-            // Auto-focus back to name field
             nameInput.focus();
         }
 
         function removeSubject(poolIndex, subjectIndex) {
             pools[poolIndex].subjects.splice(subjectIndex, 1);
             renderSubjectsForPool(poolIndex);
+        }
+
+        // ==================== ADD RANDOM SUBJECTS ====================
+        function addRandomSubjects() {
+            const subjectNames = [
+                "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring", 
+                "Yoga & Meditasjon", "Matlaging", "Kreativ Skriving", "Filmproduksjon", 
+                "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill", 
+                "Akustisk Gitar", "Vandring", "Street Art", "Poetikk", "Løping"
+            ];
+
+            pools.forEach(pool => {
+                const numberOfSubjects = Math.floor(Math.random() * 4) + 3; // 3 to 6 subjects
+                
+                for (let i = 0; i < numberOfSubjects; i++) {
+                    const randomName = subjectNames[Math.floor(Math.random() * subjectNames.length)];
+                    const randomSpots = Math.floor(Math.random() * 17) + 8; // 8 to 24 spots
+                    
+                    // Avoid duplicates
+                    if (!pool.subjects.some(s => s.name === randomName)) {
+                        pool.subjects.push({
+                            name: randomName,
+                            max: randomSpots,
+                            students: []
+                        });
+                    }
+                }
+            });
+
+            renderPools();
+            alert("Tilfeldige fag lagt til i alle pools!");
         }
 
         function renderStudentForm() {
@@ -303,8 +337,6 @@
 
             document.getElementById('student-name').value = '';
             renderStudentList();
-            
-            // Auto-focus name field for next student
             document.getElementById('student-name').focus();
         }
 
@@ -386,7 +418,7 @@
             renderStudentList();
         }
 
-        // Keyboard shortcut: Ctrl + R = Add 10 random students
+        // Keyboard shortcut
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'r') {
                 e.preventDefault();
@@ -394,7 +426,7 @@
             }
         });
 
-        // ==================== ALLOCATION + RESULTS ====================
+        // ==================== ALLOCATION ====================
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
@@ -634,9 +666,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            
-            // Keyboard shortcut hint
-            console.log('%c[EduChoice] Tip: Trykk Ctrl + R for å legge til 10 tilfeldige studenter', 'color:#a78bfa');
+            console.log('%c[EduChoice] Random subjects feature added!', 'color:#22c55e');
         }
 
         window.onload = init;
