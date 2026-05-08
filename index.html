@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaros | NTNU EdTech & Browser Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .title-font { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 600; }
+        .section { scroll-margin-top: 80px; }
+        .nav-link { transition: color 0.2s ease; }
+        .nav-link:hover { color: #6366f1; }
+        .project-card { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; }
+        .project-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+    <!-- Navbar -->
+    <nav class="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-lg fixed w-full z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-indigo-600 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-graduation-cap text-white"></i>
+                </div>
+                <span class="title-font text-2xl font-semibold">Jaros</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-x-8 text-sm">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="flex items-center gap-x-4">
+                <a href="https://github.com/Jaros01/portfolio" target="_blank" class="text-sm px-4 py-2 border border-zinc-700 rounded-2xl hover:bg-zinc-900 transition-colors flex items-center gap-x-2">
+                    <i class="fa-brands fa-github"></i>
+                    <span class="hidden sm:inline">GitHub</span>
+                </a>
+                <a href="#contact" class="px-5 py-2 bg-white text-zinc-950 text-sm font-semibold rounded-2xl hover:bg-zinc-100 transition-all">Get in touch</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="max-w-6xl mx-auto px-6 pt-24 pb-16">
+        <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-x-2 px-4 py-1.5 bg-zinc-900 rounded-3xl mb-6 text-sm">
+                <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span class="font-medium text-emerald-400">Available for freelance & collaborations</span>
+            </div>
+            
+            <h1 class="title-font text-7xl font-semibold tracking-tighter leading-none mb-6">I build playful<br>learning experiences.</h1>
+            
+            <p class="text-2xl text-zinc-400 max-w-lg mb-10">25-year-old Education student at NTNU turning studying into adventures through browser-based games and EdTech tools.</p>
+            
+            <div class="flex flex-wrap gap-4">
+                <a href="#projects" class="px-8 py-4 bg-white text-zinc-950 font-semibold rounded-3xl flex items-center gap-x-3 hover:bg-zinc-100 transition-all">
+                    <span>Explore my work</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="study-quest.html" target="_blank" class="px-8 py-4 border border-zinc-700 hover:bg-zinc-900 rounded-3xl flex items-center gap-x-3 transition-all">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span>Play Study Quest</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- About -->
+    <div id="about" class="max-w-6xl mx-auto px-6 py-16 border-t border-zinc-800 section">
+        <div class="grid md:grid-cols-12 gap-12">
+            <div class="md:col-span-5">
+                <h2 class="text-4xl font-semibold tracking-tight mb-6">About me</h2>
+                <div class="prose prose-invert text-zinc-400">
+                    <p>Hi, I'm Jaros — a 25-year-old student pursuing my bachelor's in Education at NTNU in Trondheim, Norway.</p>
+                    <p class="mt-4">I combine my passion for teaching with game development to create engaging browser-based educational tools that make learning fun and effective.</p>
+                    <p class="mt-4">Previously completed the first stage of Computer Hardware & Software Engineering at Coventry University.</p>
+                </div>
+            </div>
+            
+            <div class="md:col-span-7">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                        <div class="text-emerald-400 text-3xl mb-3"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="font-semibold">Education</div>
+                        <div class="text-sm text-zinc-400 mt-1">Bachelor's in Education, NTNU<br>Computer Engineering, Coventry University</div>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                        <div class="text-emerald-400 text-3xl mb-3"><i class="fa-solid fa-gamepad"></i></div>
+                        <div class="font-semibold">Game Dev</div>
+                        <div class="text-sm text-zinc-400 mt-1">HTML5, Canvas, JavaScript<br>Gamification & EdTech</div>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                        <div class="text-emerald-400 text-3xl mb-3"><i class="fa-solid fa-globe"></i></div>
+                        <div class="font-semibold">Web Dev</div>
+                        <div class="text-sm text-zinc-400 mt-1">Modern HTML/CSS/JS<br>Responsive & Accessible</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects -->
+    <div id="projects" class="max-w-6xl mx-auto px-6 py-16 border-t border-zinc-800 section">
+        <div class="flex items-end justify-between mb-10">
+            <div>
+                <h2 class="text-4xl font-semibold tracking-tight">Featured Projects</h2>
+                <p class="text-zinc-400 mt-2">Browser-based educational games & tools</p>
+            </div>
+            <a href="https://github.com/Jaros01/portfolio" target="_blank" class="text-sm flex items-center gap-x-2 text-zinc-400 hover:text-white">
+                View all on GitHub <i class="fa-solid fa-external-link-alt ml-1.5 text-xs"></i>
+            </a>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Study Quest -->
+            <div class="project-card bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center relative">
+                    <div class="text-center">
+                        <div class="text-6xl mb-2">🎮</div>
+                        <div class="text-white font-semibold text-xl">Study Quest v1.5</div>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-medium rounded-full">Featured</span>
+                        </div>
+                        <div class="text-xs text-zinc-500">48 questions • 4 subjects</div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold mb-3">Study Quest</h3>
+                    <p class="text-zinc-400 mb-6">Gamified educational adventure with 4 Norwegian curriculum subjects. Built with pure HTML/JS/Canvas. 3 lives, streaks, XP, and local progress saving.</p>
+                    
+                    <div class="flex gap-3">
+                        <a href="study-quest.html" target="_blank" class="flex-1 px-6 py-3.5 bg-white text-zinc-950 font-semibold rounded-2xl text-center hover:bg-zinc-100 transition-all">Play Now</a>
+                        <a href="https://github.com/Jaros01/portfolio" target="_blank" class="px-6 py-3.5 border border-zinc-700 rounded-2xl text-center hover:bg-zinc-900 transition-all">Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Placeholder second project -->
+            <div class="project-card bg-zinc-900 border border-zinc-800 rounded-3xl p-8 flex flex-col">
+                <div class="flex-1">
+                    <div class="px-3 py-1 bg-sky-500/10 text-sky-400 text-xs font-medium rounded-full inline-block mb-4">Coming Soon</div>
+                    <h3 class="text-2xl font-semibold mb-3">Teacher's Quick Planner</h3>
+                    <p class="text-zinc-400">Simple drag-and-drop lesson planner web app for Norwegian teachers. Built with localStorage and print-ready output.</p>
+                </div>
+                <div class="mt-6">
+                    <div class="text-sm text-zinc-500">In development • Expected March 2026</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div id="services" class="max-w-6xl mx-auto px-6 py-16 border-t border-zinc-800 section">
+        <h2 class="text-4xl font-semibold tracking-tight mb-4">How I can help</h2>
+        <p class="text-xl text-zinc-400 max-w-2xl mb-10">I help educators, schools, and EdTech creators build engaging digital learning experiences.</p>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                <i class="fa-solid fa-gamepad text-4xl text-indigo-400 mb-6"></i>
+                <h3 class="font-semibold text-xl mb-3">Custom Browser Games</h3>
+                <p class="text-zinc-400 text-sm">Gamified quizzes, learning adventures, and interactive tools tailored to Norwegian curriculum.</p>
+                <div class="mt-6 text-xs text-emerald-400 font-medium">Starting at 1,500 NOK</div>
+            </div>
+            
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                <i class="fa-solid fa-laptop-code text-4xl text-indigo-400 mb-6"></i>
+                <h3 class="font-semibold text-xl mb-3">Simple Web Tools</h3>
+                <p class="text-zinc-400 text-sm">Lesson planners, flashcard systems, progress trackers, and teacher dashboards.</p>
+                <div class="mt-6 text-xs text-emerald-400 font-medium">Starting at 1,200 NOK</div>
+            </div>
+            
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                <i class="fa-solid fa-box text-4xl text-indigo-400 mb-6"></i>
+                <h3 class="font-semibold text-xl mb-3">Digital Products</h3>
+                <p class="text-zinc-400 text-sm">Sell ready-made educational games and templates on Gumroad & itch.io.</p>
+                <div class="mt-6 text-xs text-emerald-400 font-medium">Passive income focus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact -->
+    <div id="contact" class="max-w-6xl mx-auto px-6 py-16 border-t border-zinc-800 section">
+        <div class="max-w-xl">
+            <h2 class="text-4xl font-semibold tracking-tight mb-4">Let's build something together</h2>
+            <p class="text-xl text-zinc-400 mb-8">Whether you need a custom educational game, a simple teacher tool, or want to collaborate on an EdTech idea — I'm ready.</p>
+            
+            <form action="https://formspree.io/f/your-form-id" method="POST" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" name="name" placeholder="Your name" class="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:border-indigo-500" required>
+                    <input type="email" name="email" placeholder="Your email" class="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:border-indigo-500" required>
+                </div>
+                <textarea name="message" rows="5" placeholder="Tell me about your project..." class="bg-zinc-900 border border-zinc-700 rounded-3xl px-5 py-4 text-sm w-full focus:outline-none focus:border-indigo-500" required></textarea>
+                
+                <button type="submit" class="w-full py-4 bg-white text-zinc-950 font-semibold rounded-3xl hover:bg-zinc-100 transition-all">Send message</button>
+            </form>
+            
+            <div class="text-xs text-zinc-500 mt-4 text-center">Or email me directly at jaros@yourdomain.com (replace with real email)</div>
+        </div>
+    </div>
+
+    <footer class="border-t border-zinc-800 py-12">
+        <div class="max-w-6xl mx-auto px-6 text-center text-sm text-zinc-500">
+            &copy; 2026 Jaros • Built with ❤️ in Norway • <a href="https://github.com/Jaros01/portfolio" class="hover:text-white">View source on GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+        // Simple smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
