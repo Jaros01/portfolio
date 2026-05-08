@@ -320,7 +320,7 @@
             }
         }
 
-        // ==================== CORRECT ALLOCATION (One subject per pool) ====================
+        // ==================== FIXED ALLOCATION (One subject per pool) ====================
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
@@ -334,18 +334,20 @@
 
             allocations = [];
 
-            // Process each pool independently
+            // Go through each pool
             pools.forEach(pool => {
-                // Get all students who have preferences for this pool
-                const studentsForThisPool = students.filter(student => 
+                // Get students who ranked something in this pool
+                const studentsInPool = students.filter(student => 
                     student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
                 );
 
                 // Shuffle for fairness
-                const shuffled = [...studentsForThisPool].sort(() => Math.random() - 0.5);
+                const shuffled = [...studentsInPool].sort(() => Math.random() - 0.5);
 
                 shuffled.forEach(student => {
                     const poolPrefs = student.preferences[pool.id];
+                    
+                    // Sort by preference (1 = highest)
                     const sortedChoices = Object.entries(poolPrefs)
                         .sort((a, b) => a[1] - b[1])
                         .map(entry => entry[0]);
@@ -470,7 +472,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Fixed version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Fixed allocation loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
