@@ -9,79 +9,92 @@
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
+        
+        @media (max-width: 640px) {
+            .mobile-full { width: 100% !important; margin: 0 !important; }
+            .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .nav-tab { padding-left: 1rem; padding-right: 1rem; font-size: 0.875rem; }
+        }
+        
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200">
-    <div class="max-w-7xl mx-auto px-6 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-10">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div class="flex items-center gap-x-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg">
                     <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-5xl font-bold tracking-tight">EduChoice</h1>
-                    <p class="text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
+                    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">EduChoice</h1>
+                    <p class="text-sm text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
                 </div>
             </div>
-            <div class="flex items-center gap-x-3">
-                <div class="px-4 py-1.5 bg-zinc-900 rounded-2xl text-sm">Vår 2026</div>
-                <div class="px-4 py-1.5 bg-zinc-900 rounded-2xl text-sm">~100 studenter</div>
+            
+            <div class="flex items-center gap-x-2 text-sm">
+                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
+                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 studenter</div>
             </div>
         </div>
 
         <!-- Navigation -->
-        <div class="flex gap-x-2 mb-8 border-b border-zinc-800 pb-1">
-            <button onclick="showSection('admin')" id="nav-admin" class="nav-active px-6 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium">
-                <i class="fa-solid fa-cog"></i> <span>Admin</span>
+        <div class="flex gap-x-1 sm:gap-x-2 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
+            <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 sm:px-6 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
+                <i class="fa-solid fa-cog"></i> <span class="hidden sm:inline">Admin</span>
             </button>
-            <button onclick="showSection('students')" id="nav-students" class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
-                <i class="fa-solid fa-users"></i> <span>Studenter</span>
+            <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 sm:px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
+                <i class="fa-solid fa-users"></i> <span class="hidden sm:inline">Studenter</span>
             </button>
-            <button onclick="showSection('results')" id="nav-results" class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
-                <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
+            <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 sm:px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
+                <i class="fa-solid fa-chart-bar"></i> <span class="hidden sm:inline">Resultater</span>
             </button>
         </div>
 
         <!-- ADMIN SECTION -->
         <div id="section-admin">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold">Administrer Pools og Fag</h2>
-                <div class="flex gap-3">
-                    <button onclick="addRandomSubjects()" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
-                        <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Pools og Fag</h2>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addRandomSubjects()" class="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
+                        <i class="fa-solid fa-magic"></i> <span class="hidden sm:inline">Tilfeldige fag</span>
                     </button>
-                    <button onclick="addNewPool()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
-                        <i class="fa-solid fa-plus"></i> <span>Legg til ny dag/pool</span>
+                    <button onclick="addNewPool()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
+                        <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Ny dag</span>
                     </button>
                 </div>
             </div>
+            
             <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- STUDENTS SECTION -->
         <div id="section-students" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold">Legg til studentpreferanser</h2>
-                <div class="flex gap-3">
-                    <button onclick="addRandomStudents(10)" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
-                        <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige</span>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addRandomStudents(10)" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
+                        <i class="fa-solid fa-dice"></i> <span class="hidden sm:inline">10 tilfeldige</span>
                     </button>
-                    <button onclick="removeAllStudents()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
-                        <i class="fa-solid fa-trash"></i> <span>Fjern alle</span>
+                    <button onclick="removeAllStudents()" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
+                        <i class="fa-solid fa-trash"></i> <span class="hidden sm:inline">Fjern alle</span>
                     </button>
                 </div>
             </div>
             
             <div class="max-w-2xl">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Studentnavn</label>
-                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg" onkeydown="if (event.key === 'Enter') addStudent()">
+                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
                         </div>
                         <div id="student-preferences-form"></div>
-                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg">Legg til studentpreferanser</button>
+                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg touch-target">Legg til studentpreferanser</button>
                     </div>
                 </div>
             </div>
@@ -94,14 +107,14 @@
 
         <!-- RESULTS SECTION -->
         <div id="section-results" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold">Fordelingsresultater</h2>
-                <div class="flex gap-3">
-                    <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
-                        <i class="fa-solid fa-magic"></i> <span>Kjør smart fordeling</span>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="runSmartAllocation()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 touch-target">
+                        <i class="fa-solid fa-magic"></i> <span class="hidden sm:inline">Kjør fordeling</span>
                     </button>
-                    <button onclick="resetAllocations()" class="px-5 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2">
-                        <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
+                    <button onclick="resetAllocations()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 touch-target">
+                        <i class="fa-solid fa-undo"></i>
                     </button>
                 </div>
             </div>
@@ -109,13 +122,17 @@
             <div id="allocation-summary" class="mb-6 hidden"></div>
             
             <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Studentoversikt (Alle fag per student)</h3>
-                <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[300px]"></div>
+                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
+                <div class="table-scroll">
+                    <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
+                </div>
             </div>
             
             <div>
                 <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
-                <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[200px]"></div>
+                <div class="table-scroll">
+                    <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -139,24 +156,24 @@
 
             pools.forEach((pool, poolIndex) => {
                 const poolDiv = document.createElement('div');
-                poolDiv.className = 'pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6';
+                poolDiv.className = 'pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6';
 
                 let html = `
                     <div class="flex justify-between items-center mb-4">
                         <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)" 
-                               class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1 w-40">
-                        <button onclick="deletePool(${poolIndex})" class="text-red-400 hover:text-red-500">
-                            <i class="fa-solid fa-times"></i>
+                               class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1 w-32 sm:w-40">
+                        <button onclick="deletePool(${poolIndex})" class="text-red-400 hover:text-red-500 touch-target">
+                            <i class="fa-solid fa-times text-lg"></i>
                         </button>
                     </div>
                     
-                    <div class="min-h-[180px] space-y-2 mb-4" id="pool-${pool.id}-subjects"></div>
+                    <div class="min-h-[160px] space-y-2 mb-4" id="pool-${pool.id}-subjects"></div>
                     
                     <div class="flex gap-2">
-                        <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2 text-sm" 
+                        <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-sm touch-target" 
                                onkeydown="if (event.key === 'Enter') addSubjectToPool(${poolIndex})">
-                        <input type="number" id="subject-max-${pool.id}" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-sm text-center">
-                        <button onclick="addSubjectToPool(${poolIndex})" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm">Legg til</button>
+                        <input type="number" id="subject-max-${pool.id}" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-3 text-sm text-center touch-target">
+                        <button onclick="addSubjectToPool(${poolIndex})" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm touch-target">Legg til</button>
                     </div>
                 `;
 
@@ -185,7 +202,7 @@
                         <span class="font-medium">${subject.name}</span>
                         <span class="text-xs bg-zinc-700 px-2 py-0.5 rounded-full ml-2">${subject.max} plasser</span>
                     </div>
-                    <button onclick="removeSubject(${poolIndex}, ${subjectIndex})" class="text-red-400 hover:text-red-500">
+                    <button onclick="removeSubject(${poolIndex}, ${subjectIndex})" class="text-red-400 hover:text-red-500 touch-target">
                         <i class="fa-solid fa-times"></i>
                     </button>
                 `;
@@ -242,8 +259,7 @@
             const subjectNames = [
                 "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring", 
                 "Yoga & Meditasjon", "Matlaging", "Kreativ Skriving", "Filmproduksjon", 
-                "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill", 
-                "Akustisk Gitar", "Vandring", "Street Art", "Poetikk", "Løping"
+                "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill"
             ];
 
             pools.forEach(pool => {
@@ -286,7 +302,7 @@
                     html += `
                         <div class="flex items-center gap-3 mb-2">
                             <div class="flex-1 text-sm">${subject.name}</div>
-                            <select id="pref-${pool.id}-${index}" class="bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm w-28">
+                            <select id="pref-${pool.id}-${index}" class="bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-sm w-28 touch-target">
                                 <option value="">--</option>
                                 <option value="1">1. valg</option>
                                 <option value="2">2. valg</option>
@@ -363,13 +379,13 @@
                 });
 
                 const div = document.createElement('div');
-                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-3 flex justify-between items-center';
+                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 flex justify-between items-center';
                 div.innerHTML = `
-                    <div>
+                    <div class="min-w-0 flex-1">
                         <span class="font-medium">${student.name}</span>
-                        <span class="text-xs text-zinc-500 ml-3">${prefText}</span>
+                        <div class="text-xs text-zinc-500 mt-1 truncate">${prefText}</div>
                     </div>
-                    <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm">Fjern</button>
+                    <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm ml-3 touch-target">Fjern</button>
                 `;
                 container.appendChild(div);
             });
@@ -497,24 +513,24 @@
             });
 
             summaryContainer.innerHTML = `
-                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-                    <h3 class="font-semibold text-xl mb-4">Fordelingsstatistikk (${allocations.length} totalt)</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-emerald-400">${firstChoice}</div>
-                            <div class="text-sm text-emerald-400">Fikk 1. valg</div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
+                    <h3 class="font-semibold text-lg mb-4">Statistikk (${allocations.length} totalt)</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                        <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-3">
+                            <div class="text-2xl font-bold text-emerald-400">${firstChoice}</div>
+                            <div class="text-xs text-emerald-400">1. valg</div>
                         </div>
-                        <div class="bg-yellow-900/30 border border-yellow-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-yellow-400">${secondChoice}</div>
-                            <div class="text-sm text-yellow-400">Fikk 2. valg</div>
+                        <div class="bg-yellow-900/30 border border-yellow-600 rounded-2xl p-3">
+                            <div class="text-2xl font-bold text-yellow-400">${secondChoice}</div>
+                            <div class="text-xs text-yellow-400">2. valg</div>
                         </div>
-                        <div class="bg-orange-900/30 border border-orange-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-orange-400">${thirdChoice}</div>
-                            <div class="text-sm text-orange-400">Fikk 3. valg</div>
+                        <div class="bg-orange-900/30 border border-orange-600 rounded-2xl p-3">
+                            <div class="text-2xl font-bold text-orange-400">${thirdChoice}</div>
+                            <div class="text-xs text-orange-400">3. valg</div>
                         </div>
-                        <div class="bg-red-900/30 border border-red-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-red-400">${noSpot}</div>
-                            <div class="text-sm text-red-400">Ingen plass</div>
+                        <div class="bg-red-900/30 border border-red-600 rounded-2xl p-3">
+                            <div class="text-2xl font-bold text-red-400">${noSpot}</div>
+                            <div class="text-xs text-red-400">Ingen plass</div>
                         </div>
                     </div>
                 </div>
@@ -542,7 +558,7 @@
                 };
             });
 
-            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
+            let html = `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[600px]"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
             
             pools.forEach(pool => {
                 html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
@@ -564,16 +580,16 @@
                     }
                 });
                 
-                html += `<td class="py-3 px-4 text-center"><button onclick="editStudentAllocation('${studentName}')" class="text-indigo-400 hover:text-indigo-300 text-sm">Endre</button></td>`;
+                html += `<td class="py-3 px-4 text-center"><button onclick="editStudentAllocation('${studentName}')" class="text-indigo-400 hover:text-indigo-300 text-sm px-3 py-1">Endre</button></td>`;
                 html += `</tr>`;
             });
 
-            html += `</tbody></table>`;
+            html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
             // Subject Enrollment
             const enrollmentContainer = document.getElementById('subject-enrollment');
-            let enrollmentHtml = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+            let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[500px]"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
             pools.forEach(pool => {
                 pool.subjects.forEach(subject => {
@@ -592,7 +608,7 @@
                 });
             });
 
-            enrollmentHtml += `</tbody></table>`;
+            enrollmentHtml += `</tbody></table></div>`;
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
@@ -600,9 +616,9 @@
             const studentAllocations = allocations.filter(a => a.student === studentName);
             const uniquePools = [...new Set(studentAllocations.map(a => a.pool))];
             
-            let html = `<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">`;
-            html += `<div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-2xl w-full mx-4">`;
-            html += `<h3 class="text-2xl font-semibold mb-6">Endre tildeling for ${studentName}</h3>`;
+            let html = `<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">`;
+            html += `<div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-6 w-full max-w-lg">`;
+            html += `<h3 class="text-xl font-semibold mb-6">Endre tildeling for ${studentName}</h3>`;
             
             uniquePools.forEach((poolName, index) => {
                 const alloc = studentAllocations.find(a => a.pool === poolName);
@@ -610,7 +626,7 @@
                 
                 html += `<div class="mb-4">`;
                 html += `<label class="block text-sm font-medium mb-1">${poolName}</label>`;
-                html += `<select id="edit-${index}" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3">`;
+                html += `<select id="edit-${index}" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 touch-target">`;
                 
                 const pool = pools.find(p => p.name === poolName);
                 if (pool) {
@@ -624,8 +640,8 @@
             });
             
             html += `<div class="flex gap-3 mt-8">`;
-            html += `<button onclick="saveStudentEdit('${studentName}', this)" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold">Lagre endringer</button>`;
-            html += `<button onclick="this.closest('.fixed').remove()" class="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold">Avbryt</button>`;
+            html += `<button onclick="saveStudentEdit('${studentName}', this)" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold touch-target">Lagre</button>`;
+            html += `<button onclick="this.closest('.fixed').remove()" class="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold touch-target">Avbryt</button>`;
             html += `</div></div></div>`;
 
             document.body.insertAdjacentHTML('beforeend', html);
@@ -697,7 +713,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Final version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Mobile-optimized version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
