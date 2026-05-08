@@ -82,4 +82,261 @@
                     <div class="w-14 h-14 bg-orange-500/10 text-orange-400 rounded-2xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-calculator text-3xl"></i></div>
                     <div class="flex-1"><div class="flex items-center justify-between"><h4 class="font-semibold text-xl">Matte</h4><span class="text-xs px-3 py-1 bg-orange-500/10 text-orange-400 rounded-full">12 questions</span></div><p class="text-sm text-zinc-400 mt-1">Arithmetic, fractions &amp; problem solving</p></div>
                 </div>
-                <div onclick="startGame('norsk')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border
+                <div onclick="startGame('norsk')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-emerald-500 rounded-3xl p-6 flex gap-4">
+                    <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-book text-3xl"></i></div>
+                    <div class="flex-1"><div class="flex items-center justify-between"><h4 class="font-semibold text-xl">Norsk</h4><span class="text-xs px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full">12 questions</span></div><p class="text-sm text-zinc-400 mt-1">Grammar, vocabulary &amp; spelling</p></div>
+                </div>
+                <div onclick="startGame('engelsk')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-sky-500 rounded-3xl p-6 flex gap-4">
+                    <div class="w-14 h-14 bg-sky-500/10 text-sky-400 rounded-2xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-globe text-3xl"></i></div>
+                    <div class="flex-1"><div class="flex items-center justify-between"><h4 class="font-semibold text-xl">Engelsk</h4><span class="text-xs px-3 py-1 bg-sky-500/10 text-sky-400 rounded-full">12 questions</span></div><p class="text-sm text-zinc-400 mt-1">Vocabulary, grammar &amp; reading</p></div>
+                </div>
+                <div onclick="startGame('historie')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-amber-500 rounded-3xl p-6 flex gap-4">
+                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-landmark text-3xl"></i></div>
+                    <div class="flex-1"><div class="flex items-center justify-between"><h4 class="font-semibold text-xl">Historie</h4><span class="text-xs px-3 py-1 bg-amber-500/10 text-amber-400 rounded-full">12 questions</span></div><p class="text-sm text-zinc-400 mt-1">Norwegian &amp; world history</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="hidden">
+            <div class="flex items-center justify-between mb-4">
+                <div id="subject-badge" class="px-4 py-1.5 rounded-2xl text-sm font-semibold flex items-center gap-x-2"></div>
+                <div class="flex items-center gap-x-5 text-sm">
+                    <div class="flex items-center gap-x-1"><i class="fa-solid fa-heart text-red-500"></i><span id="lives" class="font-mono font-bold text-lg">3</span></div>
+                    <div class="flex items-center gap-x-1 bg-zinc-900 px-3 py-1 rounded-2xl"><i class="fa-solid fa-fire text-orange-400"></i><span id="streak" class="font-mono font-bold">0</span></div>
+                </div>
+            </div>
+
+            <div class="h-1.5 bg-zinc-800 rounded-full mb-6 overflow-hidden">
+                <div id="progress-bar" class="h-1.5 bg-indigo-500 transition-all duration-500" style="width: 8.3%"></div>
+            </div>
+
+            <div class="flex justify-center mb-4">
+                <div id="monster" class="monster text-6xl transition-transform">👾</div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-5">
+                <div id="question-text" class="text-2xl font-medium leading-tight min-h-[90px]"></div>
+                <div id="answers-container" class="grid grid-cols-1 gap-3 mt-6"></div>
+            </div>
+
+            <div class="flex justify-between text-xs text-zinc-500 px-1">
+                <div>XP: <span id="current-xp" class="font-mono text-emerald-400 font-bold">0</span></div>
+                <button onclick="endGameEarly()" class="hover:text-zinc-300">End quest early</button>
+            </div>
+        </div>
+
+        <!-- RESULTS SCREEN -->
+        <div id="results-screen" class="hidden text-center py-8">
+            <div class="mx-auto w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
+                <i class="fa-solid fa-trophy text-6xl text-emerald-400"></i>
+            </div>
+            <h2 id="results-title" class="text-4xl font-semibold mb-2"></h2>
+            <p id="results-subtitle" class="text-zinc-400 mb-8"></p>
+
+            <div class="max-w-xs mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-6 mb-8">
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <div id="final-xp" class="text-4xl font-bold text-emerald-400">1240</div>
+                        <div class="text-xs text-zinc-500">XP EARNED</div>
+                    </div>
+                    <div>
+                        <div id="final-streak" class="text-4xl font-bold text-orange-400">8</div>
+                        <div class="text-xs text-zinc-500">BEST STREAK</div>
+                    </div>
+                    <div>
+                        <div id="final-accuracy" class="text-4xl font-bold text-indigo-400">92</div>
+                        <div class="text-xs text-zinc-500">% ACCURACY</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="restartSameSubject()" class="px-9 py-4 bg-white text-zinc-950 font-semibold rounded-3xl flex-1 hover:bg-zinc-100 transition-all">Play Again</button>
+                <button onclick="showSubjectScreen()" class="px-9 py-4 border border-zinc-700 hover:bg-zinc-900 rounded-3xl flex-1 transition-all">New Quest</button>
+            </div>
+            
+            <div class="mt-8">
+                <button onclick="copyShareText()" class="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-x-2 mx-auto">
+                    <i class="fa-solid fa-share-alt"></i> <span>Share your score</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameData = {
+            matte: [
+                { q: "Hva er 15 + 27?", a: ["42", "32", "52", "41"], correct: 0 },
+                { q: "Hva er 8 × 7?", a: ["54", "56", "49", "63"], correct: 1 },
+                { q: "Hva er 45 ÷ 5?", a: ["7", "8", "9", "6"], correct: 2 },
+                { q: "Hva er 3/4 av 80?", a: ["50", "60", "70", "55"], correct: 1 },
+                { q: "Hvilket tall er et primtall?", a: ["15", "21", "17", "25"], correct: 2 },
+                { q: "Hva er 12²?", a: ["124", "144", "154", "134"], correct: 1 },
+                { q: "Hva er 100 - 37?", a: ["53", "63", "73", "43"], correct: 1 },
+                { q: "Hva er 2.5 + 3.75?", a: ["5.25", "6.25", "6.5", "5.5"], correct: 1 },
+                { q: "Hva er arealet av en firkant med sidelengde 9 cm?", a: ["36 cm²", "81 cm²", "18 cm²", "45 cm²"], correct: 1 },
+                { q: "Hva er 25% av 200?", a: ["25", "40", "50", "75"], correct: 2 },
+                { q: "Hvilken brøk er størst?", a: ["3/4", "2/3", "5/8", "7/10"], correct: 0 },
+                { q: "Hva er 144 ÷ 12?", a: ["10", "11", "12", "13"], correct: 2 }
+            ],
+            norsk: [
+                { q: "Hva betyr ordet 'hus' på engelsk?", a: ["House", "Home", "Building", "Hut"], correct: 0 },
+                { q: "Hvilket ord er et substantiv?", a: ["Løpe", "Rask", "Bok", "Veldig"], correct: 2 },
+                { q: "Hva er flertall av 'en katt'?", a: ["Katter", "Kattene", "Katts", "Kattene"], correct: 0 },
+                { q: "Hvilken setning er grammatisk riktig?", a: ["Jeg går på skole", "Jeg gå på skole", "Meg går på skole", "Jeg på skole går"], correct: 0 },
+                { q: "Hva er synonym til 'glad'?", a: ["Trist", "Lykkelig", "Sint", "Lei"], correct: 1 },
+                { q: "Hvilket ord har 'å' som diftong?", a: ["Hus", "Båt", "Skole", "Venn"], correct: 1 },
+                { q: "Hva er 'the' på norsk?", a: ["En", "Et", "Den/det/de", "En/et"], correct: 2 },
+                { q: "Hvilken setning bruker presens?", a: ["Jeg spiste", "Jeg spiser", "Jeg skal spise", "Jeg har spist"], correct: 1 },
+                { q: "Hva er antonym til 'stor'?", a: ["Liten", "Høy", "Bred", "Lang"], correct: 0 },
+                { q: "Hvilket ord er et verb?", a: ["Bord", "Løpe", "Rask", "Blå"], correct: 1 },
+                { q: "Hva betyr 'å være' i presens flertall?", a: ["Er", "Er", "Er", "Er"], correct: 0 },
+                { q: "Hvilken setning har riktig ordstilling?", a: ["I går jeg gikk på kino", "Jeg gikk i går på kino", "I går gikk jeg på kino", "Gikk jeg i går på kino"], correct: 2 }
+            ],
+            engelsk: [
+                { q: "What is the capital of Norway?", a: ["Bergen", "Oslo", "Trondheim", "Stavanger"], correct: 1 },
+                { q: "Choose the correct spelling:", a: ["Recieve", "Receive", "Receve", "Recive"], correct: 1 },
+                { q: "What does 'beautiful' mean?", a: ["Ugly", "Pretty", "Fast", "Smart"], correct: 1 },
+                { q: "Which is a verb?", a: ["Happy", "Run", "Blue", "Table"], correct: 1 },
+                { q: "What is the past tense of 'go'?", a: ["Goed", "Went", "Gone", "Goes"], correct: 1 },
+                { q: "Choose the correct article: ___ apple", a: ["A", "An", "The", "No article"], correct: 1 },
+                { q: "What is the opposite of 'difficult'?", a: ["Hard", "Easy", "Big", "Small"], correct: 1 },
+                { q: "Which sentence is correct?", a: ["She don't like it", "She doesn't like it", "She not like it", "She no like it"], correct: 1 },
+                { q: "What is the plural of 'child'?", a: ["Childs", "Children", "Childes", "Childrens"], correct: 1 },
+                { q: "Choose the correct word: I ___ to school every day.", a: ["go", "goes", "going", "gone"], correct: 0 },
+                { q: "What does 'excited' mean?", a: ["Bored", "Happy and enthusiastic", "Angry", "Tired"], correct: 1 },
+                { q: "Which is a noun?", a: ["Quickly", "Happiness", "Run", "Beautiful"], correct: 1 }
+            ],
+            historie: [
+                { q: "Når ble Norge selvstendig?", a: ["1814", "1905", "1945", "1884"], correct: 1 },
+                { q: "Hvem oppdaget Amerika i 1492?", a: ["Leiv Eiriksson", "Kristoffer Columbus", "Vasco da Gama", "Marco Polo"], correct: 1 },
+                { q: "Hva het Norges konge under 2. verdenskrig?", a: ["Haakon VII", "Olav V", "Harald V", "Haakon VI"], correct: 0 },
+                { q: "Når ble EU grunnlagt?", a: ["1945", "1957", "1973", "1993"], correct: 1 },
+                { q: "Hva var vikingene kjent for?", a: ["Handel og sjøfart", "Kun jordbruk", "Kun krig", "Kun fiske"], correct: 0 },
+                { q: "Hvilket år ble Berlinmuren revet?", a: ["1985", "1989", "1991", "1995"], correct: 1 },
+                { q: "Hvem var Norges første statsminister?", a: ["Johan Sverdrup", "Einar Gerhardsen", "Gro Harlem Brundtland", "Jens Stoltenberg"], correct: 0 },
+                { q: "Hva var den kalde krigen?", a: ["En krig mellom Norge og Sverige", "En ideologisk konflikt mellom USA og Sovjet", "En verdenskrig", "En borgerkrig i Europa"], correct: 1 },
+                { q: "Når ble FN grunnlagt?", a: ["1919", "1945", "1955", "1960"], correct: 1 },
+                { q: "Hva het den første norske grunnloven?", a: ["Eidsvollsgrunnloven", "Grunnloven av 1814", "Stortingsloven", "Kongeloven"], correct: 1 },
+                { q: "Hvem var dronning under 2. verdenskrig?", a: ["Maud", "Sonja", "Märtha", "Astrid"], correct: 2 },
+                { q: "Hvilket år ble olje funnet i Nordsjøen?", a: ["1969", "1971", "1975", "1980"], correct: 0 }
+            ]
+        };
+
+        let currentSubject = '';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let lives = 3;
+        let correctAnswers = 0;
+        let audioContext;
+
+        function initAudio() { try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+
+        function playSound(type) {
+            if (!audioContext) return;
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            if (type === 'correct') { oscillator.type = 'sine'; oscillator.frequency.value = 880; gain.gain.value = 0.3; setTimeout(() => { gain.gain.value = 0; }, 180); }
+            else if (type === 'wrong') { oscillator.type = 'sawtooth'; oscillator.frequency.value = 180; gain.gain.value = 0.25; setTimeout(() => { gain.gain.value = 0; }, 280); }
+            else if (type === 'victory') { oscillator.type = 'triangle'; oscillator.frequency.value = 660; gain.gain.value = 0.4; setTimeout(() => { oscillator.frequency.value = 880; }, 120); setTimeout(() => { gain.gain.value = 0; }, 450); }
+            const filter = audioContext.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200;
+            oscillator.connect(filter); filter.connect(gain); gain.connect(audioContext.destination); oscillator.start();
+            setTimeout(() => oscillator.stop(), 600);
+        }
+
+        function showStartScreen() { hideAllScreens(); document.getElementById('start-screen').classList.remove('hidden'); }
+        function showSubjectScreen() { hideAllScreens(); document.getElementById('subject-screen').classList.remove('hidden'); }
+        function hideAllScreens() { ['start-screen','subject-screen','game-screen','results-screen'].forEach(id => document.getElementById(id).classList.add('hidden')); }
+
+        function startGame(subject) {
+            currentSubject = subject;
+            currentQuestions = [...gameData[subject]];
+            currentQuestionIndex = 0; score = 0; streak = 0; lives = 3; correctAnswers = 0;
+            hideAllScreens(); document.getElementById('game-screen').classList.remove('hidden');
+            const badge = document.getElementById('subject-badge');
+            let colorClass = '', icon = '';
+            if (subject === 'matte') { colorClass = 'bg-orange-500/10 text-orange-400'; icon = 'fa-calculator'; }
+            else if (subject === 'norsk') { colorClass = 'bg-emerald-500/10 text-emerald-400'; icon = 'fa-book'; }
+            else if (subject === 'engelsk') { colorClass = 'bg-sky-500/10 text-sky-400'; icon = 'fa-globe'; }
+            else { colorClass = 'bg-amber-500/10 text-amber-400'; icon = 'fa-landmark'; }
+            badge.innerHTML = `<i class="fa-solid ${icon} mr-2"></i><span class="font-semibold">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
+            badge.className = `px-4 py-1.5 rounded-2xl text-sm font-semibold flex items-center gap-x-2 ${colorClass}`;
+            initAudio(); updateGameUI(); nextQuestion();
+        }
+
+        function updateGameUI() {
+            document.getElementById('question-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('current-xp').textContent = score;
+            const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) { endGame(); return; }
+            const q = currentQuestions[currentQuestionIndex];
+            document.getElementById('question-text').innerHTML = q.q;
+            const container = document.getElementById('answers-container'); container.innerHTML = '';
+            q.a.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = `answer-btn w-full text-left px-6 py-4 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-2xl text-lg flex items-center gap-x-3`;
+                btn.innerHTML = `<div class="w-8 h-8 flex-shrink-0 rounded-xl bg-zinc-700 flex items-center justify-center text-sm font-mono">${String.fromCharCode(65 + index)}</div><span>${answer}</span>`;
+                btn.onclick = () => selectAnswer(index, btn);
+                container.appendChild(btn);
+            });
+            updateGameUI();
+        }
+
+        function selectAnswer(selectedIndex, btn) {
+            const q = currentQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.correct;
+            const allBtns = document.getElementById('answers-container').children;
+            const monster = document.getElementById('monster');
+            Array.from(allBtns).forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct'); score += 100 + (streak * 25); streak++; correctAnswers++;
+                monster.classList.add('happy'); playSound('correct'); setTimeout(() => monster.classList.remove('happy'), 600);
+            } else {
+                btn.classList.add('wrong'); streak = 0; lives--;
+                monster.classList.add('sad'); playSound('wrong'); setTimeout(() => monster.classList.remove('sad'), 600);
+                Array.from(allBtns).forEach((b, i) => { if (i === q.correct) b.classList.add('correct'); });
+            }
+            document.getElementById('current-xp').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('lives').textContent = lives;
+            if (lives <= 0) { setTimeout(() => endGame(true), 1300); }
+            else { setTimeout(() => { currentQuestionIndex++; nextQuestion(); }, 1450); }
+        }
+
+        function endGame(early = false) {
+            hideAllScreens(); document.getElementById('results-screen').classList.remove('hidden');
+            const accuracy = Math.round((correctAnswers / currentQuestions.length) * 100);
+            const finalXP = score;
+            document.getElementById('final-xp').textContent = finalXP;
+            document.getElementById('final-streak').textContent = streak;
+            document.getElementById('final-accuracy').textContent = accuracy;
+            let title = '', subtitle = '';
+            if (early) { title = 'Quest Ended Early'; subtitle = 'Come back stronger tomorrow!'; }
+            else if (accuracy >= 85) { title = 'Legendary Victory!'; subtitle = 'You crushed it! 🔥'; }
+            else if (accuracy >= 65) { title = 'Quest Complete!'; subtitle = 'Great work, adventurer!'; }
+            else { title = 'Quest Complete'; subtitle = 'Every attempt makes you smarter.'; }
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('results-subtitle').textContent = subtitle;
+        }
+
+        function endGameEarly() { if (confirm('End this quest early?')) endGame(true); }
+        function restartSameSubject() { startGame(currentSubject); }
+
+        function showStats() { alert("Stats coming soon!"); }
+        function showHowToPlay() { alert("How to Play:\n1. Choose a subject\n2. Answer 12 questions\n3. 3 lives\n4. Build streaks for bonus XP"); }
+        function copyShareText() { navigator.clipboard.writeText("I just played Study Quest on EduQuest! 🔥"); alert("Copied!"); }
+
+        function init() { showStartScreen(); console.log('%c[EduQuest] Full working game loaded!', 'color:#22c55e'); }
+        window.onload = init;
+    </script>
+</body>
+</html>
