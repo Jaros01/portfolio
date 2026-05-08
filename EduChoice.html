@@ -126,7 +126,7 @@
             </div>
             
             <div>
-                <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
+                <h3 class="font-semibold text-xl mb-4">Faginndeling (Sortert etter Dag)</h3>
                 <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
             </div>
         </div>
@@ -360,27 +360,41 @@
                 return;
             }
 
-            students.forEach(student => {
-                let prefText = '';
+            // Sort students by last name
+            const sortedStudents = [...students].sort((a, b) => {
+                const lastNameA = a.name.split(' ').pop();
+                const lastNameB = b.name.split(' ').pop();
+                return lastNameA.localeCompare(lastNameB);
+            });
+
+            sortedStudents.forEach(student => {
+                let prefHtml = '';
+                
                 Object.keys(student.preferences).forEach(poolId => {
                     const pool = pools.find(p => p.id == poolId);
                     if (pool) {
-                        prefText += `${pool.name}: `;
-                        Object.entries(student.preferences[poolId]).forEach(([subject, rank]) => {
-                            prefText += `${subject}(${rank}) `;
+                        const prefs = student.preferences[poolId];
+                        const sortedPrefs = Object.entries(prefs).sort((a, b) => a[1] - b[1]);
+                        
+                        prefHtml += `<div class="mt-1 text-xs"><strong>${pool.name}:</strong> `;
+                        sortedPrefs.forEach(([subject, rank], i) => {
+                            prefHtml += `${rank}. ${subject}`;
+                            if (i < sortedPrefs.length - 1) prefHtml += ' • ';
                         });
-                        prefText += ' | ';
+                        prefHtml += `</div>`;
                     }
                 });
 
                 const div = document.createElement('div');
-                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 flex justify-between items-center';
+                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3';
                 div.innerHTML = `
-                    <div class="min-w-0 flex-1">
-                        <span class="font-medium">${student.name}</span>
-                        <div class="text-xs text-zinc-500 mt-1 truncate">${prefText}</div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-medium">${student.name}</span>
+                            <div class="mt-1">${prefHtml}</div>
+                        </div>
+                        <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm ml-3 touch-target">Fjern</button>
                     </div>
-                    <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm ml-3 touch-target">Fjern</button>
                 `;
                 container.appendChild(div);
             });
@@ -397,7 +411,6 @@
             renderStudentList();
         }
 
-        // New function with confirmation popup
         function addRandomStudentsWithConfirm() {
             if (confirm("Vil du legge til 10 tilfeldige studenter? Dette vil legge til nye studenter med tilfeldige navn og preferanser.")) {
                 addRandomStudents(10);
@@ -560,6 +573,13 @@
                 };
             });
 
+            // Sort students by last name
+            const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
+                const lastNameA = a.split(' ').pop();
+                const lastNameB = b.split(' ').pop();
+                return lastNameA.localeCompare(lastNameB);
+            });
+
             let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
             
             pools.forEach(pool => {
@@ -568,7 +588,7 @@
             
             html += `<th class="py-3 px-4 text-center">Handlinger</th></tr></thead><tbody>`;
 
-            Object.keys(studentResults).forEach(studentName => {
+            sortedStudentNames.forEach(studentName => {
                 html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800">`;
                 html += `<td class="py-3 px-4 font-medium">${studentName}</td>`;
                 
@@ -589,11 +609,14 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // Subject Enrollment
+            // Subject Enrollment - Sorted by Dag
             const enrollmentContainer = document.getElementById('subject-enrollment');
-            let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+            let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Dag</th><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
-            pools.forEach(pool => {
+            // Sort pools by name (Mandag, Tirsdag, Onsdag)
+            const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedPools.forEach(pool => {
                 pool.subjects.forEach(subject => {
                     const enrolled = subject.students ? subject.students.length : 0;
                     const remaining = subject.max - enrolled;
@@ -601,6 +624,7 @@
                     
                     enrollmentHtml += `
                         <tr class="border-b border-zinc-800 hover:bg-zinc-800">
+                            <td class="py-3 px-4 font-medium text-emerald-400">${pool.name}</td>
                             <td class="py-3 px-4 font-medium">${subject.name}</td>
                             <td class="py-3 px-4 text-center">${enrolled}</td>
                             <td class="py-3 px-4 text-center">${subject.max}</td>
@@ -715,7 +739,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Final mobile version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] All requested features added!', 'color:#22c55e');
         }
 
         window.onload = init;
