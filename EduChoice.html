@@ -11,14 +11,13 @@
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
         
         @media (max-width: 640px) {
-            .mobile-full { width: 100% !important; margin: 0 !important; }
-            .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .nav-tab { padding-left: 1rem; padding-right: 1rem; font-size: 0.875rem; }
+            .nav-tab { padding-left: 0.75rem; padding-right: 0.75rem; font-size: 0.75rem; }
+            .big-button { padding-top: 1rem; padding-bottom: 1rem; font-size: 1rem; }
         }
         
         .touch-target {
-            min-height: 44px;
-            min-width: 44px;
+            min-height: 48px;
+            min-width: 48px;
         }
     </style>
 </head>
@@ -43,15 +42,15 @@
         </div>
 
         <!-- Navigation -->
-        <div class="flex gap-x-1 sm:gap-x-2 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
-            <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 sm:px-6 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
-                <i class="fa-solid fa-cog"></i> <span class="hidden sm:inline">Admin</span>
+        <div class="flex gap-x-1 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
+            <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
+                <i class="fa-solid fa-cog"></i> <span>Admin</span>
             </button>
-            <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 sm:px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                <i class="fa-solid fa-users"></i> <span class="hidden sm:inline">Studenter</span>
+            <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
+                <i class="fa-solid fa-users"></i> <span>Studenter</span>
             </button>
-            <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 sm:px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                <i class="fa-solid fa-chart-bar"></i> <span class="hidden sm:inline">Resultater</span>
+            <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
+                <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
             </button>
         </div>
 
@@ -60,11 +59,11 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Pools og Fag</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="addRandomSubjects()" class="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-magic"></i> <span class="hidden sm:inline">Tilfeldige fag</span>
+                    <button onclick="addRandomSubjects()" class="px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
                     </button>
-                    <button onclick="addNewPool()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Ny dag</span>
+                    <button onclick="addNewPool()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-plus"></i> <span>Ny dag / pool</span>
                     </button>
                 </div>
             </div>
@@ -77,11 +76,11 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="addRandomStudents(10)" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-dice"></i> <span class="hidden sm:inline">10 tilfeldige</span>
+                    <button onclick="addRandomStudents(10)" class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige studenter</span>
                     </button>
-                    <button onclick="removeAllStudents()" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-trash"></i> <span class="hidden sm:inline">Fjern alle</span>
+                    <button onclick="removeAllStudents()" class="px-5 py-3 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-trash"></i> <span>Fjern alle studenter</span>
                     </button>
                 </div>
             </div>
@@ -91,10 +90,10 @@
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Studentnavn</label>
-                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
+                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
                         </div>
                         <div id="student-preferences-form"></div>
-                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg touch-target">Legg til studentpreferanser</button>
+                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til studentpreferanser</button>
                     </div>
                 </div>
             </div>
@@ -110,11 +109,11 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="runSmartAllocation()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-magic"></i> <span class="hidden sm:inline">Kjør fordeling</span>
+                    <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-magic"></i> <span>Kjør smart fordeling</span>
                     </button>
-                    <button onclick="resetAllocations()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-undo"></i>
+                    <button onclick="resetAllocations()" class="px-5 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
                     </button>
                 </div>
             </div>
@@ -122,17 +121,13 @@
             <div id="allocation-summary" class="mb-6 hidden"></div>
             
             <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
-                <div class="table-scroll">
-                    <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
-                </div>
+                <h3 class="font-semibold text-xl mb-4">Studentoversikt (Alle fag per student)</h3>
+                <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
             </div>
             
             <div>
                 <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
-                <div class="table-scroll">
-                    <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
-                </div>
+                <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
             </div>
         </div>
     </div>
@@ -280,7 +275,7 @@
             });
 
             renderPools();
-            alert("Tilfeldige fag lagt til!");
+            alert("Tilfeldige fag lagt til i alle pools!");
         }
 
         function renderStudentForm() {
@@ -514,19 +509,19 @@
 
             summaryContainer.innerHTML = `
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
-                    <h3 class="font-semibold text-lg mb-4">Statistikk (${allocations.length} totalt)</h3>
+                    <h3 class="font-semibold text-lg mb-4">Fordelingsstatistikk (${allocations.length} totalt)</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                         <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-3">
                             <div class="text-2xl font-bold text-emerald-400">${firstChoice}</div>
-                            <div class="text-xs text-emerald-400">1. valg</div>
+                            <div class="text-xs text-emerald-400">Fikk 1. valg</div>
                         </div>
                         <div class="bg-yellow-900/30 border border-yellow-600 rounded-2xl p-3">
                             <div class="text-2xl font-bold text-yellow-400">${secondChoice}</div>
-                            <div class="text-xs text-yellow-400">2. valg</div>
+                            <div class="text-xs text-yellow-400">Fikk 2. valg</div>
                         </div>
                         <div class="bg-orange-900/30 border border-orange-600 rounded-2xl p-3">
                             <div class="text-2xl font-bold text-orange-400">${thirdChoice}</div>
-                            <div class="text-xs text-orange-400">3. valg</div>
+                            <div class="text-xs text-orange-400">Fikk 3. valg</div>
                         </div>
                         <div class="bg-red-900/30 border border-red-600 rounded-2xl p-3">
                             <div class="text-2xl font-bold text-red-400">${noSpot}</div>
@@ -558,7 +553,7 @@
                 };
             });
 
-            let html = `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[600px]"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
+            let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
             
             pools.forEach(pool => {
                 html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
@@ -589,7 +584,7 @@
 
             // Subject Enrollment
             const enrollmentContainer = document.getElementById('subject-enrollment');
-            let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[500px]"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+            let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
             pools.forEach(pool => {
                 pool.subjects.forEach(subject => {
@@ -640,7 +635,7 @@
             });
             
             html += `<div class="flex gap-3 mt-8">`;
-            html += `<button onclick="saveStudentEdit('${studentName}', this)" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold touch-target">Lagre</button>`;
+            html += `<button onclick="saveStudentEdit('${studentName}', this)" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold touch-target">Lagre endringer</button>`;
             html += `<button onclick="this.closest('.fixed').remove()" class="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold touch-target">Avbryt</button>`;
             html += `</div></div></div>`;
 
@@ -713,7 +708,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Mobile-optimized version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Improved mobile version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
