@@ -58,9 +58,14 @@
         <div id="section-students" class="hidden">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-semibold">Legg til studentpreferanser</h2>
-                <button onclick="addRandomStudents(10)" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
-                    <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige studenter</span>
-                </button>
+                <div class="flex gap-3">
+                    <button onclick="addRandomStudents(10)" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
+                        <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige</span>
+                    </button>
+                    <button onclick="removeAllStudents()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
+                        <i class="fa-solid fa-trash"></i> <span>Fjern alle</span>
+                    </button>
+                </div>
             </div>
             
             <div class="max-w-2xl">
@@ -68,7 +73,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Studentnavn</label>
-                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg">
+                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg" onkeydown="if (event.key === 'Enter') addStudent()">
                         </div>
                         <div id="student-preferences-form"></div>
                         <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg">Legg til studentpreferanser</button>
@@ -98,7 +103,6 @@
             
             <div id="allocation-summary" class="mb-6 hidden"></div>
             
-            <!-- Grouped Student Overview -->
             <div class="mb-8">
                 <h3 class="font-semibold text-xl mb-4">Studentoversikt (Alle fag per student)</h3>
                 <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[300px]"></div>
@@ -137,14 +141,15 @@
                         <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)" 
                                class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1 w-40">
                         <button onclick="deletePool(${poolIndex})" class="text-red-400 hover:text-red-500">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="min-h-[180px] space-y-2 mb-4" id="pool-${pool.id}-subjects"></div>
                     
                     <div class="flex gap-2">
-                        <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2 text-sm">
+                        <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2 text-sm" 
+                               onkeydown="if (event.key === 'Enter') addSubjectToPool(${poolIndex})">
                         <input type="number" id="subject-max-${pool.id}" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-sm text-center">
                         <button onclick="addSubjectToPool(${poolIndex})" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm">Legg til</button>
                     </div>
@@ -198,10 +203,8 @@
         }
 
         function deletePool(poolIndex) {
-            if (confirm("Er du sikker på at du vil slette denne dagen/poolen?")) {
-                pools.splice(poolIndex, 1);
-                renderPools();
-            }
+            pools.splice(poolIndex, 1);
+            renderPools();
         }
 
         function addSubjectToPool(poolIndex) {
@@ -222,13 +225,14 @@
 
             nameInput.value = '';
             renderSubjectsForPool(poolIndex);
+            
+            // Auto-focus back to name field
+            nameInput.focus();
         }
 
         function removeSubject(poolIndex, subjectIndex) {
-            if (confirm("Fjern dette faget?")) {
-                pools[poolIndex].subjects.splice(subjectIndex, 1);
-                renderSubjectsForPool(poolIndex);
-            }
+            pools[poolIndex].subjects.splice(subjectIndex, 1);
+            renderSubjectsForPool(poolIndex);
         }
 
         function renderStudentForm() {
@@ -299,7 +303,9 @@
 
             document.getElementById('student-name').value = '';
             renderStudentList();
-            alert(`${name} lagt til!`);
+            
+            // Auto-focus name field for next student
+            document.getElementById('student-name').focus();
         }
 
         function renderStudentList() {
@@ -314,10 +320,25 @@
             }
 
             students.forEach(student => {
+                let prefText = '';
+                Object.keys(student.preferences).forEach(poolId => {
+                    const pool = pools.find(p => p.id == poolId);
+                    if (pool) {
+                        prefText += `${pool.name}: `;
+                        Object.entries(student.preferences[poolId]).forEach(([subject, rank]) => {
+                            prefText += `${subject}(${rank}) `;
+                        });
+                        prefText += ' | ';
+                    }
+                });
+
                 const div = document.createElement('div');
                 div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-3 flex justify-between items-center';
                 div.innerHTML = `
-                    <div><span class="font-medium">${student.name}</span></div>
+                    <div>
+                        <span class="font-medium">${student.name}</span>
+                        <span class="text-xs text-zinc-500 ml-3">${prefText}</span>
+                    </div>
                     <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm">Fjern</button>
                 `;
                 container.appendChild(div);
@@ -325,13 +346,16 @@
         }
 
         function removeStudent(id) {
-            if (confirm("Fjern denne studenten?")) {
-                students = students.filter(s => s.id !== id);
-                renderStudentList();
-            }
+            students = students.filter(s => s.id !== id);
+            renderStudentList();
         }
 
-        // ==================== ADD RANDOM STUDENTS ====================
+        function removeAllStudents() {
+            if (students.length === 0) return;
+            students = [];
+            renderStudentList();
+        }
+
         function addRandomStudents(count) {
             const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias"];
             const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide"];
@@ -343,8 +367,6 @@
                 
                 pools.forEach(pool => {
                     preferences[pool.id] = {};
-                    
-                    // Create 3 unique random rankings
                     const ranks = [1, 2, 3].sort(() => Math.random() - 0.5);
                     
                     pool.subjects.forEach((subject, index) => {
@@ -362,10 +384,17 @@
             }
 
             renderStudentList();
-            alert(`${count} tilfeldige studenter lagt til!`);
         }
 
-        // ==================== ALLOCATION ====================
+        // Keyboard shortcut: Ctrl + R = Add 10 random students
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                addRandomStudents(10);
+            }
+        });
+
+        // ==================== ALLOCATION + RESULTS ====================
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
@@ -441,7 +470,7 @@
 
             summaryContainer.innerHTML = `
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-                    <h3 class="font-semibold text-xl mb-4">Fordelingsstatistikk</h3>
+                    <h3 class="font-semibold text-xl mb-4">Fordelingsstatistikk (${allocations.length} totalt)</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                         <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-4">
                             <div class="text-3xl font-bold text-emerald-400">${firstChoice}</div>
@@ -464,7 +493,6 @@
             `;
         }
 
-        // ==================== GROUPED STUDENT OVERVIEW ====================
         function renderResults() {
             const overviewContainer = document.getElementById('student-overview');
             
@@ -473,7 +501,6 @@
                 return;
             }
 
-            // Group allocations by student
             const studentResults = {};
             
             allocations.forEach(item => {
@@ -482,14 +509,12 @@
                 }
                 studentResults[item.student][item.pool] = {
                     subject: item.subject,
-                    choice: item.choice,
-                    poolId: item.poolId
+                    choice: item.choice
                 };
             });
 
             let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
             
-            // Add pool headers
             pools.forEach(pool => {
                 html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
             });
@@ -556,17 +581,14 @@
             selects.forEach((select, index) => {
                 const alloc = allocations.find(a => a.student === studentName && a.pool === pools[index].name);
                 if (alloc) {
-                    // Remove student from old subject
                     const oldPool = pools.find(p => p.name === alloc.pool);
                     const oldSubject = oldPool.subjects.find(s => s.name === alloc.subject);
                     if (oldSubject) {
                         oldSubject.students = oldSubject.students.filter(name => name !== studentName);
                     }
                     
-                    // Update allocation
                     alloc.subject = select.value;
                     
-                    // Add student to new subject
                     const newSubject = oldPool.subjects.find(s => s.name === select.value);
                     if (newSubject && !newSubject.students.includes(studentName)) {
                         newSubject.students.push(studentName);
@@ -580,15 +602,13 @@
         }
 
         function resetAllocations() {
-            if (confirm("Tilbakestill all fordeling?")) {
-                pools.forEach(pool => {
-                    pool.subjects.forEach(subject => subject.students = []);
-                });
-                allocations = [];
-                document.getElementById('allocation-summary').classList.add('hidden');
-                document.getElementById('student-overview').innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
-                document.getElementById('subject-enrollment').innerHTML = '';
-            }
+            pools.forEach(pool => {
+                pool.subjects.forEach(subject => subject.students = []);
+            });
+            allocations = [];
+            document.getElementById('allocation-summary').classList.add('hidden');
+            document.getElementById('student-overview').innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
+            document.getElementById('subject-enrollment').innerHTML = '';
         }
 
         function showSection(section) {
@@ -614,7 +634,9 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Full version with editing loaded!', 'color:#22c55e');
+            
+            // Keyboard shortcut hint
+            console.log('%c[EduChoice] Tip: Trykk Ctrl + R for å legge til 10 tilfeldige studenter', 'color:#a78bfa');
         }
 
         window.onload = init;
