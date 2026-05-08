@@ -522,7 +522,6 @@
         }
 
         function renderResults() {
-            // === Student Overview ===
             const overviewContainer = document.getElementById('student-overview');
             
             if (allocations.length === 0) {
@@ -572,7 +571,7 @@
             html += `</tbody></table>`;
             overviewContainer.innerHTML = html;
 
-            // === SUBJECT ENROLLMENT (Faginndeling) ===
+            // Subject Enrollment
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
@@ -599,17 +598,21 @@
 
         function editStudentAllocation(studentName) {
             const studentAllocations = allocations.filter(a => a.student === studentName);
+            const uniquePools = [...new Set(studentAllocations.map(a => a.pool))];
             
             let html = `<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">`;
             html += `<div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-2xl w-full mx-4">`;
             html += `<h3 class="text-2xl font-semibold mb-6">Endre tildeling for ${studentName}</h3>`;
             
-            studentAllocations.forEach((alloc, index) => {
+            uniquePools.forEach((poolName, index) => {
+                const alloc = studentAllocations.find(a => a.pool === poolName);
+                if (!alloc) return;
+                
                 html += `<div class="mb-4">`;
-                html += `<label class="block text-sm font-medium mb-1">${alloc.pool}</label>`;
+                html += `<label class="block text-sm font-medium mb-1">${poolName}</label>`;
                 html += `<select id="edit-${index}" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3">`;
                 
-                const pool = pools.find(p => p.name === alloc.pool);
+                const pool = pools.find(p => p.name === poolName);
                 if (pool) {
                     pool.subjects.forEach(subject => {
                         const selected = subject.name === alloc.subject ? 'selected' : '';
@@ -633,17 +636,23 @@
             const selects = modal.querySelectorAll('select');
             
             selects.forEach((select, index) => {
-                const alloc = allocations.find(a => a.student === studentName && a.pool === pools[index].name);
+                const poolNames = [...new Set(allocations.filter(a => a.student === studentName).map(a => a.pool))];
+                const poolName = poolNames[index];
+                
+                const alloc = allocations.find(a => a.student === studentName && a.pool === poolName);
+                
                 if (alloc) {
-                    const oldPool = pools.find(p => p.name === alloc.pool);
-                    const oldSubject = oldPool.subjects.find(s => s.name === alloc.subject);
+                    const pool = pools.find(p => p.name === poolName);
+                    if (!pool) return;
+
+                    const oldSubject = pool.subjects.find(s => s.name === alloc.subject);
                     if (oldSubject) {
                         oldSubject.students = oldSubject.students.filter(name => name !== studentName);
                     }
                     
                     alloc.subject = select.value;
                     
-                    const newSubject = oldPool.subjects.find(s => s.name === select.value);
+                    const newSubject = pool.subjects.find(s => s.name === select.value);
                     if (newSubject && !newSubject.students.includes(studentName)) {
                         newSubject.students.push(studentName);
                     }
@@ -688,7 +697,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Faginndeling fixed!', 'color:#22c55e');
+            console.log('%c[EduChoice] Final version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
