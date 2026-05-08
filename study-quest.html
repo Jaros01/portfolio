@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Quest • v1.5</title>
+    <title>Study Quest • EduQuest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -25,24 +25,19 @@
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200">
-    <!-- Header -->
-    <div class="border-b border-zinc-800">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- EduQuest Header -->
+    <div class="border-b border-zinc-800 bg-zinc-900">
+        <div class="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between">
             <div class="flex items-center gap-x-3">
-                <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center">
-                    <i class="fa-solid fa-graduation-cap text-white text-2xl"></i>
+                <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="title-font text-3xl font-semibold tracking-tight">Study Quest</h1>
-                    <p class="text-xs text-zinc-500 -mt-1">v1.5 • NTNU Edition</p>
+                    <span class="title-font text-xl font-semibold">EduQuest</span>
+                    <span class="text-xs text-zinc-500 ml-1">Study Quest v1.5</span>
                 </div>
             </div>
-            <div class="flex items-center gap-x-2 text-sm">
-                <div onclick="showStats()" class="px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 rounded-2xl cursor-pointer flex items-center gap-x-2 transition-colors">
-                    <i class="fa-solid fa-chart-line text-emerald-400"></i>
-                    <span class="font-medium">My Stats</span>
-                </div>
-            </div>
+            <div class="text-xs text-emerald-400">Norwegian Curriculum Edition</div>
         </div>
     </div>
 
@@ -56,7 +51,7 @@
                     <span class="font-medium text-emerald-400">48 questions • 4 subjects</span>
                 </div>
                 <h2 class="title-font text-6xl font-semibold tracking-tighter leading-none mb-3">Level up.<br>Study smarter.</h2>
-                <p class="text-xl text-zinc-400 max-w-md mx-auto">Gamified learning made for Norwegian students. Built by an NTNU Education student.</p>
+                <p class="text-xl text-zinc-400 max-w-md mx-auto">Gamified learning made for Norwegian students.</p>
             </div>
 
             <div class="flex justify-center gap-x-4 mb-12">
@@ -83,164 +78,8 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Matte -->
                 <div onclick="startGame('matte')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-orange-500 rounded-3xl p-6 flex gap-4">
-                    <div class="w-14 h-14 bg-orange-500/10 text-orange-400 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fa-solid fa-calculator text-3xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-semibold text-xl">Matte</h4>
-                            <span class="text-xs px-3 py-1 bg-orange-500/10 text-orange-400 rounded-full">12 questions</span>
-                        </div>
-                        <p class="text-sm text-zinc-400 mt-1">Arithmetic, fractions &amp; problem solving</p>
-                    </div>
+                    <div class="w-14 h-14 bg-orange-500/10 text-orange-400 rounded-2xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-calculator text-3xl"></i></div>
+                    <div class="flex-1"><div class="flex items-center justify-between"><h4 class="font-semibold text-xl">Matte</h4><span class="text-xs px-3 py-1 bg-orange-500/10 text-orange-400 rounded-full">12 questions</span></div><p class="text-sm text-zinc-400 mt-1">Arithmetic, fractions &amp; problem solving</p></div>
                 </div>
-
-                <!-- Norsk -->
-                <div onclick="startGame('norsk')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-emerald-500 rounded-3xl p-6 flex gap-4">
-                    <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fa-solid fa-book text-3xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-semibold text-xl">Norsk</h4>
-                            <span class="text-xs px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full">12 questions</span>
-                        </div>
-                        <p class="text-sm text-zinc-400 mt-1">Grammar, vocabulary &amp; spelling</p>
-                    </div>
-                </div>
-
-                <!-- Engelsk -->
-                <div onclick="startGame('engelsk')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-sky-500 rounded-3xl p-6 flex gap-4">
-                    <div class="w-14 h-14 bg-sky-500/10 text-sky-400 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fa-solid fa-globe text-3xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-semibold text-xl">Engelsk</h4>
-                            <span class="text-xs px-3 py-1 bg-sky-500/10 text-sky-400 rounded-full">12 questions</span>
-                        </div>
-                        <p class="text-sm text-zinc-400 mt-1">Vocabulary, grammar &amp; reading</p>
-                    </div>
-                </div>
-
-                <!-- Historie -->
-                <div onclick="startGame('historie')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-amber-500 rounded-3xl p-6 flex gap-4">
-                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fa-solid fa-landmark text-3xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-semibold text-xl">Historie</h4>
-                            <span class="text-xs px-3 py-1 bg-amber-500/10 text-amber-400 rounded-full">12 questions</span>
-                        </div>
-                        <p class="text-sm text-zinc-400 mt-1">Norwegian &amp; world history</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- GAME SCREEN -->
-        <div id="game-screen" class="hidden">
-            <div class="flex items-center justify-between mb-4">
-                <div id="subject-badge" class="px-4 py-1.5 rounded-2xl text-sm font-semibold flex items-center gap-x-2"></div>
-                <div class="flex items-center gap-x-5 text-sm">
-                    <div class="flex items-center gap-x-1">
-                        <i class="fa-solid fa-heart text-red-500"></i>
-                        <span id="lives" class="font-mono font-bold text-lg">3</span>
-                    </div>
-                    <div class="flex items-center gap-x-1 bg-zinc-900 px-3 py-1 rounded-2xl">
-                        <i class="fa-solid fa-fire text-orange-400"></i>
-                        <span id="streak" class="font-mono font-bold">0</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="h-1.5 bg-zinc-800 rounded-full mb-6 overflow-hidden">
-                <div id="progress-bar" class="h-1.5 bg-indigo-500 transition-all duration-500" style="width: 8.3%"></div>
-            </div>
-
-            <div class="flex justify-center mb-4">
-                <div id="monster" class="monster text-6xl transition-transform">👾</div>
-            </div>
-
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-5">
-                <div id="question-text" class="text-2xl font-medium leading-tight min-h-[90px]"></div>
-                <div id="answers-container" class="grid grid-cols-1 gap-3 mt-6"></div>
-            </div>
-
-            <div class="flex justify-between text-xs text-zinc-500 px-1">
-                <div>XP: <span id="current-xp" class="font-mono text-emerald-400 font-bold">0</span></div>
-                <button onclick="endGameEarly()" class="hover:text-zinc-300">End quest early</button>
-            </div>
-        </div>
-
-        <!-- RESULTS SCREEN -->
-        <div id="results-screen" class="hidden text-center py-8">
-            <div class="mx-auto w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
-                <i class="fa-solid fa-trophy text-6xl text-emerald-400"></i>
-            </div>
-            <h2 id="results-title" class="text-4xl font-semibold mb-2"></h2>
-            <p id="results-subtitle" class="text-zinc-400 mb-8"></p>
-
-            <div class="max-w-xs mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-6 mb-8">
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
-                        <div id="final-xp" class="text-4xl font-bold text-emerald-400">1240</div>
-                        <div class="text-xs text-zinc-500">XP EARNED</div>
-                    </div>
-                    <div>
-                        <div id="final-streak" class="text-4xl font-bold text-orange-400">8</div>
-                        <div class="text-xs text-zinc-500">BEST STREAK</div>
-                    </div>
-                    <div>
-                        <div id="final-accuracy" class="text-4xl font-bold text-indigo-400">92</div>
-                        <div class="text-xs text-zinc-500">% ACCURACY</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                <button onclick="restartSameSubject()" class="px-9 py-4 bg-white text-zinc-950 font-semibold rounded-3xl flex-1 hover:bg-zinc-100 transition-all">Play Again</button>
-                <button onclick="showSubjectScreen()" class="px-9 py-4 border border-zinc-700 hover:bg-zinc-900 rounded-3xl flex-1 transition-all">New Quest</button>
-            </div>
-            
-            <div class="mt-8">
-                <button onclick="copyShareText()" class="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-x-2 mx-auto">
-                    <i class="fa-solid fa-share-alt"></i> <span>Share your score</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ==================== FULL GAME CODE ====================
-        const gameData = {
-            matte: [
-                { q: "Hva er 15 + 27?", a: ["42", "32", "52", "41"], correct: 0 },
-                { q: "Hva er 8 × 7?", a: ["54", "56", "49", "63"], correct: 1 },
-                { q: "Hva er 45 ÷ 5?", a: ["7", "8", "9", "6"], correct: 2 },
-                { q: "Hva er 3/4 av 80?", a: ["50", "60", "70", "55"], correct: 1 },
-                { q: "Hvilket tall er et primtall?", a: ["15", "21", "17", "25"], correct: 2 },
-                { q: "Hva er 12²?", a: ["124", "144", "154", "134"], correct: 1 },
-                { q: "Hva er 100 - 37?", a: ["53", "63", "73", "43"], correct: 1 },
-                { q: "Hva er 2.5 + 3.75?", a: ["5.25", "6.25", "6.5", "5.5"], correct: 1 },
-                { q: "Hva er arealet av en firkant med sidelengde 9 cm?", a: ["36 cm²", "81 cm²", "18 cm²", "45 cm²"], correct: 1 },
-                { q: "Hva er 25% av 200?", a: ["25", "40", "50", "75"], correct: 2 },
-                { q: "Hvilken brøk er størst?", a: ["3/4", "2/3", "5/8", "7/10"], correct: 0 },
-                { q: "Hva er 144 ÷ 12?", a: ["10", "11", "12", "13"], correct: 2 }
-            ],
-            norsk: [
-                { q: "Hva betyr ordet 'hus' på engelsk?", a: ["House", "Home", "Building", "Hut"], correct: 0 },
-                { q: "Hvilket ord er et substantiv?", a: ["Løpe", "Rask", "Bok", "Veldig"], correct: 2 },
-                { q: "Hva er flertall av 'en katt'?", a: ["Katter", "Kattene", "Katts", "Kattene"], correct: 0 },
-                { q: "Hvilken setning er grammatisk riktig?", a: ["Jeg går på skole", "Jeg gå på skole", "Meg går på skole", "Jeg på skole går"], correct: 0 },
-                { q: "Hva er synonym til 'glad'?", a: ["Trist", "Lykkelig", "Sint", "Lei"], correct: 1 },
-                { q: "Hvilket ord har 'å' som diftong?", a: ["Hus", "Båt", "Skole", "Venn"], correct: 1 },
-                { q: "Hva er 'the' på norsk?", a: ["En", "Et", "Den/det/de", "En/et"], correct: 2 },
-                { q: "Hvilken setning bruker presens?", a: ["Jeg spiste", "Jeg spiser", "Jeg skal spise", "Jeg har spist"], correct: 1 },
-                { q: "Hva er antonym til 'stor'?", a: ["Liten", "Høy", "Bred", "Lang"], correct: 0 },
-                { q: "Hvilket ord er et verb?", a: ["Bord", "Løpe", "Rask", "Blå"], correct: 1 },
-                { q: "Hva betyr 'å være' i presens flertall?", a: ["Er", "Er", "Er", "Er"], correct: 0 },
-                { q: "Hvilken setning har riktig ordstilling?", a: ["I går jeg gikk på
+                <div onclick="startGame('norsk')" class="quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border
