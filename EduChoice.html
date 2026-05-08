@@ -109,8 +109,8 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-magic"></i> <span>Kjør smart fordeling</span>
+                    <button onclick="runMultipleSimulations()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling (100x)</span>
                     </button>
                     <button onclick="resetAllocations()" class="px-5 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
@@ -275,7 +275,7 @@
             });
 
             renderPools();
-            alert("Tilfeldige fag lagt til i alle pools!");
+            alert("Tilfeldige fag lagt til!");
         }
 
         function renderStudentForm() {
@@ -360,7 +360,6 @@
                 return;
             }
 
-            // Sort students by last name
             const sortedStudents = [...students].sort((a, b) => {
                 const lastNameA = a.name.split(' ').pop();
                 const lastNameB = b.name.split(' ').pop();
@@ -412,7 +411,7 @@
         }
 
         function addRandomStudentsWithConfirm() {
-            if (confirm("Vil du legge til 10 tilfeldige studenter? Dette vil legge til nye studenter med tilfeldige navn og preferanser.")) {
+            if (confirm("Vil du legge til 10 tilfeldige studenter?")) {
                 addRandomStudents(10);
             }
         }
@@ -447,74 +446,96 @@
             renderStudentList();
         }
 
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'r') {
-                e.preventDefault();
-                addRandomStudentsWithConfirm();
-            }
-        });
-
-        function runSmartAllocation() {
+        // ==================== MULTIPLE SIMULATIONS ====================
+        function runMultipleSimulations() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
                 return;
             }
 
-            pools.forEach(pool => {
-                pool.subjects.forEach(subject => subject.students = []);
-            });
+            const SIMULATIONS = 100;
+            let bestScore = -Infinity;
+            let bestAllocations = [];
+            let bestPools = JSON.parse(JSON.stringify(pools)); // Deep copy
 
-            allocations = [];
+            for (let sim = 0; sim < SIMULATIONS; sim++) {
+                // Reset
+                pools.forEach(pool => {
+                    pool.subjects.forEach(subject => subject.students = []);
+                });
 
-            pools.forEach(pool => {
-                const studentsInPool = students.filter(student => 
-                    student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
-                );
+                let currentAllocations = [];
+                let firstChoices = 0, secondChoices = 0, thirdChoices = 0, noPlacement = 0;
 
-                const shuffled = [...studentsInPool].sort(() => Math.random() - 0.5);
+                pools.forEach(pool => {
+                    const studentsInPool = students.filter(student => 
+                        student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
+                    );
 
-                shuffled.forEach(student => {
-                    const poolPrefs = student.preferences[pool.id];
-                    const sortedChoices = Object.entries(poolPrefs)
-                        .sort((a, b) => a[1] - b[1])
-                        .map(entry => entry[0]);
+                    const shuffled = [...studentsInPool].sort(() => Math.random() - 0.5);
 
-                    let assigned = false;
+                    shuffled.forEach(student => {
+                        const poolPrefs = student.preferences[pool.id];
+                        const sortedChoices = Object.entries(poolPrefs)
+                            .sort((a, b) => a[1] - b[1])
+                            .map(entry => entry[0]);
 
-                    for (let choice of sortedChoices) {
-                        const subject = pool.subjects.find(s => s.name === choice);
-                        if (subject && subject.students.length < subject.max) {
-                            subject.students.push(student.name);
-                            allocations.push({
+                        let assigned = false;
+
+                        for (let choice of sortedChoices) {
+                            const subject = pool.subjects.find(s => s.name === choice);
+                            if (subject && subject.students.length < subject.max) {
+                                subject.students.push(student.name);
+                                currentAllocations.push({
+                                    student: student.name,
+                                    pool: pool.name,
+                                    subject: choice,
+                                    choice: poolPrefs[choice],
+                                    poolId: pool.id
+                                });
+                                assigned = true;
+
+                                if (poolPrefs[choice] === 1) firstChoices++;
+                                else if (poolPrefs[choice] === 2) secondChoices++;
+                                else if (poolPrefs[choice] === 3) thirdChoices++;
+                                
+                                break;
+                            }
+                        }
+
+                        if (!assigned) {
+                            currentAllocations.push({
                                 student: student.name,
                                 pool: pool.name,
-                                subject: choice,
-                                choice: poolPrefs[choice],
+                                subject: "Ingen ledig plass",
+                                choice: "-",
                                 poolId: pool.id
                             });
-                            assigned = true;
-                            break;
+                            noPlacement++;
                         }
-                    }
-
-                    if (!assigned) {
-                        allocations.push({
-                            student: student.name,
-                            pool: pool.name,
-                            subject: "Ingen ledig plass",
-                            choice: "-",
-                            poolId: pool.id
-                        });
-                    }
+                    });
                 });
-            });
+
+                // Calculate score with strong punishment for no placement
+                const score = (firstChoices * 10) + (secondChoices * 5) + (thirdChoices * 2) - (noPlacement * 10);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestAllocations = currentAllocations;
+                    bestPools = JSON.parse(JSON.stringify(pools));
+                }
+            }
+
+            // Apply best result
+            allocations = bestAllocations;
+            pools = bestPools;
 
             showSection('results');
             renderResults();
-            showAllocationSummary();
+            showAllocationSummary(bestScore, SIMULATIONS);
         }
 
-        function showAllocationSummary() {
+        function showAllocationSummary(score, simulations) {
             const summaryContainer = document.getElementById('allocation-summary');
             summaryContainer.classList.remove('hidden');
 
@@ -528,8 +549,11 @@
             });
 
             summaryContainer.innerHTML = `
-                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
-                    <h3 class="font-semibold text-lg mb-4">Fordelingsstatistikk (${allocations.length} totalt)</h3>
+                <div class="bg-zinc-900 border border-emerald-600 rounded-3xl p-5">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-semibold text-lg">Optimal fordeling funnet</h3>
+                        <span class="text-xs bg-emerald-600 px-3 py-1 rounded-full">${simulations} simuleringer</span>
+                    </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                         <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-3">
                             <div class="text-2xl font-bold text-emerald-400">${firstChoice}</div>
@@ -548,6 +572,7 @@
                             <div class="text-xs text-red-400">Ingen plass</div>
                         </div>
                     </div>
+                    <div class="text-xs text-emerald-400 mt-3 text-center">Beste resultat valgt automatisk</div>
                 </div>
             `;
         }
@@ -573,7 +598,6 @@
                 };
             });
 
-            // Sort students by last name
             const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
                 const lastNameA = a.split(' ').pop();
                 const lastNameB = b.split(' ').pop();
@@ -609,11 +633,10 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // Subject Enrollment - Sorted by Dag
+            // Subject Enrollment
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Dag</th><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
-            // Sort pools by name (Mandag, Tirsdag, Onsdag)
             const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
 
             sortedPools.forEach(pool => {
@@ -703,7 +726,7 @@
             
             modal.remove();
             renderResults();
-            showAllocationSummary();
+            showAllocationSummary(0, 0);
         }
 
         function resetAllocations() {
@@ -739,7 +762,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] All requested features added!', 'color:#22c55e');
+            console.log('%c[EduChoice] Multiple Simulations version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
