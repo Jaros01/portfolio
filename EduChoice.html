@@ -238,7 +238,6 @@
             renderSubjectsForPool(poolIndex);
         }
 
-        // ==================== ADD RANDOM SUBJECTS ====================
         function addRandomSubjects() {
             const subjectNames = [
                 "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring", 
@@ -248,13 +247,12 @@
             ];
 
             pools.forEach(pool => {
-                const numberOfSubjects = Math.floor(Math.random() * 4) + 3; // 3 to 6 subjects
+                const numberOfSubjects = Math.floor(Math.random() * 4) + 3;
                 
                 for (let i = 0; i < numberOfSubjects; i++) {
                     const randomName = subjectNames[Math.floor(Math.random() * subjectNames.length)];
-                    const randomSpots = Math.floor(Math.random() * 17) + 8; // 8 to 24 spots
+                    const randomSpots = Math.floor(Math.random() * 17) + 8;
                     
-                    // Avoid duplicates
                     if (!pool.subjects.some(s => s.name === randomName)) {
                         pool.subjects.push({
                             name: randomName,
@@ -266,7 +264,7 @@
             });
 
             renderPools();
-            alert("Tilfeldige fag lagt til i alle pools!");
+            alert("Tilfeldige fag lagt til!");
         }
 
         function renderStudentForm() {
@@ -418,7 +416,6 @@
             renderStudentList();
         }
 
-        // Keyboard shortcut
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'r') {
                 e.preventDefault();
@@ -426,7 +423,6 @@
             }
         });
 
-        // ==================== ALLOCATION ====================
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
@@ -526,10 +522,12 @@
         }
 
         function renderResults() {
+            // === Student Overview ===
             const overviewContainer = document.getElementById('student-overview');
             
             if (allocations.length === 0) {
                 overviewContainer.innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
+                document.getElementById('subject-enrollment').innerHTML = '';
                 return;
             }
 
@@ -573,6 +571,30 @@
 
             html += `</tbody></table>`;
             overviewContainer.innerHTML = html;
+
+            // === SUBJECT ENROLLMENT (Faginndeling) ===
+            const enrollmentContainer = document.getElementById('subject-enrollment');
+            let enrollmentHtml = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+
+            pools.forEach(pool => {
+                pool.subjects.forEach(subject => {
+                    const enrolled = subject.students ? subject.students.length : 0;
+                    const remaining = subject.max - enrolled;
+                    const remainingColor = remaining > 0 ? 'text-emerald-400' : 'text-red-400';
+                    
+                    enrollmentHtml += `
+                        <tr class="border-b border-zinc-800 hover:bg-zinc-800">
+                            <td class="py-3 px-4 font-medium">${subject.name}</td>
+                            <td class="py-3 px-4 text-center">${enrolled}</td>
+                            <td class="py-3 px-4 text-center">${subject.max}</td>
+                            <td class="py-3 px-4 text-center"><span class="${remainingColor} font-medium">${remaining}</span></td>
+                        </tr>
+                    `;
+                });
+            });
+
+            enrollmentHtml += `</tbody></table>`;
+            enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
         function editStudentAllocation(studentName) {
@@ -666,7 +688,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Random subjects feature added!', 'color:#22c55e');
+            console.log('%c[EduChoice] Faginndeling fixed!', 'color:#22c55e');
         }
 
         window.onload = init;
