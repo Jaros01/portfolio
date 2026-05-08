@@ -320,7 +320,7 @@
             }
         }
 
-        // ==================== FAIR MULTI-ROUND ALLOCATION ====================
+        // ==================== CORRECT ALLOCATION (One subject per pool) ====================
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
@@ -334,147 +334,88 @@
 
             allocations = [];
 
-            // Create a copy of students and shuffle them
-            let remainingStudents = [...students].sort(() => Math.random() - 0.5);
+            // Process each pool independently
+            pools.forEach(pool => {
+                // Get all students who have preferences for this pool
+                const studentsForThisPool = students.filter(student => 
+                    student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
+                );
 
-            // ========== ROUND 1: Give as many 1st choices as possible ==========
-            let round1Assigned = 0;
-            remainingStudents = remainingStudents.filter(student => {
-                let assigned = false;
-                
-                Object.keys(student.preferences).forEach(poolId => {
-                    if (assigned) return;
-                    
-                    const pool = pools.find(p => p.id == poolId);
-                    if (!pool) return;
+                // Shuffle for fairness
+                const shuffled = [...studentsForThisPool].sort(() => Math.random() - 0.5);
 
-                    const firstChoice = Object.keys(student.preferences[poolId]).find(key => student.preferences[poolId][key] === 1);
-                    
-                    if (firstChoice) {
-                        const subject = pool.subjects.find(s => s.name === firstChoice);
+                shuffled.forEach(student => {
+                    const poolPrefs = student.preferences[pool.id];
+                    const sortedChoices = Object.entries(poolPrefs)
+                        .sort((a, b) => a[1] - b[1])
+                        .map(entry => entry[0]);
+
+                    let assigned = false;
+
+                    for (let choice of sortedChoices) {
+                        const subject = pool.subjects.find(s => s.name === choice);
                         if (subject && subject.students.length < subject.max) {
                             subject.students.push(student.name);
                             allocations.push({
                                 student: student.name,
                                 pool: pool.name,
-                                subject: firstChoice,
-                                choice: 1
+                                subject: choice,
+                                choice: poolPrefs[choice]
                             });
                             assigned = true;
-                            round1Assigned++;
+                            break;
                         }
                     }
-                });
-                
-                return !assigned; // Keep unassigned students for next round
-            });
 
-            // ========== ROUND 2: Give 2nd choices ==========
-            let round2Assigned = 0;
-            remainingStudents = remainingStudents.filter(student => {
-                let assigned = false;
-                
-                Object.keys(student.preferences).forEach(poolId => {
-                    if (assigned) return;
-                    
-                    const pool = pools.find(p => p.id == poolId);
-                    if (!pool) return;
-
-                    const secondChoice = Object.keys(student.preferences[poolId]).find(key => student.preferences[poolId][key] === 2);
-                    
-                    if (secondChoice) {
-                        const subject = pool.subjects.find(s => s.name === secondChoice);
-                        if (subject && subject.students.length < subject.max) {
-                            subject.students.push(student.name);
-                            allocations.push({
-                                student: student.name,
-                                pool: pool.name,
-                                subject: secondChoice,
-                                choice: 2
-                            });
-                            assigned = true;
-                            round2Assigned++;
-                        }
+                    if (!assigned) {
+                        allocations.push({
+                            student: student.name,
+                            pool: pool.name,
+                            subject: "Ingen ledig plass",
+                            choice: "-"
+                        });
                     }
                 });
-                
-                return !assigned;
-            });
-
-            // ========== ROUND 3: Give 3rd choices ==========
-            let round3Assigned = 0;
-            remainingStudents.forEach(student => {
-                let assigned = false;
-                
-                Object.keys(student.preferences).forEach(poolId => {
-                    if (assigned) return;
-                    
-                    const pool = pools.find(p => p.id == poolId);
-                    if (!pool) return;
-
-                    const thirdChoice = Object.keys(student.preferences[poolId]).find(key => student.preferences[poolId][key] === 3);
-                    
-                    if (thirdChoice) {
-                        const subject = pool.subjects.find(s => s.name === thirdChoice);
-                        if (subject && subject.students.length < subject.max) {
-                            subject.students.push(student.name);
-                            allocations.push({
-                                student: student.name,
-                                pool: pool.name,
-                                subject: thirdChoice,
-                                choice: 3
-                            });
-                            assigned = true;
-                            round3Assigned++;
-                        }
-                    }
-                });
-                
-                if (!assigned) {
-                    allocations.push({
-                        student: student.name,
-                        pool: "Ukjent",
-                        subject: "Ingen ledig plass",
-                        choice: "-"
-                    });
-                }
             });
 
             showSection('results');
             renderResults();
-            showAllocationSummary(round1Assigned, round2Assigned, round3Assigned);
+            showAllocationSummary();
         }
 
-        function showAllocationSummary(round1, round2, round3) {
+        function showAllocationSummary() {
             const summaryContainer = document.getElementById('allocation-summary');
             summaryContainer.classList.remove('hidden');
 
-            const total = round1 + round2 + round3;
-            const noSpot = allocations.filter(a => a.choice === "-").length;
+            let firstChoice = 0, secondChoice = 0, thirdChoice = 0, noSpot = 0;
+
+            allocations.forEach(item => {
+                if (item.choice === 1) firstChoice++;
+                else if (item.choice === 2) secondChoice++;
+                else if (item.choice === 3) thirdChoice++;
+                else noSpot++;
+            });
 
             summaryContainer.innerHTML = `
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-                    <h3 class="font-semibold text-xl mb-4">Fordelingsstatistikk (Multi-Round)</h3>
+                    <h3 class="font-semibold text-xl mb-4">Fordelingsstatistikk</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                         <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-emerald-400">${round1}</div>
+                            <div class="text-3xl font-bold text-emerald-400">${firstChoice}</div>
                             <div class="text-sm text-emerald-400">Fikk 1. valg</div>
                         </div>
                         <div class="bg-yellow-900/30 border border-yellow-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-yellow-400">${round2}</div>
+                            <div class="text-3xl font-bold text-yellow-400">${secondChoice}</div>
                             <div class="text-sm text-yellow-400">Fikk 2. valg</div>
                         </div>
                         <div class="bg-orange-900/30 border border-orange-600 rounded-2xl p-4">
-                            <div class="text-3xl font-bold text-orange-400">${round3}</div>
+                            <div class="text-3xl font-bold text-orange-400">${thirdChoice}</div>
                             <div class="text-sm text-orange-400">Fikk 3. valg</div>
                         </div>
                         <div class="bg-red-900/30 border border-red-600 rounded-2xl p-4">
                             <div class="text-3xl font-bold text-red-400">${noSpot}</div>
                             <div class="text-sm text-red-400">Ingen plass</div>
                         </div>
-                    </div>
-                    <div class="mt-4 text-xs text-zinc-500 text-center">
-                        Algoritme: Multi-Round Allocation (1st → 2nd → 3rd choice priority)
                     </div>
                 </div>
             `;
@@ -529,7 +470,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Multi-Round Fair Algorithm loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Fixed version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
