@@ -51,7 +51,6 @@
                     <i class="fa-solid fa-plus"></i> <span>Legg til ny dag/pool</span>
                 </button>
             </div>
-
             <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
@@ -104,7 +103,6 @@
         let students = [];
         let allocations = [];
 
-        // Initialize with 3 default pools
         function initDefaultPools() {
             pools = [
                 { id: 1, name: "Mandag", subjects: [] },
@@ -123,10 +121,8 @@
 
                 let html = `
                     <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-x-3">
-                            <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)" 
-                                   class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1">
-                        </div>
+                        <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)" 
+                               class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1 w-40">
                         <button onclick="deletePool(${poolIndex})" class="text-red-400 hover:text-red-500">
                             <i class="fa-solid fa-trash"></i>
                         </button>
@@ -143,8 +139,6 @@
 
                 poolDiv.innerHTML = html;
                 container.appendChild(poolDiv);
-
-                // Render subjects for this pool
                 renderSubjectsForPool(poolIndex);
             });
         }
@@ -153,7 +147,6 @@
             const pool = pools[poolIndex];
             const container = document.getElementById(`pool-${pool.id}-subjects`);
             if (!container) return;
-
             container.innerHTML = '';
 
             if (pool.subjects.length === 0) {
@@ -225,7 +218,186 @@
             }
         }
 
-        // ... (rest of the functions remain the same: renderStudentForm, addStudent, runSmartAllocation, etc.)
+        function renderStudentForm() {
+            const container = document.getElementById('student-preferences-form');
+            container.innerHTML = '';
+
+            if (pools.length === 0) {
+                container.innerHTML = `<p class="text-zinc-500">Ingen pools lagt til ennå. Gå til Admin først.</p>`;
+                return;
+            }
+
+            pools.forEach((pool, poolIndex) => {
+                if (pool.subjects.length === 0) return;
+
+                let html = `<div class="mb-6">
+                    <div class="font-semibold mb-3 text-emerald-400">${pool.name}</div>`;
+
+                pool.subjects.forEach((subject, subjectIndex) => {
+                    html += `
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="flex-1 text-sm">${subject.name}</div>
+                            <select id="pref-${pool.id}-${subjectIndex}" class="bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm w-28">
+                                <option value="">--</option>
+                                <option value="1">1. valg</option>
+                                <option value="2">2. valg</option>
+                                <option value="3">3. valg</option>
+                            </select>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function addStudent() {
+            const name = document.getElementById('student-name').value.trim();
+            if (!name) {
+                alert("Skriv inn studentnavn");
+                return;
+            }
+
+            const preferences = {};
+            let hasPreferences = false;
+
+            pools.forEach(pool => {
+                preferences[pool.id] = {};
+                pool.subjects.forEach((subject, index) => {
+                    const select = document.getElementById(`pref-${pool.id}-${index}`);
+                    if (select && select.value) {
+                        preferences[pool.id][subject.name] = parseInt(select.value);
+                        hasPreferences = true;
+                    }
+                });
+            });
+
+            if (!hasPreferences) {
+                alert("Velg minst én preferanse");
+                return;
+            }
+
+            students.push({
+                id: Date.now(),
+                name: name,
+                preferences: preferences
+            });
+
+            document.getElementById('student-name').value = '';
+            renderStudentList();
+            alert(`${name} lagt til!`);
+        }
+
+        function renderStudentList() {
+            const container = document.getElementById('students-list');
+            const countEl = document.getElementById('student-count');
+            container.innerHTML = '';
+            countEl.textContent = students.length;
+
+            if (students.length === 0) {
+                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen studenter lagt til ennå</p>`;
+                return;
+            }
+
+            students.forEach(student => {
+                const div = document.createElement('div');
+                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-3 flex justify-between items-center';
+                div.innerHTML = `
+                    <div><span class="font-medium">${student.name}</span></div>
+                    <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm">Fjern</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeStudent(id) {
+            if (confirm("Fjern denne studenten?")) {
+                students = students.filter(s => s.id !== id);
+                renderStudentList();
+            }
+        }
+
+        function runSmartAllocation() {
+            if (students.length === 0) {
+                alert("Legg til noen studenter først!");
+                return;
+            }
+
+            pools.forEach(pool => pool.subjects.forEach(s => s.students = []));
+            allocations = [];
+
+            const shuffledStudents = [...students].sort(() => Math.random() - 0.5);
+
+            shuffledStudents.forEach(student => {
+                Object.keys(student.preferences).forEach(poolId => {
+                    const pool = pools.find(p => p.id == poolId);
+                    if (!pool) return;
+
+                    const poolPrefs = student.preferences[poolId];
+                    const sortedChoices = Object.entries(poolPrefs)
+                        .sort((a, b) => a[1] - b[1])
+                        .map(entry => entry[0]);
+
+                    let assigned = false;
+
+                    for (let choice of sortedChoices) {
+                        const subject = pool.subjects.find(s => s.name === choice);
+                        if (subject && subject.students.length < subject.max) {
+                            subject.students.push(student.name);
+                            allocations.push({
+                                student: student.name,
+                                pool: pool.name,
+                                subject: choice,
+                                choice: poolPrefs[choice]
+                            });
+                            assigned = true;
+                            break;
+                        }
+                    }
+
+                    if (!assigned) {
+                        allocations.push({
+                            student: student.name,
+                            pool: pool.name,
+                            subject: "Ingen ledig plass",
+                            choice: "-"
+                        });
+                    }
+                });
+            });
+
+            showSection('results');
+            renderResults();
+        }
+
+        function renderResults() {
+            // Student Overview
+            const overviewContainer = document.getElementById('student-overview');
+            overviewContainer.innerHTML = allocations.length === 0 
+                ? `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`
+                : `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Student</th><th class="py-2 px-4 text-left">Pool</th><th class="py-2 px-4 text-left">Tildelt fag</th><th class="py-2 px-4 text-center">Valg</th></tr></thead><tbody>` +
+                  allocations.map(item => {
+                      const choiceColor = item.choice === 1 ? 'text-emerald-400' : item.choice === 2 ? 'text-yellow-400' : 'text-orange-400';
+                      return `<tr class="border-b border-zinc-800 hover:bg-zinc-800"><td class="py-2 px-4 font-medium">${item.student}</td><td class="py-2 px-4 text-zinc-400">${item.pool}</td><td class="py-2 px-4">${item.subject}</td><td class="py-2 px-4 text-center"><span class="${choiceColor} font-medium">${item.choice}</span></td></tr>`;
+                  }).join('') + `</tbody></table>`;
+
+            // Subject Enrollment
+            const enrollmentContainer = document.getElementById('subject-enrollment');
+            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Fag</th><th class="py-2 px-4 text-center">Påmeldt</th><th class="py-2 px-4 text-center">Maks</th><th class="py-2 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+
+            pools.forEach(pool => {
+                pool.subjects.forEach(subject => {
+                    const enrolled = subject.students ? subject.students.length : 0;
+                    const remaining = subject.max - enrolled;
+                    const remainingColor = remaining > 0 ? 'text-emerald-400' : 'text-red-400';
+                    html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800"><td class="py-2 px-4 font-medium">${subject.name}</td><td class="py-2 px-4 text-center">${enrolled}</td><td class="py-2 px-4 text-center">${subject.max}</td><td class="py-2 px-4 text-center"><span class="${remainingColor} font-medium">${remaining}</span></td></tr>`;
+                });
+            });
+
+            html += `</tbody></table>`;
+            enrollmentContainer.innerHTML = html;
+        }
 
         function showSection(section) {
             document.getElementById('section-admin').classList.add('hidden');
@@ -238,14 +410,19 @@
             document.getElementById('nav-' + section).classList.add('nav-active');
 
             if (section === 'students') {
-                // renderStudentForm and renderStudentList would go here
+                renderStudentForm();
+                renderStudentList();
+            }
+
+            if (section === 'results' && allocations.length > 0) {
+                renderResults();
             }
         }
 
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Flexible Norwegian version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Full flexible version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
