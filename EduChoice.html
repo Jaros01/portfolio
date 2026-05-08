@@ -7,20 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .pool-card {
-            transition: all 0.2s ease;
-        }
-        .subject-row {
-            transition: background-color 0.2s ease;
-        }
-        .subject-row:hover {
-            background-color: #27253a;
-        }
-        .nav-active {
-            border-bottom: 3px solid #6366f1;
-            color: white;
-            font-weight: 600;
-        }
+        .pool-card { transition: all 0.2s ease; }
+        .subject-row { transition: background-color 0.2s ease; }
+        .subject-row:hover { background-color: #27253a; }
+        .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200">
@@ -48,20 +38,14 @@
 
         <!-- Navigation -->
         <div class="flex gap-x-2 mb-8 border-b border-zinc-800 pb-1">
-            <button onclick="showSection('admin')" id="nav-admin"
-                    class="nav-active px-6 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium">
-                <i class="fa-solid fa-cog"></i>
-                <span>Admin</span>
+            <button onclick="showSection('admin')" id="nav-admin" class="nav-active px-6 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium">
+                <i class="fa-solid fa-cog"></i> <span>Admin</span>
             </button>
-            <button onclick="showSection('students')" id="nav-students"
-                    class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
-                <i class="fa-solid fa-users"></i>
-                <span>Students</span>
+            <button onclick="showSection('students')" id="nav-students" class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
+                <i class="fa-solid fa-users"></i> <span>Students</span>
             </button>
-            <button onclick="showSection('results')" id="nav-results"
-                    class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
-                <i class="fa-solid fa-chart-bar"></i>
-                <span>Results</span>
+            <button onclick="showSection('results')" id="nav-results" class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
+                <i class="fa-solid fa-chart-bar"></i> <span>Results</span>
             </button>
         </div>
 
@@ -69,10 +53,7 @@
         <div id="section-admin">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-semibold">Manage Subjects</h2>
-                <button onclick="resetAllData()" 
-                        class="px-4 py-2 text-sm border border-red-500 text-red-400 rounded-2xl hover:bg-red-950 transition-colors">
-                    Reset All Data
-                </button>
+                <button onclick="resetAllData()" class="px-4 py-2 text-sm border border-red-500 text-red-400 rounded-2xl hover:bg-red-950 transition-colors">Reset All Data</button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -80,24 +61,15 @@
                 <div class="pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-semibold text-xl flex items-center gap-x-2">
-                                <i class="fa-solid fa-sun text-orange-400"></i> Monday
-                            </h3>
+                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-sun text-orange-400"></i> Monday</h3>
                             <p class="text-xs text-zinc-500">Pool 1</p>
                         </div>
                     </div>
-                    
                     <div id="pool1-list" class="min-h-[200px] space-y-2 mb-4"></div>
-                    
                     <div class="flex gap-2">
-                        <input id="subject1-name" type="text" placeholder="Subject name" 
-                               class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <input id="subject1-max" type="number" value="25" 
-                               class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
-                        <button onclick="addSubjectToPool(1)" 
-                                class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium transition-colors">
-                            Add
-                        </button>
+                        <input id="subject1-name" type="text" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
+                        <input id="subject1-max" type="number" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
+                        <button onclick="addSubjectToPool(1)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Add</button>
                     </div>
                 </div>
 
@@ -105,24 +77,15 @@
                 <div class="pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-semibold text-xl flex items-center gap-x-2">
-                                <i class="fa-solid fa-cloud-sun text-sky-400"></i> Tuesday
-                            </h3>
+                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-cloud-sun text-sky-400"></i> Tuesday</h3>
                             <p class="text-xs text-zinc-500">Pool 2</p>
                         </div>
                     </div>
-                    
                     <div id="pool2-list" class="min-h-[200px] space-y-2 mb-4"></div>
-                    
                     <div class="flex gap-2">
-                        <input id="subject2-name" type="text" placeholder="Subject name" 
-                               class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <input id="subject2-max" type="number" value="25" 
-                               class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
-                        <button onclick="addSubjectToPool(2)" 
-                                class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium transition-colors">
-                            Add
-                        </button>
+                        <input id="subject2-name" type="text" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
+                        <input id="subject2-max" type="number" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
+                        <button onclick="addSubjectToPool(2)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Add</button>
                     </div>
                 </div>
 
@@ -130,24 +93,15 @@
                 <div class="pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-semibold text-xl flex items-center gap-x-2">
-                                <i class="fa-solid fa-moon text-emerald-400"></i> Wednesday
-                            </h3>
+                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-moon text-emerald-400"></i> Wednesday</h3>
                             <p class="text-xs text-zinc-500">Pool 3</p>
                         </div>
                     </div>
-                    
                     <div id="pool3-list" class="min-h-[200px] space-y-2 mb-4"></div>
-                    
                     <div class="flex gap-2">
-                        <input id="subject3-name" type="text" placeholder="Subject name" 
-                               class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <input id="subject3-max" type="number" value="25" 
-                               class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
-                        <button onclick="addSubjectToPool(3)" 
-                                class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium transition-colors">
-                            Add
-                        </button>
+                        <input id="subject3-name" type="text" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
+                        <input id="subject3-max" type="number" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
+                        <button onclick="addSubjectToPool(3)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Add</button>
                     </div>
                 </div>
             </div>
@@ -162,14 +116,12 @@
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Student Name</label>
-                            <input id="student-name" type="text" placeholder="Ola Nordmann" 
-                                   class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg focus:outline-none focus:border-indigo-500">
+                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg focus:outline-none focus:border-indigo-500">
                         </div>
                         
                         <div id="student-preferences-form"></div>
                         
-                        <button onclick="addStudent()" 
-                                class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg transition-colors">
+                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg transition-colors">
                             Add Student Preferences
                         </button>
                     </div>
@@ -177,7 +129,7 @@
             </div>
             
             <div class="mt-8">
-                <h3 class="font-semibold mb-4">Current Students ({{studentCount}})</h3>
+                <h3 class="font-semibold mb-4">Current Students (<span id="student-count">0</span>)</h3>
                 <div id="students-list" class="space-y-2"></div>
             </div>
         </div>
@@ -186,24 +138,30 @@
         <div id="section-results" class="hidden">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-semibold">Allocation Results</h2>
-                <button onclick="runSmartAllocation()" 
-                        class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
-                    <i class="fa-solid fa-magic"></i>
-                    <span>Run Smart Allocation</span>
+                <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
+                    <i class="fa-solid fa-magic"></i> <span>Run Smart Allocation</span>
                 </button>
             </div>
             
-            <div id="results-display" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 min-h-[400px]">
-                <div class="text-center py-12">
-                    <i class="fa-solid fa-chart-bar text-6xl text-zinc-700 mb-4"></i>
-                    <p class="text-zinc-400">Run allocation to see results</p>
-                </div>
+            <!-- Student Overview -->
+            <div class="mb-8">
+                <h3 class="font-semibold text-xl mb-4 flex items-center gap-x-2">
+                    <i class="fa-solid fa-list"></i> Student Overview
+                </h3>
+                <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[200px]"></div>
+            </div>
+            
+            <!-- Subject Enrollment -->
+            <div>
+                <h3 class="font-semibold text-xl mb-4 flex items-center gap-x-2">
+                    <i class="fa-solid fa-chart-pie"></i> Subject Enrollment
+                </h3>
+                <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[200px]"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Data storage
         let pools = {
             1: { name: "Monday", subjects: [] },
             2: { name: "Tuesday", subjects: [] },
@@ -213,7 +171,6 @@
         let students = [];
         let allocations = [];
 
-        // Render functions
         function renderPools() {
             [1,2,3].forEach(num => {
                 const container = document.getElementById(`pool${num}-list`);
@@ -282,7 +239,7 @@
                     html += `
                         <div class="flex items-center gap-3 mb-2">
                             <div class="flex-1 text-sm">${subject.name}</div>
-                            <select id="pref-${poolNum}-${index}" class="bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm w-28">
+                            <select id="pref-${poolNum}-${index}" onchange="enforceUniqueRanks(${poolNum})" class="bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm w-28">
                                 <option value="">--</option>
                                 <option value="1">1st Choice</option>
                                 <option value="2">2nd Choice</option>
@@ -297,6 +254,22 @@
             });
         }
 
+        function enforceUniqueRanks(poolNum) {
+            const selects = document.querySelectorAll(`[id^="pref-${poolNum}-"]`);
+            const selectedValues = {};
+            
+            selects.forEach(select => {
+                if (select.value) {
+                    if (selectedValues[select.value]) {
+                        alert(`You can only have one ${select.value === "1" ? "1st" : select.value === "2" ? "2nd" : "3rd"} choice per pool!`);
+                        select.value = "";
+                    } else {
+                        selectedValues[select.value] = true;
+                    }
+                }
+            });
+        }
+
         function addStudent() {
             const name = document.getElementById('student-name').value.trim();
             if (!name) {
@@ -305,6 +278,7 @@
             }
             
             const preferences = {};
+            let hasPreferences = false;
             
             Object.keys(pools).forEach(poolNum => {
                 preferences[poolNum] = {};
@@ -312,9 +286,15 @@
                     const select = document.getElementById(`pref-${poolNum}-${index}`);
                     if (select && select.value) {
                         preferences[poolNum][subject.name] = parseInt(select.value);
+                        hasPreferences = true;
                     }
                 });
             });
+            
+            if (!hasPreferences) {
+                alert("Please select at least one preference");
+                return;
+            }
             
             students.push({
                 id: Date.now(),
@@ -329,7 +309,9 @@
 
         function renderStudentList() {
             const container = document.getElementById('students-list');
+            const countEl = document.getElementById('student-count');
             container.innerHTML = '';
+            countEl.textContent = students.length;
             
             if (students.length === 0) {
                 container.innerHTML = `<p class="text-zinc-500 text-sm">No students added yet</p>`;
@@ -342,7 +324,6 @@
                 div.innerHTML = `
                     <div>
                         <span class="font-medium">${student.name}</span>
-                        <span class="text-xs text-zinc-500 ml-2">(${Object.keys(student.preferences).length} pools ranked)</span>
                     </div>
                     <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm">Remove</button>
                 `;
@@ -357,14 +338,14 @@
             }
         }
 
-        // Smart Allocation Algorithm
+        // Smart Allocation Algorithm (respects preferences)
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Please add some students first!");
                 return;
             }
             
-            // Reset allocations
+            // Reset all subject student lists
             Object.keys(pools).forEach(poolNum => {
                 pools[poolNum].subjects.forEach(subject => {
                     subject.students = [];
@@ -372,15 +353,13 @@
             });
             
             allocations = [];
-            
-            // Sort students randomly for fairness
             const shuffledStudents = [...students].sort(() => Math.random() - 0.5);
             
             shuffledStudents.forEach(student => {
                 Object.keys(student.preferences).forEach(poolNum => {
                     const poolPrefs = student.preferences[poolNum];
                     const sortedChoices = Object.entries(poolPrefs)
-                        .sort((a, b) => a[1] - b[1]) // Sort by rank (1 = highest)
+                        .sort((a, b) => a[1] - b[1])
                         .map(entry => entry[0]);
                     
                     let assigned = false;
@@ -404,7 +383,7 @@
                         allocations.push({
                             student: student.name,
                             pool: pools[poolNum].name,
-                            subject: "No available choice",
+                            subject: "No spot available",
                             choice: "-"
                         });
                     }
@@ -416,49 +395,65 @@
         }
 
         function renderResults() {
-            const container = document.getElementById('results-display');
-            container.innerHTML = '';
+            // Student Overview
+            const overviewContainer = document.getElementById('student-overview');
+            overviewContainer.innerHTML = '';
             
             if (allocations.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12">
-                        <i class="fa-solid fa-chart-bar text-6xl text-zinc-700 mb-4"></i>
-                        <p class="text-zinc-400">No allocation has been run yet.</p>
-                        <p class="text-sm text-zinc-500 mt-2">Add students and run allocation to see results.</p>
-                    </div>
-                `;
-                return;
+                overviewContainer.innerHTML = `<p class="text-zinc-400">No allocation has been run yet.</p>`;
+            } else {
+                let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Student</th><th class="py-2 px-4 text-left">Pool</th><th class="py-2 px-4 text-left">Assigned Subject</th><th class="py-2 px-4 text-center">Choice</th></tr></thead><tbody>`;
+                
+                allocations.forEach(item => {
+                    const choiceColor = item.choice === 1 ? 'text-emerald-400' : item.choice === 2 ? 'text-yellow-400' : item.choice === 3 ? 'text-orange-400' : 'text-zinc-400';
+                    html += `
+                        <tr class="border-b border-zinc-800 hover:bg-zinc-800">
+                            <td class="py-2 px-4 font-medium">${item.student}</td>
+                            <td class="py-2 px-4 text-zinc-400">${item.pool}</td>
+                            <td class="py-2 px-4">${item.subject}</td>
+                            <td class="py-2 px-4 text-center"><span class="${choiceColor} font-medium">${item.choice}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += `</tbody></table>`;
+                overviewContainer.innerHTML = html;
             }
             
-            let html = `<div class="overflow-x-auto"><table class="w-full text-sm">`;
-            html += `<thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th><th class="py-3 px-4 text-left">Pool</th><th class="py-3 px-4 text-left">Assigned Subject</th><th class="py-3 px-4 text-center">Choice</th></tr></thead><tbody>`;
+            // Subject Enrollment
+            const enrollmentContainer = document.getElementById('subject-enrollment');
+            enrollmentContainer.innerHTML = '';
             
-            allocations.forEach(item => {
-                const choiceColor = item.choice === 1 ? 'text-emerald-400' : item.choice === 2 ? 'text-yellow-400' : 'text-orange-400';
-                html += `
-                    <tr class="border-b border-zinc-800 hover:bg-zinc-800">
-                        <td class="py-3 px-4 font-medium">${item.student}</td>
-                        <td class="py-3 px-4 text-zinc-400">${item.pool}</td>
-                        <td class="py-3 px-4">${item.subject}</td>
-                        <td class="py-3 px-4 text-center"><span class="${choiceColor} font-medium">${item.choice}</span></td>
-                    </tr>
-                `;
+            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Subject</th><th class="py-2 px-4 text-center">Enrolled</th><th class="py-2 px-4 text-center">Max</th><th class="py-2 px-4 text-center">Remaining</th></tr></thead><tbody>`;
+            
+            Object.keys(pools).forEach(poolNum => {
+                pools[poolNum].subjects.forEach(subject => {
+                    const enrolled = subject.students ? subject.students.length : 0;
+                    const remaining = subject.max - enrolled;
+                    const remainingColor = remaining > 0 ? 'text-emerald-400' : 'text-red-400';
+                    
+                    html += `
+                        <tr class="border-b border-zinc-800 hover:bg-zinc-800">
+                            <td class="py-2 px-4 font-medium">${subject.name}</td>
+                            <td class="py-2 px-4 text-center">${enrolled}</td>
+                            <td class="py-2 px-4 text-center">${subject.max}</td>
+                            <td class="py-2 px-4 text-center"><span class="${remainingColor} font-medium">${remaining}</span></td>
+                        </tr>
+                    `;
+                });
             });
             
-            html += `</tbody></table></div>`;
-            container.innerHTML = html;
+            html += `</tbody></table>`;
+            enrollmentContainer.innerHTML = html;
         }
 
         function showSection(section) {
-            // Hide all sections
             document.getElementById('section-admin').classList.add('hidden');
             document.getElementById('section-students').classList.add('hidden');
             document.getElementById('section-results').classList.add('hidden');
             
-            // Show selected section
             document.getElementById('section-' + section).classList.remove('hidden');
             
-            // Update nav
             document.querySelectorAll('[id^="nav-"]').forEach(nav => nav.classList.remove('nav-active'));
             document.getElementById('nav-' + section).classList.add('nav-active');
             
@@ -473,7 +468,7 @@
         }
 
         function resetAllData() {
-            if (confirm("Reset all data? This cannot be undone.")) {
+            if (confirm("Reset all data?")) {
                 pools = {
                     1: { name: "Monday", subjects: [] },
                     2: { name: "Tuesday", subjects: [] },
@@ -483,19 +478,14 @@
                 allocations = [];
                 renderPools();
                 document.getElementById('students-list').innerHTML = '';
-                document.getElementById('results-display').innerHTML = `
-                    <div class="text-center py-12">
-                        <i class="fa-solid fa-chart-bar text-6xl text-zinc-700 mb-4"></i>
-                        <p class="text-zinc-400">No allocation has been run yet.</p>
-                    </div>
-                `;
+                document.getElementById('student-overview').innerHTML = '';
+                document.getElementById('subject-enrollment').innerHTML = '';
                 alert("All data has been reset.");
             }
         }
 
-        // Initialize with sample data
         function init() {
-            // Sample subjects
+            // Sample data
             pools[1].subjects = [
                 { name: "Photography", max: 22, students: [] },
                 { name: "Music Production", max: 18, students: [] },
@@ -513,7 +503,7 @@
             ];
             
             renderPools();
-            console.log('%c[EduChoice] Polished version loaded successfully!', 'color:#22c55e');
+            console.log('%c[EduChoice] Updated version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
