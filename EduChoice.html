@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduChoice • EduQuest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-bold">EduChoice</h1>
+                    <p class="text-sm text-zinc-400">by EduQuest</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-emerald-400">Fredrikstad Folkehøyskole</div>
+                <div class="text-xs text-zinc-500">Spring 2026</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-zinc-800 mb-6">
+            <button onclick="showTab('admin')" class="tab-button px-6 py-3 font-medium border-b-2 border-indigo-500" id="tab-admin">Admin</button>
+            <button onclick="showTab('student')" class="tab-button px-6 py-3 font-medium text-zinc-400 hover:text-white" id="tab-student">Student</button>
+            <button onclick="showTab('results')" class="tab-button px-6 py-3 font-medium text-zinc-400 hover:text-white" id="tab-results">Results</button>
+        </div>
+
+        <!-- ADMIN TAB -->
+        <div id="admin-tab">
+            <h2 class="text-2xl font-semibold mb-4">Admin Dashboard</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Pool 1 -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                    <h3 class="font-semibold text-lg mb-3 flex items-center gap-x-2">
+                        <i class="fa-solid fa-calendar-day text-orange-400"></i> 
+                        Pool 1 - Monday
+                    </h3>
+                    <div class="space-y-2" id="pool1-subjects"></div>
+                    <div class="mt-4 flex gap-2">
+                        <input type="text" id="new-subject-1" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-sm">
+                        <input type="number" id="max-1" placeholder="Max" value="30" class="w-20 bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm">
+                        <button onclick="addSubject(1)" class="px-4 py-2 bg-indigo-600 rounded-xl text-sm">Add</button>
+                    </div>
+                </div>
+
+                <!-- Pool 2 -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                    <h3 class="font-semibold text-lg mb-3 flex items-center gap-x-2">
+                        <i class="fa-solid fa-calendar-day text-sky-400"></i> 
+                        Pool 2 - Tuesday
+                    </h3>
+                    <div class="space-y-2" id="pool2-subjects"></div>
+                    <div class="mt-4 flex gap-2">
+                        <input type="text" id="new-subject-2" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-sm">
+                        <input type="number" id="max-2" placeholder="Max" value="30" class="w-20 bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm">
+                        <button onclick="addSubject(2)" class="px-4 py-2 bg-indigo-600 rounded-xl text-sm">Add</button>
+                    </div>
+                </div>
+
+                <!-- Pool 3 -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                    <h3 class="font-semibold text-lg mb-3 flex items-center gap-x-2">
+                        <i class="fa-solid fa-calendar-day text-emerald-400"></i> 
+                        Pool 3 - Wednesday
+                    </h3>
+                    <div class="space-y-2" id="pool3-subjects"></div>
+                    <div class="mt-4 flex gap-2">
+                        <input type="text" id="new-subject-3" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-sm">
+                        <input type="number" id="max-3" placeholder="Max" value="30" class="w-20 bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm">
+                        <button onclick="addSubject(3)" class="px-4 py-2 bg-indigo-600 rounded-xl text-sm">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="runAllocation()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
+                    <i class="fa-solid fa-magic"></i>
+                    <span>Run Allocation</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STUDENT TAB -->
+        <div id="student-tab" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">Student Preferences</h2>
+            <p class="text-zinc-400 mb-6">Rank your top 3 choices in each pool (1 = highest priority)</p>
+            
+            <div id="student-pools"></div>
+            
+            <div class="mt-8">
+                <button onclick="submitPreferences()" class="px-8 py-3 bg-white text-zinc-950 font-semibold rounded-2xl">Submit My Choices</button>
+            </div>
+        </div>
+
+        <!-- RESULTS TAB -->
+        <div id="results-tab" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">Allocation Results</h2>
+            <div id="results-content"></div>
+        </div>
+    </div>
+
+    <script>
+        let pools = {
+            1: { name: "Monday", subjects: [] },
+            2: { name: "Tuesday", subjects: [] },
+            3: { name: "Wednesday", subjects: [] }
+        };
+        
+        let allocations = [];
+
+        function showTab(tab) {
+            document.getElementById('admin-tab').classList.add('hidden');
+            document.getElementById('student-tab').classList.add('hidden');
+            document.getElementById('results-tab').classList.add('hidden');
+            
+            document.getElementById(tab + '-tab').classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('border-b-2', 'border-indigo-500'));
+            document.getElementById('tab-' + tab).classList.add('border-b-2', 'border-indigo-500');
+            
+            if (tab === 'student') renderStudentPools();
+            if (tab === 'results') renderResults();
+        }
+
+        function addSubject(poolNumber) {
+            const nameInput = document.getElementById(`new-subject-${poolNumber}`);
+            const maxInput = document.getElementById(`max-${poolNumber}`);
+            
+            if (!nameInput.value) return;
+            
+            pools[poolNumber].subjects.push({
+                name: nameInput.value,
+                max: parseInt(maxInput.value) || 30,
+                students: []
+            });
+            
+            nameInput.value = '';
+            renderPools();
+        }
+
+        function renderPools() {
+            [1,2,3].forEach(num => {
+                const container = document.getElementById(`pool${num}-subjects`);
+                container.innerHTML = '';
+                
+                pools[num].subjects.forEach((subject, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center bg-zinc-800 px-4 py-2 rounded-xl text-sm';
+                    div.innerHTML = `
+                        <div>${subject.name} <span class="text-zinc-500">(${subject.max} spots)</span></div>
+                        <button onclick="removeSubject(${num}, ${index})" class="text-red-400 hover:text-red-500">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        function removeSubject(poolNumber, index) {
+            pools[poolNumber].subjects.splice(index, 1);
+            renderPools();
+        }
+
+        function renderStudentPools() {
+            const container = document.getElementById('student-pools');
+            container.innerHTML = '';
+            
+            Object.keys(pools).forEach(poolNum => {
+                const pool = pools[poolNum];
+                const poolDiv = document.createElement('div');
+                poolDiv.className = 'mb-8 bg-zinc-900 border border-zinc-800 rounded-3xl p-6';
+                
+                let html = `<h3 class="font-semibold text-lg mb-4">${pool.name}</h3>`;
+                
+                pool.subjects.forEach((subject, index) => {
+                    html += `
+                        <div class="mb-4">
+                            <div class="font-medium mb-2">${subject.name}</div>
+                            <div class="flex gap-2">
+                                <select class="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-sm" id="choice-${poolNum}-${index}">
+                                    <option value="">-- Choose rank --</option>
+                                    <option value="1">1st Choice</option>
+                                    <option value="2">2nd Choice</option>
+                                    <option value="3">3rd Choice</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                poolDiv.innerHTML = html;
+                container.appendChild(poolDiv);
+            });
+        }
+
+        function submitPreferences() {
+            alert("Preferences saved! (Prototype mode)");
+        }
+
+        function runAllocation() {
+            allocations = [];
+            
+            Object.keys(pools).forEach(poolNum => {
+                const pool = pools[poolNum];
+                pool.subjects.forEach(subject => {
+                    allocations.push({
+                        pool: pool.name,
+                        subject: subject.name,
+                        students: Math.floor(Math.random() * subject.max) + 1
+                    });
+                });
+            });
+            
+            alert("Allocation completed!");
+            showTab('results');
+        }
+
+        function renderResults() {
+            const container = document.getElementById('results-content');
+            container.innerHTML = '';
+            
+            if (allocations.length === 0) {
+                container.innerHTML = '<p class="text-zinc-400">No allocation has been run yet.</p>';
+                return;
+            }
+            
+            allocations.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-3 flex justify-between items-center';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-semibold">${item.pool}</span> — 
+                        <span class="text-emerald-400">${item.subject}</span>
+                    </div>
+                    <div class="text-sm text-zinc-400">${item.students} students</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function init() {
+            pools[1].subjects = [
+                { name: "Photography", max: 25, students: [] },
+                { name: "Music Production", max: 20, students: [] },
+                { name: "Theatre", max: 30, students: [] }
+            ];
+            pools[2].subjects = [
+                { name: "Hiking & Nature", max: 35, students: [] },
+                { name: "Cooking", max: 20, students: [] },
+                { name: "Yoga & Meditation", max: 25, students: [] }
+            ];
+            pools[3].subjects = [
+                { name: "Film Making", max: 22, students: [] },
+                { name: "Creative Writing", max: 18, students: [] },
+                { name: "Digital Art", max: 28, students: [] }
+            ];
+            
+            renderPools();
+            console.log('%c[EduChoice] Prototype initialized!', 'color:#22c55e');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
