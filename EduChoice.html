@@ -59,10 +59,10 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Pools og Fag</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="addRandomSubjects()" class="px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                    <button onclick="addRandomSubjects()" class="flex-1 sm:flex-none px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
                     </button>
-                    <button onclick="addNewPool()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                    <button onclick="addNewPool()" class="flex-1 sm:flex-none px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-plus"></i> <span>Ny dag / pool</span>
                     </button>
                 </div>
@@ -76,10 +76,10 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="addRandomStudents(10)" class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                    <button onclick="addRandomStudentsWithConfirm()" class="flex-1 sm:flex-none px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige studenter</span>
                     </button>
-                    <button onclick="removeAllStudents()" class="px-5 py-3 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                    <button onclick="removeAllStudents()" class="flex-1 sm:flex-none px-5 py-3 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-trash"></i> <span>Fjern alle studenter</span>
                     </button>
                 </div>
@@ -397,6 +397,13 @@
             renderStudentList();
         }
 
+        // New function with confirmation popup
+        function addRandomStudentsWithConfirm() {
+            if (confirm("Vil du legge til 10 tilfeldige studenter? Dette vil legge til nye studenter med tilfeldige navn og preferanser.")) {
+                addRandomStudents(10);
+            }
+        }
+
         function addRandomStudents(count) {
             const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias"];
             const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide"];
@@ -430,7 +437,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'r') {
                 e.preventDefault();
-                addRandomStudents(10);
+                addRandomStudentsWithConfirm();
             }
         });
 
@@ -708,7 +715,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Improved mobile version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Final mobile version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
