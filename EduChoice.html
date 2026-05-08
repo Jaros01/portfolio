@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,16 +23,16 @@
                 </div>
                 <div>
                     <h1 class="text-5xl font-bold tracking-tight">EduChoice</h1>
-                    <p class="text-zinc-400">by EduQuest • Fredrikstad Folkehøyskole</p>
+                    <p class="text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-x-3">
                 <div class="px-4 py-1.5 bg-zinc-900 rounded-2xl text-sm flex items-center gap-x-2">
                     <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span>Spring 2026</span>
+                    <span>Vår 2026</span>
                 </div>
-                <div class="px-4 py-1.5 bg-zinc-900 rounded-2xl text-sm">~100 students</div>
+                <div class="px-4 py-1.5 bg-zinc-900 rounded-2xl text-sm">~100 studenter</div>
             </div>
         </div>
 
@@ -42,18 +42,18 @@
                 <i class="fa-solid fa-cog"></i> <span>Admin</span>
             </button>
             <button onclick="showSection('students')" id="nav-students" class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
-                <i class="fa-solid fa-users"></i> <span>Students</span>
+                <i class="fa-solid fa-users"></i> <span>Studenter</span>
             </button>
             <button onclick="showSection('results')" id="nav-results" class="px-6 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl">
-                <i class="fa-solid fa-chart-bar"></i> <span>Results</span>
+                <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
             </button>
         </div>
 
         <!-- ADMIN SECTION -->
         <div id="section-admin">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold">Manage Subjects</h2>
-                <button onclick="resetAllData()" class="px-4 py-2 text-sm border border-red-500 text-red-400 rounded-2xl hover:bg-red-950 transition-colors">Reset All Data</button>
+                <h2 class="text-3xl font-semibold">Administrer fag</h2>
+                <button onclick="resetAllData()" class="px-4 py-2 text-sm border border-red-500 text-red-400 rounded-2xl hover:bg-red-950 transition-colors">Nullstill alt</button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -61,15 +61,15 @@
                 <div class="pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-sun text-orange-400"></i> Monday</h3>
+                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-sun text-orange-400"></i> Mandag</h3>
                             <p class="text-xs text-zinc-500">Pool 1</p>
                         </div>
                     </div>
                     <div id="pool1-list" class="min-h-[200px] space-y-2 mb-4"></div>
                     <div class="flex gap-2">
-                        <input id="subject1-name" type="text" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
+                        <input id="subject1-name" type="text" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
                         <input id="subject1-max" type="number" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
-                        <button onclick="addSubjectToPool(1)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Add</button>
+                        <button onclick="addSubjectToPool(1)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Legg til</button>
                     </div>
                 </div>
 
@@ -77,15 +77,15 @@
                 <div class="pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-cloud-sun text-sky-400"></i> Tuesday</h3>
+                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-cloud-sun text-sky-400"></i> Tirsdag</h3>
                             <p class="text-xs text-zinc-500">Pool 2</p>
                         </div>
                     </div>
                     <div id="pool2-list" class="min-h-[200px] space-y-2 mb-4"></div>
                     <div class="flex gap-2">
-                        <input id="subject2-name" type="text" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
+                        <input id="subject2-name" type="text" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
                         <input id="subject2-max" type="number" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
-                        <button onclick="addSubjectToPool(2)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Add</button>
+                        <button onclick="addSubjectToPool(2)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Legg til</button>
                     </div>
                 </div>
 
@@ -93,15 +93,15 @@
                 <div class="pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-moon text-emerald-400"></i> Wednesday</h3>
+                            <h3 class="font-semibold text-xl flex items-center gap-x-2"><i class="fa-solid fa-moon text-emerald-400"></i> Onsdag</h3>
                             <p class="text-xs text-zinc-500">Pool 3</p>
                         </div>
                     </div>
                     <div id="pool3-list" class="min-h-[200px] space-y-2 mb-4"></div>
                     <div class="flex gap-2">
-                        <input id="subject3-name" type="text" placeholder="Subject name" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
+                        <input id="subject3-name" type="text" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-2.5 text-sm">
                         <input id="subject3-max" type="number" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 text-sm text-center">
-                        <button onclick="addSubjectToPool(3)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Add</button>
+                        <button onclick="addSubjectToPool(3)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium">Legg til</button>
                     </div>
                 </div>
             </div>
@@ -109,27 +109,27 @@
 
         <!-- STUDENTS SECTION -->
         <div id="section-students" class="hidden">
-            <h2 class="text-3xl font-semibold mb-6">Add Student Preferences</h2>
+            <h2 class="text-3xl font-semibold mb-6">Legg til studentpreferanser</h2>
             
             <div class="max-w-2xl">
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Student Name</label>
+                            <label class="block text-sm font-medium mb-2">Studentnavn</label>
                             <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-3 text-lg focus:outline-none focus:border-indigo-500">
                         </div>
                         
                         <div id="student-preferences-form"></div>
                         
                         <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg transition-colors">
-                            Add Student Preferences
+                            Legg til studentpreferanser
                         </button>
                     </div>
                 </div>
             </div>
             
             <div class="mt-8">
-                <h3 class="font-semibold mb-4">Current Students (<span id="student-count">0</span>)</h3>
+                <h3 class="font-semibold mb-4">Registrerte studenter (<span id="student-count">0</span>)</h3>
                 <div id="students-list" class="space-y-2"></div>
             </div>
         </div>
@@ -137,16 +137,16 @@
         <!-- RESULTS SECTION -->
         <div id="section-results" class="hidden">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold">Allocation Results</h2>
+                <h2 class="text-3xl font-semibold">Fordelingsresultater</h2>
                 <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
-                    <i class="fa-solid fa-magic"></i> <span>Run Smart Allocation</span>
+                    <i class="fa-solid fa-magic"></i> <span>Kjør smart fordeling</span>
                 </button>
             </div>
             
             <!-- Student Overview -->
             <div class="mb-8">
                 <h3 class="font-semibold text-xl mb-4 flex items-center gap-x-2">
-                    <i class="fa-solid fa-list"></i> Student Overview
+                    <i class="fa-solid fa-list"></i> Studentoversikt
                 </h3>
                 <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[200px]"></div>
             </div>
@@ -154,7 +154,7 @@
             <!-- Subject Enrollment -->
             <div>
                 <h3 class="font-semibold text-xl mb-4 flex items-center gap-x-2">
-                    <i class="fa-solid fa-chart-pie"></i> Subject Enrollment
+                    <i class="fa-solid fa-chart-pie"></i> Faginndeling
                 </h3>
                 <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[200px]"></div>
             </div>
@@ -163,9 +163,9 @@
 
     <script>
         let pools = {
-            1: { name: "Monday", subjects: [] },
-            2: { name: "Tuesday", subjects: [] },
-            3: { name: "Wednesday", subjects: [] }
+            1: { name: "Mandag", subjects: [] },
+            2: { name: "Tirsdag", subjects: [] },
+            3: { name: "Onsdag", subjects: [] }
         };
         
         let students = [];
@@ -177,7 +177,7 @@
                 container.innerHTML = '';
                 
                 if (pools[num].subjects.length === 0) {
-                    container.innerHTML = `<p class="text-zinc-500 text-sm italic py-4">No subjects added yet</p>`;
+                    container.innerHTML = `<p class="text-zinc-500 text-sm italic py-4">Ingen fag lagt til ennå</p>`;
                     return;
                 }
                 
@@ -187,7 +187,7 @@
                     div.innerHTML = `
                         <div class="flex items-center gap-x-3">
                             <span class="font-medium">${subject.name}</span>
-                            <span class="text-xs bg-zinc-700 px-2 py-0.5 rounded-full">${subject.max} spots</span>
+                            <span class="text-xs bg-zinc-700 px-2 py-0.5 rounded-full">${subject.max} plasser</span>
                         </div>
                         <button onclick="removeSubject(${num}, ${index})" class="text-red-400 hover:text-red-500 px-2">
                             <i class="fa-solid fa-times"></i>
@@ -203,7 +203,7 @@
             const maxInput = document.getElementById(`subject${poolNumber}-max`);
             
             if (!nameInput.value.trim()) {
-                alert("Please enter a subject name");
+                alert("Vennligst skriv inn fagnavn");
                 return;
             }
             
@@ -218,7 +218,7 @@
         }
 
         function removeSubject(poolNumber, index) {
-            if (confirm("Remove this subject?")) {
+            if (confirm("Fjern dette faget?")) {
                 pools[poolNumber].subjects.splice(index, 1);
                 renderPools();
             }
@@ -241,9 +241,9 @@
                             <div class="flex-1 text-sm">${subject.name}</div>
                             <select id="pref-${poolNum}-${index}" onchange="enforceUniqueRanks(${poolNum})" class="bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm w-28">
                                 <option value="">--</option>
-                                <option value="1">1st Choice</option>
-                                <option value="2">2nd Choice</option>
-                                <option value="3">3rd Choice</option>
+                                <option value="1">1. valg</option>
+                                <option value="2">2. valg</option>
+                                <option value="3">3. valg</option>
                             </select>
                         </div>
                     `;
@@ -261,7 +261,7 @@
             selects.forEach(select => {
                 if (select.value) {
                     if (selectedValues[select.value]) {
-                        alert(`You can only have one ${select.value === "1" ? "1st" : select.value === "2" ? "2nd" : "3rd"} choice per pool!`);
+                        alert(`Du kan bare ha ett ${select.value === "1" ? "1." : select.value === "2" ? "2." : "3."} valg per pool!`);
                         select.value = "";
                     } else {
                         selectedValues[select.value] = true;
@@ -273,7 +273,7 @@
         function addStudent() {
             const name = document.getElementById('student-name').value.trim();
             if (!name) {
-                alert("Please enter student name");
+                alert("Vennligst skriv inn studentnavn");
                 return;
             }
             
@@ -292,7 +292,7 @@
             });
             
             if (!hasPreferences) {
-                alert("Please select at least one preference");
+                alert("Vennligst velg minst én preferanse");
                 return;
             }
             
@@ -304,7 +304,7 @@
             
             document.getElementById('student-name').value = '';
             renderStudentList();
-            alert(`${name} added successfully!`);
+            alert(`${name} lagt til!`);
         }
 
         function renderStudentList() {
@@ -314,7 +314,7 @@
             countEl.textContent = students.length;
             
             if (students.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-sm">No students added yet</p>`;
+                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen studenter lagt til ennå</p>`;
                 return;
             }
             
@@ -325,27 +325,25 @@
                     <div>
                         <span class="font-medium">${student.name}</span>
                     </div>
-                    <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm">Remove</button>
+                    <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm">Fjern</button>
                 `;
                 container.appendChild(div);
             });
         }
 
         function removeStudent(id) {
-            if (confirm("Remove this student?")) {
+            if (confirm("Fjern denne studenten?")) {
                 students = students.filter(s => s.id !== id);
                 renderStudentList();
             }
         }
 
-        // Smart Allocation Algorithm (respects preferences)
         function runSmartAllocation() {
             if (students.length === 0) {
-                alert("Please add some students first!");
+                alert("Legg til noen studenter først!");
                 return;
             }
             
-            // Reset all subject student lists
             Object.keys(pools).forEach(poolNum => {
                 pools[poolNum].subjects.forEach(subject => {
                     subject.students = [];
@@ -383,7 +381,7 @@
                         allocations.push({
                             student: student.name,
                             pool: pools[poolNum].name,
-                            subject: "No spot available",
+                            subject: "Ingen ledig plass",
                             choice: "-"
                         });
                     }
@@ -400,9 +398,9 @@
             overviewContainer.innerHTML = '';
             
             if (allocations.length === 0) {
-                overviewContainer.innerHTML = `<p class="text-zinc-400">No allocation has been run yet.</p>`;
+                overviewContainer.innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
             } else {
-                let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Student</th><th class="py-2 px-4 text-left">Pool</th><th class="py-2 px-4 text-left">Assigned Subject</th><th class="py-2 px-4 text-center">Choice</th></tr></thead><tbody>`;
+                let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Student</th><th class="py-2 px-4 text-left">Pool</th><th class="py-2 px-4 text-left">Tildelt fag</th><th class="py-2 px-4 text-center">Valg</th></tr></thead><tbody>`;
                 
                 allocations.forEach(item => {
                     const choiceColor = item.choice === 1 ? 'text-emerald-400' : item.choice === 2 ? 'text-yellow-400' : item.choice === 3 ? 'text-orange-400' : 'text-zinc-400';
@@ -424,7 +422,7 @@
             const enrollmentContainer = document.getElementById('subject-enrollment');
             enrollmentContainer.innerHTML = '';
             
-            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Subject</th><th class="py-2 px-4 text-center">Enrolled</th><th class="py-2 px-4 text-center">Max</th><th class="py-2 px-4 text-center">Remaining</th></tr></thead><tbody>`;
+            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Fag</th><th class="py-2 px-4 text-center">Påmeldt</th><th class="py-2 px-4 text-center">Maks</th><th class="py-2 px-4 text-center">Ledig</th></tr></thead><tbody>`;
             
             Object.keys(pools).forEach(poolNum => {
                 pools[poolNum].subjects.forEach(subject => {
@@ -468,11 +466,11 @@
         }
 
         function resetAllData() {
-            if (confirm("Reset all data?")) {
+            if (confirm("Nullstill alt?")) {
                 pools = {
-                    1: { name: "Monday", subjects: [] },
-                    2: { name: "Tuesday", subjects: [] },
-                    3: { name: "Wednesday", subjects: [] }
+                    1: { name: "Mandag", subjects: [] },
+                    2: { name: "Tirsdag", subjects: [] },
+                    3: { name: "Onsdag", subjects: [] }
                 };
                 students = [];
                 allocations = [];
@@ -480,30 +478,29 @@
                 document.getElementById('students-list').innerHTML = '';
                 document.getElementById('student-overview').innerHTML = '';
                 document.getElementById('subject-enrollment').innerHTML = '';
-                alert("All data has been reset.");
+                alert("Alt er nullstilt.");
             }
         }
 
         function init() {
-            // Sample data
             pools[1].subjects = [
-                { name: "Photography", max: 22, students: [] },
-                { name: "Music Production", max: 18, students: [] },
-                { name: "Theatre", max: 28, students: [] }
+                { name: "Fotografi", max: 22, students: [] },
+                { name: "Musikkproduksjon", max: 18, students: [] },
+                { name: "Teater", max: 28, students: [] }
             ];
             pools[2].subjects = [
-                { name: "Hiking & Nature", max: 32, students: [] },
-                { name: "Cooking", max: 20, students: [] },
-                { name: "Yoga & Meditation", max: 25, students: [] }
+                { name: "Tur og friluftsliv", max: 32, students: [] },
+                { name: "Matlaging", max: 20, students: [] },
+                { name: "Yoga og meditasjon", max: 25, students: [] }
             ];
             pools[3].subjects = [
-                { name: "Film Making", max: 20, students: [] },
-                { name: "Creative Writing", max: 18, students: [] },
-                { name: "Digital Art", max: 26, students: [] }
+                { name: "Filmproduksjon", max: 20, students: [] },
+                { name: "Kreativ skriving", max: 18, students: [] },
+                { name: "Digital kunst", max: 26, students: [] }
             ];
             
             renderPools();
-            console.log('%c[EduChoice] Updated version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Norsk versjon lastet!', 'color:#22c55e');
         }
 
         window.onload = init;
