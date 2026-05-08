@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaros | NTNU EdTech & Browser Games</title>
+    <title>EduQuest • Playful Learning by Jaros</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -15,6 +15,7 @@
         .nav-link:hover { color: #6366f1; }
         .project-card { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; }
         .project-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+        .brand-gradient { background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200">
@@ -22,10 +23,10 @@
     <nav class="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-lg fixed w-full z-50">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-x-3">
-                <div class="w-9 h-9 bg-indigo-600 rounded-2xl flex items-center justify-center">
+                <div class="w-9 h-9 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center">
                     <i class="fa-solid fa-graduation-cap text-white"></i>
                 </div>
-                <span class="title-font text-2xl font-semibold">Jaros</span>
+                <span class="title-font text-2xl font-semibold">EduQuest</span>
             </div>
             
             <div class="hidden md:flex items-center gap-x-8 text-sm">
@@ -50,16 +51,16 @@
         <div class="max-w-3xl">
             <div class="inline-flex items-center gap-x-2 px-4 py-1.5 bg-zinc-900 rounded-3xl mb-6 text-sm">
                 <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                <span class="font-medium text-emerald-400">Available for freelance & collaborations</span>
+                <span class="font-medium text-emerald-400">New: Study Quest v1.5 now live</span>
             </div>
             
-            <h1 class="title-font text-7xl font-semibold tracking-tighter leading-none mb-6">I build playful<br>learning experiences.</h1>
-            
-            <p class="text-2xl text-zinc-400 max-w-lg mb-10">25-year-old Education student at NTNU turning studying into adventures through browser-based games and EdTech tools.</p>
+            <h1 class="title-font text-7xl font-semibold tracking-tighter leading-none mb-6">EduQuest</h1>
+            <p class="text-3xl text-zinc-400 max-w-lg mb-4">Playful learning experiences for Norwegian students.</p>
+            <p class="text-xl text-zinc-500 mb-10">Created by Jaros, NTNU Education student</p>
             
             <div class="flex flex-wrap gap-4">
                 <a href="#projects" class="px-8 py-4 bg-white text-zinc-950 font-semibold rounded-3xl flex items-center gap-x-3 hover:bg-zinc-100 transition-all">
-                    <span>Explore my work</span>
+                    <span>Explore projects</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
                 <a href="study-quest.html" target="_blank" class="px-8 py-4 border border-zinc-700 hover:bg-zinc-900 rounded-3xl flex items-center gap-x-3 transition-all">
@@ -74,10 +75,10 @@
     <div id="about" class="max-w-6xl mx-auto px-6 py-16 border-t border-zinc-800 section">
         <div class="grid md:grid-cols-12 gap-12">
             <div class="md:col-span-5">
-                <h2 class="text-4xl font-semibold tracking-tight mb-6">About me</h2>
+                <h2 class="text-4xl font-semibold tracking-tight mb-6">About EduQuest</h2>
                 <div class="prose prose-invert text-zinc-400">
-                    <p>Hi, I'm Jaros — a 25-year-old student pursuing my bachelor's in Education at NTNU in Trondheim, Norway.</p>
-                    <p class="mt-4">I combine my passion for teaching with game development to create engaging browser-based educational tools that make learning fun and effective.</p>
+                    <p>EduQuest is a personal project by Jaros, a 25-year-old Education student at NTNU in Trondheim, Norway.</p>
+                    <p class="mt-4">I combine my passion for teaching and game development to create engaging browser-based educational tools that make learning fun and effective for Norwegian students.</p>
                     <p class="mt-4">Previously completed the first stage of Computer Hardware & Software Engineering at Coventry University.</p>
                 </div>
             </div>
@@ -91,12 +92,12 @@
                     </div>
                     <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                         <div class="text-emerald-400 text-3xl mb-3"><i class="fa-solid fa-gamepad"></i></div>
-                        <div class="font-semibold">Game Dev</div>
+                        <div class="font-semibold">Game Design</div>
                         <div class="text-sm text-zinc-400 mt-1">HTML5, Canvas, JavaScript<br>Gamification & EdTech</div>
                     </div>
                     <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                         <div class="text-emerald-400 text-3xl mb-3"><i class="fa-solid fa-globe"></i></div>
-                        <div class="font-semibold">Web Dev</div>
+                        <div class="font-semibold">Web Development</div>
                         <div class="text-sm text-zinc-400 mt-1">Modern HTML/CSS/JS<br>Responsive & Accessible</div>
                     </div>
                 </div>
@@ -134,7 +135,7 @@
                     </div>
                     
                     <h3 class="text-2xl font-semibold mb-3">Study Quest</h3>
-                    <p class="text-zinc-400 mb-6">Gamified educational adventure with 4 Norwegian curriculum subjects. Built with pure HTML/JS/Canvas. 3 lives, streaks, XP, and local progress saving.</p>
+                    <p class="text-zinc-400 mb-6">Gamified educational adventure with 4 Norwegian curriculum subjects. Built with pure HTML/JS. 3 lives, streaks, XP, and local progress saving.</p>
                     
                     <div class="flex gap-3">
                         <a href="study-quest.html" target="_blank" class="flex-1 px-6 py-3.5 bg-white text-zinc-950 font-semibold rounded-2xl text-center hover:bg-zinc-100 transition-all">Play Now</a>
@@ -143,7 +144,6 @@
                 </div>
             </div>
             
-            <!-- Placeholder second project -->
             <div class="project-card bg-zinc-900 border border-zinc-800 rounded-3xl p-8 flex flex-col">
                 <div class="flex-1">
                     <div class="px-3 py-1 bg-sky-500/10 text-sky-400 text-xs font-medium rounded-full inline-block mb-4">Coming Soon</div>
@@ -159,7 +159,7 @@
 
     <!-- Services -->
     <div id="services" class="max-w-6xl mx-auto px-6 py-16 border-t border-zinc-800 section">
-        <h2 class="text-4xl font-semibold tracking-tight mb-4">How I can help</h2>
+        <h2 class="text-4xl font-semibold tracking-tight mb-4">How EduQuest can help</h2>
         <p class="text-xl text-zinc-400 max-w-2xl mb-10">I help educators, schools, and EdTech creators build engaging digital learning experiences.</p>
         
         <div class="grid md:grid-cols-3 gap-6">
@@ -202,18 +202,17 @@
                 <button type="submit" class="w-full py-4 bg-white text-zinc-950 font-semibold rounded-3xl hover:bg-zinc-100 transition-all">Send message</button>
             </form>
             
-            <div class="text-xs text-zinc-500 mt-4 text-center">Or email me directly at jaros@yourdomain.com (replace with real email)</div>
+            <div class="text-xs text-zinc-500 mt-4 text-center">Or email me at <span class="text-emerald-400">[your-eduquest-email]</span></div>
         </div>
     </div>
 
     <footer class="border-t border-zinc-800 py-12">
         <div class="max-w-6xl mx-auto px-6 text-center text-sm text-zinc-500">
-            &copy; 2026 Jaros • Built with ❤️ in Norway • <a href="https://github.com/Jaros01/portfolio" class="hover:text-white">View source on GitHub</a>
+            &copy; 2026 EduQuest by Jaros • Built with ❤️ in Norway • <a href="https://github.com/Jaros01/portfolio" class="hover:text-white">View source on GitHub</a>
         </div>
     </footer>
 
     <script>
-        // Simple smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const target = document.querySelector(this.getAttribute('href'));
