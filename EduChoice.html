@@ -56,7 +56,12 @@
 
         <!-- STUDENTS SECTION -->
         <div id="section-students" class="hidden">
-            <h2 class="text-3xl font-semibold mb-6">Legg til studentpreferanser</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-semibold">Legg til studentpreferanser</h2>
+                <button onclick="addRandomStudents(10)" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2">
+                    <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige studenter</span>
+                </button>
+            </div>
             
             <div class="max-w-2xl">
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
@@ -81,16 +86,22 @@
         <div id="section-results" class="hidden">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-semibold">Fordelingsresultater</h2>
-                <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
-                    <i class="fa-solid fa-magic"></i> <span>Kjør smart fordeling</span>
-                </button>
+                <div class="flex gap-3">
+                    <button onclick="runSmartAllocation()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2">
+                        <i class="fa-solid fa-magic"></i> <span>Kjør smart fordeling</span>
+                    </button>
+                    <button onclick="resetAllocations()" class="px-5 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2">
+                        <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
+                    </button>
+                </div>
             </div>
             
             <div id="allocation-summary" class="mb-6 hidden"></div>
             
+            <!-- Grouped Student Overview -->
             <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
-                <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[200px]"></div>
+                <h3 class="font-semibold text-xl mb-4">Studentoversikt (Alle fag per student)</h3>
+                <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 min-h-[300px]"></div>
             </div>
             
             <div>
@@ -320,34 +331,62 @@
             }
         }
 
-        // ==================== FIXED ALLOCATION (One subject per pool) ====================
+        // ==================== ADD RANDOM STUDENTS ====================
+        function addRandomStudents(count) {
+            const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias"];
+            const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide"];
+
+            for (let i = 0; i < count; i++) {
+                const name = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+                
+                const preferences = {};
+                
+                pools.forEach(pool => {
+                    preferences[pool.id] = {};
+                    
+                    // Create 3 unique random rankings
+                    const ranks = [1, 2, 3].sort(() => Math.random() - 0.5);
+                    
+                    pool.subjects.forEach((subject, index) => {
+                        if (index < 3) {
+                            preferences[pool.id][subject.name] = ranks[index];
+                        }
+                    });
+                });
+
+                students.push({
+                    id: Date.now() + i,
+                    name: name,
+                    preferences: preferences
+                });
+            }
+
+            renderStudentList();
+            alert(`${count} tilfeldige studenter lagt til!`);
+        }
+
+        // ==================== ALLOCATION ====================
         function runSmartAllocation() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
                 return;
             }
 
-            // Reset all spots
             pools.forEach(pool => {
                 pool.subjects.forEach(subject => subject.students = []);
             });
 
             allocations = [];
 
-            // Go through each pool
             pools.forEach(pool => {
-                // Get students who ranked something in this pool
                 const studentsInPool = students.filter(student => 
                     student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
                 );
 
-                // Shuffle for fairness
                 const shuffled = [...studentsInPool].sort(() => Math.random() - 0.5);
 
                 shuffled.forEach(student => {
                     const poolPrefs = student.preferences[pool.id];
-                    
-                    // Sort by preference (1 = highest)
                     const sortedChoices = Object.entries(poolPrefs)
                         .sort((a, b) => a[1] - b[1])
                         .map(entry => entry[0]);
@@ -362,7 +401,8 @@
                                 student: student.name,
                                 pool: pool.name,
                                 subject: choice,
-                                choice: poolPrefs[choice]
+                                choice: poolPrefs[choice],
+                                poolId: pool.id
                             });
                             assigned = true;
                             break;
@@ -374,7 +414,8 @@
                             student: student.name,
                             pool: pool.name,
                             subject: "Ingen ledig plass",
-                            choice: "-"
+                            choice: "-",
+                            poolId: pool.id
                         });
                     }
                 });
@@ -423,30 +464,131 @@
             `;
         }
 
+        // ==================== GROUPED STUDENT OVERVIEW ====================
         function renderResults() {
             const overviewContainer = document.getElementById('student-overview');
-            overviewContainer.innerHTML = allocations.length === 0 
-                ? `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`
-                : `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Student</th><th class="py-2 px-4 text-left">Pool</th><th class="py-2 px-4 text-left">Tildelt fag</th><th class="py-2 px-4 text-center">Valg</th></tr></thead><tbody>` +
-                  allocations.map(item => {
-                      const choiceColor = item.choice === 1 ? 'text-emerald-400' : item.choice === 2 ? 'text-yellow-400' : item.choice === 3 ? 'text-orange-400' : 'text-zinc-400';
-                      return `<tr class="border-b border-zinc-800 hover:bg-zinc-800"><td class="py-2 px-4 font-medium">${item.student}</td><td class="py-2 px-4 text-zinc-400">${item.pool}</td><td class="py-2 px-4">${item.subject}</td><td class="py-2 px-4 text-center"><span class="${choiceColor} font-medium">${item.choice}</span></td></tr>`;
-                  }).join('') + `</tbody></table>`;
+            
+            if (allocations.length === 0) {
+                overviewContainer.innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
+                return;
+            }
 
-            const enrollmentContainer = document.getElementById('subject-enrollment');
-            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-2 px-4 text-left">Fag</th><th class="py-2 px-4 text-center">Påmeldt</th><th class="py-2 px-4 text-center">Maks</th><th class="py-2 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+            // Group allocations by student
+            const studentResults = {};
+            
+            allocations.forEach(item => {
+                if (!studentResults[item.student]) {
+                    studentResults[item.student] = {};
+                }
+                studentResults[item.student][item.pool] = {
+                    subject: item.subject,
+                    choice: item.choice,
+                    poolId: item.poolId
+                };
+            });
 
+            let html = `<table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
+            
+            // Add pool headers
             pools.forEach(pool => {
-                pool.subjects.forEach(subject => {
-                    const enrolled = subject.students ? subject.students.length : 0;
-                    const remaining = subject.max - enrolled;
-                    const remainingColor = remaining > 0 ? 'text-emerald-400' : 'text-red-400';
-                    html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800"><td class="py-2 px-4 font-medium">${subject.name}</td><td class="py-2 px-4 text-center">${enrolled}</td><td class="py-2 px-4 text-center">${subject.max}</td><td class="py-2 px-4 text-center"><span class="${remainingColor} font-medium">${remaining}</span></td></tr>`;
+                html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
+            });
+            
+            html += `<th class="py-3 px-4 text-center">Handlinger</th></tr></thead><tbody>`;
+
+            Object.keys(studentResults).forEach(studentName => {
+                html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800">`;
+                html += `<td class="py-3 px-4 font-medium">${studentName}</td>`;
+                
+                pools.forEach(pool => {
+                    const result = studentResults[studentName][pool.name];
+                    if (result) {
+                        const choiceColor = result.choice === 1 ? 'text-emerald-400' : result.choice === 2 ? 'text-yellow-400' : result.choice === 3 ? 'text-orange-400' : 'text-zinc-400';
+                        html += `<td class="py-3 px-4">${result.subject} <span class="${choiceColor} text-xs">(${result.choice})</span></td>`;
+                    } else {
+                        html += `<td class="py-3 px-4 text-zinc-500">—</td>`;
+                    }
                 });
+                
+                html += `<td class="py-3 px-4 text-center"><button onclick="editStudentAllocation('${studentName}')" class="text-indigo-400 hover:text-indigo-300 text-sm">Endre</button></td>`;
+                html += `</tr>`;
             });
 
             html += `</tbody></table>`;
-            enrollmentContainer.innerHTML = html;
+            overviewContainer.innerHTML = html;
+        }
+
+        function editStudentAllocation(studentName) {
+            const studentAllocations = allocations.filter(a => a.student === studentName);
+            
+            let html = `<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">`;
+            html += `<div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-2xl w-full mx-4">`;
+            html += `<h3 class="text-2xl font-semibold mb-6">Endre tildeling for ${studentName}</h3>`;
+            
+            studentAllocations.forEach((alloc, index) => {
+                html += `<div class="mb-4">`;
+                html += `<label class="block text-sm font-medium mb-1">${alloc.pool}</label>`;
+                html += `<select id="edit-${index}" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3">`;
+                
+                const pool = pools.find(p => p.name === alloc.pool);
+                if (pool) {
+                    pool.subjects.forEach(subject => {
+                        const selected = subject.name === alloc.subject ? 'selected' : '';
+                        html += `<option value="${subject.name}" ${selected}>${subject.name}</option>`;
+                    });
+                }
+                
+                html += `</select></div>`;
+            });
+            
+            html += `<div class="flex gap-3 mt-8">`;
+            html += `<button onclick="saveStudentEdit('${studentName}', this)" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold">Lagre endringer</button>`;
+            html += `<button onclick="this.closest('.fixed').remove()" class="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold">Avbryt</button>`;
+            html += `</div></div></div>`;
+
+            document.body.insertAdjacentHTML('beforeend', html);
+        }
+
+        function saveStudentEdit(studentName, button) {
+            const modal = button.closest('.fixed');
+            const selects = modal.querySelectorAll('select');
+            
+            selects.forEach((select, index) => {
+                const alloc = allocations.find(a => a.student === studentName && a.pool === pools[index].name);
+                if (alloc) {
+                    // Remove student from old subject
+                    const oldPool = pools.find(p => p.name === alloc.pool);
+                    const oldSubject = oldPool.subjects.find(s => s.name === alloc.subject);
+                    if (oldSubject) {
+                        oldSubject.students = oldSubject.students.filter(name => name !== studentName);
+                    }
+                    
+                    // Update allocation
+                    alloc.subject = select.value;
+                    
+                    // Add student to new subject
+                    const newSubject = oldPool.subjects.find(s => s.name === select.value);
+                    if (newSubject && !newSubject.students.includes(studentName)) {
+                        newSubject.students.push(studentName);
+                    }
+                }
+            });
+            
+            modal.remove();
+            renderResults();
+            showAllocationSummary();
+        }
+
+        function resetAllocations() {
+            if (confirm("Tilbakestill all fordeling?")) {
+                pools.forEach(pool => {
+                    pool.subjects.forEach(subject => subject.students = []);
+                });
+                allocations = [];
+                document.getElementById('allocation-summary').classList.add('hidden');
+                document.getElementById('student-overview').innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
+                document.getElementById('subject-enrollment').innerHTML = '';
+            }
         }
 
         function showSection(section) {
@@ -472,7 +614,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Fixed allocation loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Full version with editing loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
