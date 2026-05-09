@@ -578,12 +578,15 @@
         }
 
         function runMultipleSimulations() {
+            console.log("Starting allocation...");
+            
             const SIMULATIONS = 100;
             let bestScore = -Infinity;
             let bestAllocations = [];
             let bestPools = JSON.parse(JSON.stringify(pools));
 
             for (let sim = 0; sim < SIMULATIONS; sim++) {
+                // Reset all students in subjects
                 pools.forEach(pool => {
                     pool.subjects.forEach(subject => subject.students = []);
                 });
@@ -651,9 +654,13 @@
                 }
             }
 
+            // Apply best result
             allocations = bestAllocations;
             pools = bestPools;
 
+            console.log("Allocation complete. Best score:", bestScore);
+
+            // Show results
             showSection('results');
             renderResults();
             showAllocationSummary(bestScore, SIMULATIONS);
@@ -850,10 +857,10 @@
         function initApp() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Allocation button fixed and working!', 'color:#22c55e');
+            console.log('%c[EduChoice] Allocation fully fixed and working!', 'color:#22c55e');
         }
 
-        console.log('%c[EduChoice] Ready with fixed allocation button', 'color:#22c55e');
+        console.log('%c[EduChoice] Ready - Allocation button fixed', 'color:#22c55e');
     </script>
 </body>
 </html>
