@@ -25,10 +25,11 @@
             border: 1px solid #3f3f46;
         }
        
+        /* FIXED: Always 4 cards per row */
         .subject-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
         
         .landing-bg {
@@ -38,11 +39,9 @@
 </head>
 <body class="bg-zinc-950 text-zinc-200">
 
-    <!-- ==================== LANDING PAGE ==================== -->
+    <!-- LANDING PAGE -->
     <div id="landing-page" class="min-h-screen landing-bg flex items-center justify-center px-6">
         <div class="max-w-2xl text-center">
-            
-            <!-- Logo & Title -->
             <div class="flex justify-center mb-6">
                 <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl">
                     <i class="fa-solid fa-graduation-cap text-white text-5xl"></i>
@@ -52,7 +51,6 @@
             <h1 class="text-6xl font-bold tracking-tight mb-4">EduChoice</h1>
             <p class="text-2xl text-zinc-400 mb-12">av EduQuest</p>
 
-            <!-- What is it -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-8 text-left">
                 <h2 class="text-2xl font-semibold mb-4 flex items-center gap-x-3">
                     <i class="fa-solid fa-info-circle text-emerald-400"></i>
@@ -63,7 +61,6 @@
                 </p>
             </div>
 
-            <!-- How it works -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10 text-left">
                 <h2 class="text-2xl font-semibold mb-6 flex items-center gap-x-3">
                     <i class="fa-solid fa-play text-emerald-400"></i>
@@ -97,7 +94,6 @@
                 </div>
             </div>
 
-            <!-- Start Button -->
             <button onclick="startDemo()"
                     class="px-12 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-semibold rounded-3xl flex items-center justify-center gap-x-3 mx-auto big-button touch-target shadow-lg">
                 <span>Start Demo</span>
@@ -108,7 +104,7 @@
         </div>
     </div>
 
-    <!-- ==================== MAIN APP ==================== -->
+    <!-- MAIN APP -->
     <div id="main-app" class="hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             
@@ -234,14 +230,12 @@
     </div>
 
     <script>
-        // ==================== LANDING PAGE ====================
         function startDemo() {
             document.getElementById('landing-page').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             initApp();
         }
 
-        // ==================== MAIN APP ====================
         let pools = [];
         let students = [];
         let allocations = [];
@@ -663,7 +657,6 @@
             allocations = bestAllocations;
             pools = bestPools;
 
-            // Show results
             document.getElementById('section-admin').classList.add('hidden');
             document.getElementById('section-students').classList.add('hidden');
             document.getElementById('section-results').classList.remove('hidden');
@@ -803,7 +796,7 @@
                     }
 
                     subjectsHtml += `
-                        <div class="flex-1 min-w-[220px] border-l-4 border-emerald-600 pl-4 mb-4">
+                        <div class="border-l-4 border-emerald-600 pl-4">
                             <div class="font-semibold text-emerald-400">${subject.name}</div>
                             <div class="text-xs text-zinc-500 mb-1">${enrolledStudents.length} / ${subject.max} plasser</div>
                             ${studentList}
@@ -866,10 +859,10 @@
         function initApp() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Full version with landing page loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Now showing exactly 4 cards per row!', 'color:#22c55e');
         }
 
-        console.log('%c[EduChoice] Landing page ready', 'color:#22c55e');
+        console.log('%c[EduChoice] 4-column Faginndeling layout applied', 'color:#22c55e');
     </script>
 </body>
 </html>
