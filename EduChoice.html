@@ -452,19 +452,8 @@
         }
 
         function addRandomStudents(count) {
-            const firstNames = [
-                "Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie",
-                "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea",
-                "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya",
-                "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"
-            ];
-
-            const lastNames = [
-                "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen",
-                "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen",
-                "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen",
-                "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"
-            ];
+            const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea", "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya", "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"];
+            const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen", "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"];
 
             for (let i = 0; i < count; i++) {
                 const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -511,7 +500,7 @@
         }
 
         function runMultipleSimulations() {
-            const SIMULATIONS = 100;
+            const SIMULATIONS = 50;
             let bestScore = -Infinity;
             let bestAllocations = [];
             let bestPools = JSON.parse(JSON.stringify(pools));
@@ -525,7 +514,7 @@
                 let firstChoices = 0, secondChoices = 0, thirdChoices = 0, noPlacement = 0;
 
                 pools.forEach(pool => {
-                    const studentsInPool = students.filter(student =>
+                    const studentsInPool = students.filter(student => 
                         student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
                     );
 
@@ -557,7 +546,7 @@
                                 if (poolPrefs[choice] === 1) firstChoices++;
                                 else if (poolPrefs[choice] === 2) secondChoices++;
                                 else if (poolPrefs[choice] === 3) thirdChoices++;
-                               
+                                
                                 break;
                             }
                         }
@@ -587,7 +576,14 @@
             allocations = bestAllocations;
             pools = bestPools;
 
-            showSection('results');
+            // Force show results
+            document.getElementById('section-admin').classList.add('hidden');
+            document.getElementById('section-students').classList.add('hidden');
+            document.getElementById('section-results').classList.remove('hidden');
+
+            document.querySelectorAll('[id^="nav-"]').forEach(nav => nav.classList.remove('nav-active'));
+            document.getElementById('nav-results').classList.add('nav-active');
+
             renderResults();
             showAllocationSummary(bestScore, SIMULATIONS);
         }
@@ -655,9 +651,10 @@
                 };
             });
 
+            // FIXED: a and b are strings, not objects
             const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
-                const lastNameA = a.name.split(' ').pop();
-                const lastNameB = b.name.split(' ').pop();
+                const lastNameA = a.split(' ').pop();
+                const lastNameB = b.split(' ').pop();
                 return lastNameA.localeCompare(lastNameB);
             });
 
@@ -783,7 +780,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Fixed version with correct "elev" terminology (code logic unchanged)', 'color:#22c55e');
+            console.log('%c[EduChoice] Bug fixed - allocation now works!', 'color:#22c55e');
         }
 
         window.onload = init;
