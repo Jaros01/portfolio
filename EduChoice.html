@@ -6,8 +6,6 @@
     <title>EduChoice • EduQuest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
@@ -28,9 +26,9 @@
         }
         
         .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
     </style>
 </head>
@@ -134,10 +132,6 @@
                 <div class="flex flex-wrap gap-2">
                     <button onclick="runMultipleSimulationsWithConfirm()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
-                    </button>
-                    
-                    <button onclick="downloadFaginndelingPDF()" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-file-pdf"></i> <span>Last ned PDF</span>
                     </button>
                     
                     <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
@@ -726,7 +720,7 @@
                     }
 
                     subjectsHtml += `
-                        <div class="border-l-4 border-emerald-600 pl-4">
+                        <div class="flex-1 min-w-[220px] border-l-4 border-emerald-600 pl-4 mb-4">
                             <div class="font-semibold text-emerald-400">${subject.name}</div>
                             <div class="text-xs text-zinc-500 mb-1">${enrolledStudents.length} / ${subject.max} plasser</div>
                             ${studentList}
@@ -748,56 +742,6 @@
             });
 
             enrollmentContainer.innerHTML = enrollmentHtml;
-        }
-
-        // ==================== PROPER PDF USING SCREENSHOT ====================
-        async function downloadFaginndelingPDF() {
-            const element = document.getElementById('subject-enrollment');
-            
-            if (!element || allocations.length === 0) {
-                alert("Ingen resultater å laste ned!");
-                return;
-            }
-
-            // Show loading state
-            const originalText = event.currentTarget ? event.currentTarget.innerHTML : '';
-            
-            try {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    backgroundColor: '#18181b',
-                    logging: false
-                });
-
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-                const imgWidth = pdfWidth - 20;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                let position = 10;
-
-                // Add title
-                pdf.setFontSize(16);
-                pdf.setFont("helvetica", "bold");
-                pdf.text("EduChoice - Faginndeling", pdfWidth / 2, 8, { align: "center" });
-
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-
-                pdf.save("EduChoice_Faginndeling.pdf");
-
-            } catch (error) {
-                alert("Kunne ikke lage PDF. Prøv igjen.");
-                console.error(error);
-            }
         }
 
         function resetAllocationsWithConfirm() {
@@ -839,7 +783,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Proper PDF using screenshot method loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Optimized & Robust version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
