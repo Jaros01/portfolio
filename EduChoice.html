@@ -6,6 +6,7 @@
     <title>EduChoice • EduQuest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
@@ -132,6 +133,10 @@
                 <div class="flex flex-wrap gap-2">
                     <button onclick="runMultipleSimulationsWithConfirm()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
+                    </button>
+                    
+                    <button onclick="downloadFaginndelingPDF()" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-file-pdf"></i> <span>Last ned PDF</span>
                     </button>
                     
                     <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
@@ -744,6 +749,102 @@
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
+        // ==================== PDF EXPORT ====================
+        function downloadFaginndelingPDF() {
+            if (allocations.length === 0) {
+                alert("Ingen resultater å laste ned!");
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: "portrait",
+                unit: "mm",
+                format: "a4"
+            });
+
+            let y = 15;
+            const pageWidth = 210;
+            const margin = 15;
+
+            // Title
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.text("EduChoice - Faginndeling", pageWidth / 2, y, { align: "center" });
+            y += 8;
+
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text("Fredrikstad Folkehøyskole • Vår 2026", pageWidth / 2, y, { align: "center" });
+            y += 12;
+
+            const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedPools.forEach((pool, poolIndex) => {
+                const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
+
+                // Day header
+                doc.setFillColor(63, 66, 84);
+                doc.rect(margin, y - 2, pageWidth - margin * 2, 10, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.text(pool.name, margin + 5, y + 5);
+                y += 14;
+
+                sortedSubjects.forEach(subject => {
+                    const enrolledStudents = subject.students || [];
+                    const sortedStudents = [...enrolledStudents].sort((a, b) => {
+                        const lastNameA = a.split(' ').pop();
+                        const lastNameB = b.split(' ').pop();
+                        return lastNameA.localeCompare(lastNameB);
+                    });
+
+                    // Subject name
+                    doc.setTextColor(34, 197, 94);
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(`${subject.name} (${enrolledStudents.length}/${subject.max})`, margin + 5, y);
+                    y += 6;
+
+                    // Students
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(10);
+                    doc.setFont("helvetica", "normal");
+
+                    if (sortedStudents.length > 0) {
+                        let studentLine = "";
+                        sortedStudents.forEach((student, i) => {
+                            if (studentLine.length > 85) {
+                                doc.text(studentLine, margin + 8, y);
+                                y += 5;
+                                studentLine = student + ", ";
+                            } else {
+                                studentLine += student + (i < sortedStudents.length - 1 ? ", " : "");
+                            }
+                        });
+                        if (studentLine) {
+                            doc.text(studentLine, margin + 8, y);
+                            y += 7;
+                        }
+                    } else {
+                        doc.text("Ingen påmeldte", margin + 8, y);
+                        y += 6;
+                    }
+
+                    // Check if we need a new page
+                    if (y > 260) {
+                        doc.addPage();
+                        y = 15;
+                    }
+                });
+
+                y += 5;
+            });
+
+            doc.save("EduChoice_Faginndeling.pdf");
+        }
+
         function resetAllocationsWithConfirm() {
             if (confirm("Er du sikker på at du vil tilbakestille alle resultater?")) {
                 resetAllocations();
@@ -783,7 +884,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Optimized & Robust version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] PDF Export feature added!', 'color:#22c55e');
         }
 
         window.onload = init;
