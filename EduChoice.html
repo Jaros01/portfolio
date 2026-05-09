@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
@@ -695,7 +696,6 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // === FIXED FAGINDELIN G (No more blank spaces) ===
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = '';
 
@@ -750,115 +750,54 @@
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
-        // ==================== IMPROVED PDF ====================
-        function downloadFaginndelingPDF() {
-            if (allocations.length === 0) {
+        // ==================== PROPER PDF USING SCREENSHOT ====================
+        async function downloadFaginndelingPDF() {
+            const element = document.getElementById('subject-enrollment');
+            
+            if (!element || allocations.length === 0) {
                 alert("Ingen resultater å laste ned!");
                 return;
             }
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: "portrait",
-                unit: "mm",
-                format: "a4"
-            });
-
-            let y = 15;
-            const pageWidth = 210;
-            const margin = 12;
-            const contentWidth = pageWidth - margin * 2;
-
-            // Title
-            doc.setFontSize(20);
-            doc.setFont("helvetica", "bold");
-            doc.text("EduChoice - Faginndeling", pageWidth / 2, y, { align: "center" });
-            y += 7;
-
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "normal");
-            doc.text("Fredrikstad Folkehøyskole • Vår 2026", pageWidth / 2, y, { align: "center" });
-            y += 10;
-
-            const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
-
-            sortedPools.forEach((pool, poolIndex) => {
-                const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
-
-                // Day Header (like the box in the webapp)
-                doc.setFillColor(24, 24, 27);
-                doc.rect(margin, y - 1, contentWidth, 9, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(13);
-                doc.setFont("helvetica", "bold");
-                doc.text(pool.name, margin + 4, y + 5);
-                y += 12;
-
-                // Subjects in two columns (like the webapp)
-                const colWidth = (contentWidth - 6) / 2;
-                let col1X = margin;
-                let col2X = margin + colWidth + 6;
-                let currentCol = 0;
-
-                sortedSubjects.forEach((subject, index) => {
-                    const enrolledStudents = subject.students || [];
-                    const sortedStudents = [...enrolledStudents].sort((a, b) => {
-                        const lastNameA = a.split(' ').pop();
-                        const lastNameB = b.split(' ').pop();
-                        return lastNameA.localeCompare(lastNameB);
-                    });
-
-                    const xPos = currentCol === 0 ? col1X : col2X;
-
-                    // Subject name
-                    doc.setTextColor(34, 197, 94);
-                    doc.setFontSize(10);
-                    doc.setFont("helvetica", "bold");
-                    doc.text(`${subject.name} (${enrolledStudents.length}/${subject.max})`, xPos, y);
-
-                    y += 5;
-
-                    // Students
-                    doc.setTextColor(0, 0, 0);
-                    doc.setFontSize(9);
-                    doc.setFont("helvetica", "normal");
-
-                    if (sortedStudents.length > 0) {
-                        let line = "";
-                        sortedStudents.forEach((student, i) => {
-                            const separator = (i < sortedStudents.length - 1) ? ", " : "";
-                            if (line.length + student.length + separator.length > 38) {
-                                doc.text(line, xPos, y);
-                                y += 4.5;
-                                line = student + separator;
-                            } else {
-                                line += student + separator;
-                            }
-                        });
-                        if (line) {
-                            doc.text(line, xPos, y);
-                            y += 6;
-                        }
-                    } else {
-                        doc.text("Ingen påmeldte", xPos, y);
-                        y += 5;
-                    }
-
-                    // Switch column or new row
-                    currentCol = (currentCol + 1) % 2;
-                    if (currentCol === 0) y += 3;
-
-                    // New page if needed
-                    if (y > 265) {
-                        doc.addPage();
-                        y = 15;
-                    }
+            // Show loading state
+            const originalText = event.currentTarget ? event.currentTarget.innerHTML : '';
+            
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    backgroundColor: '#18181b',
+                    logging: false
                 });
 
-                y += 8;
-            });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
 
-            doc.save("EduChoice_Faginndeling.pdf");
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                const imgWidth = pdfWidth - 20;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let position = 10;
+
+                // Add title
+                pdf.setFontSize(16);
+                pdf.setFont("helvetica", "bold");
+                pdf.text("EduChoice - Faginndeling", pdfWidth / 2, 8, { align: "center" });
+
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+
+                pdf.save("EduChoice_Faginndeling.pdf");
+
+            } catch (error) {
+                alert("Kunne ikke lage PDF. Prøv igjen.");
+                console.error(error);
+            }
         }
 
         function resetAllocationsWithConfirm() {
@@ -900,7 +839,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Improved PDF + Fixed blank space bug', 'color:#22c55e');
+            console.log('%c[EduChoice] Proper PDF using screenshot method loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
