@@ -20,8 +20,9 @@
             min-width: 48px;
         }
         
-        .print-friendly {
-            font-family: system-ui, -apple-system, sans-serif;
+        .day-box {
+            background-color: #18181b;
+            border: 1px solid #3f3f46;
         }
     </style>
 </head>
@@ -638,64 +639,96 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // === IMPROVED FAGINDELIN G (Neat & Grouped by Dag) ===
+            // === NEW NEAT LAYOUT: 3 Boxes per Day ===
             const enrollmentContainer = document.getElementById('subject-enrollment');
-            let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Dag</th><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
+            let enrollmentHtml = '';
 
             const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
 
             sortedPools.forEach(pool => {
-                // Sort subjects alphabetically within each day
                 const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
                 
+                let subjectsHtml = '';
+                
                 sortedSubjects.forEach(subject => {
-                    const enrolled = subject.students ? subject.students.length : 0;
-                    const remaining = subject.max - enrolled;
-                    const remainingColor = remaining > 0 ? 'text-emerald-400' : 'text-red-400';
-                    
-                    enrollmentHtml += `
-                        <tr class="border-b border-zinc-800 hover:bg-zinc-800">
-                            <td class="py-3 px-4 font-medium text-emerald-400">${pool.name}</td>
-                            <td class="py-3 px-4 font-medium">${subject.name}</td>
-                            <td class="py-3 px-4 text-center">${enrolled}</td>
-                            <td class="py-3 px-4 text-center">${subject.max}</td>
-                            <td class="py-3 px-4 text-center"><span class="${remainingColor} font-medium">${remaining}</span></td>
-                        </tr>
+                    const enrolledStudents = subject.students || [];
+                    const sortedStudents = [...enrolledStudents].sort((a, b) => {
+                        const lastNameA = a.split(' ').pop();
+                        const lastNameB = b.split(' ').pop();
+                        return lastNameA.localeCompare(lastNameB);
+                    });
+
+                    let studentList = '';
+                    if (sortedStudents.length > 0) {
+                        studentList = '<ul class="list-disc list-inside text-sm text-zinc-300 mt-1">';
+                        sortedStudents.forEach(student => {
+                            studentList += `<li>${student}</li>`;
+                        });
+                        studentList += '</ul>';
+                    } else {
+                        studentList = '<p class="text-sm text-zinc-500 italic mt-1">Ingen påmeldte</p>';
+                    }
+
+                    subjectsHtml += `
+                        <div class="mb-4 border-l-4 border-emerald-600 pl-4">
+                            <div class="font-semibold text-emerald-400">${subject.name}</div>
+                            <div class="text-xs text-zinc-500 mb-1">${enrolledStudents.length} / ${subject.max} plasser</div>
+                            ${studentList}
+                        </div>
                     `;
                 });
+
+                enrollmentHtml += `
+                    <div class="day-box rounded-3xl p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-white">${pool.name}</h3>
+                            <span class="text-sm bg-zinc-800 px-3 py-1 rounded-full">${sortedSubjects.length} fag</span>
+                        </div>
+                        <div class="space-y-4">
+                            ${subjectsHtml}
+                        </div>
+                    </div>
+                `;
             });
 
-            enrollmentHtml += `</tbody></table></div>`;
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
-        // ==================== IMPROVED CSV EXPORT ====================
         function exportToCSV() {
             if (allocations.length === 0) {
                 alert("Ingen resultater å laste ned!");
                 return;
             }
 
-            let csvContent = "EduChoice - Fordelingsresultater\n";
-            csvContent += "Student,Dag,Fag,Valg\n";
+            let csvContent = "EduChoice - Fordelingsresultater\n\n";
 
-            // Sort by Dag, then by subject name
-            const sortedAllocations = [...allocations].sort((a, b) => {
-                if (a.pool !== b.pool) {
-                    return a.pool.localeCompare(b.pool);
-                }
-                return a.subject.localeCompare(b.subject);
-            });
+            const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
 
-            sortedAllocations.forEach(item => {
-                csvContent += `"${item.student}","${item.pool}","${item.subject}","${item.choice}"\n`;
+            sortedPools.forEach(pool => {
+                csvContent += `${pool.name}\n`;
+                csvContent += "Fag,Studenter\n";
+
+                const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
+
+                sortedSubjects.forEach(subject => {
+                    const enrolledStudents = subject.students || [];
+                    const sortedStudents = [...enrolledStudents].sort((a, b) => {
+                        const lastNameA = a.split(' ').pop();
+                        const lastNameB = b.split(' ').pop();
+                        return lastNameA.localeCompare(lastNameB);
+                    });
+
+                    csvContent += `"${subject.name}","${sortedStudents.join('; ')}"\n`;
+                });
+
+                csvContent += "\n";
             });
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
-            link.setAttribute("download", "EduChoice_Resultater.csv");
+            link.setAttribute("download", "EduChoice_Faginndeling.csv");
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -721,7 +754,7 @@
                 const pool = pools.find(p => p.name === poolName);
                 if (pool) {
                     pool.subjects.forEach(subject => {
-                        const selected = subject.name === alloc.subject ? 'selected' : '';
+                        const selected = subject.name === alloc.subject ? 'selected' never : '';
                         html += `<option value="${subject.name}" ${selected}>${subject.name}</option>`;
                     });
                 }
@@ -803,7 +836,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Neat Faginndeling + Improved CSV loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Neat 3-box layout loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
