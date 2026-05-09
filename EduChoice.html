@@ -109,11 +109,16 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="runMultipleSimulations()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling (100x)</span>
+                    <button onclick="runMultipleSimulations()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
                     </button>
-                    <button onclick="resetAllocations()" class="px-5 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
+                    
+                    <button onclick="exportToCSV()" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-download"></i> <span>Last ned som Excel</span>
+                    </button>
+                    
+                    <button onclick="resetAllocations()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-undo"></i>
                     </button>
                 </div>
             </div>
@@ -121,12 +126,12 @@
             <div id="allocation-summary" class="mb-6 hidden"></div>
             
             <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Studentoversikt (Alle fag per student)</h3>
+                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
                 <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
             </div>
             
             <div>
-                <h3 class="font-semibold text-xl mb-4">Faginndeling (Sortert etter Dag)</h3>
+                <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
                 <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
             </div>
         </div>
@@ -456,10 +461,9 @@
             const SIMULATIONS = 100;
             let bestScore = -Infinity;
             let bestAllocations = [];
-            let bestPools = JSON.parse(JSON.stringify(pools)); // Deep copy
+            let bestPools = JSON.parse(JSON.stringify(pools));
 
             for (let sim = 0; sim < SIMULATIONS; sim++) {
-                // Reset
                 pools.forEach(pool => {
                     pool.subjects.forEach(subject => subject.students = []);
                 });
@@ -516,7 +520,6 @@
                     });
                 });
 
-                // Calculate score with strong punishment for no placement
                 const score = (firstChoices * 10) + (secondChoices * 5) + (thirdChoices * 2) - (noPlacement * 10);
 
                 if (score > bestScore) {
@@ -526,7 +529,6 @@
                 }
             }
 
-            // Apply best result
             allocations = bestAllocations;
             pools = bestPools;
 
@@ -633,7 +635,6 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // Subject Enrollment
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Dag</th><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
@@ -659,6 +660,30 @@
 
             enrollmentHtml += `</tbody></table></div>`;
             enrollmentContainer.innerHTML = enrollmentHtml;
+        }
+
+        // ==================== EXPORT TO CSV ====================
+        function exportToCSV() {
+            if (allocations.length === 0) {
+                alert("Ingen resultater å laste ned!");
+                return;
+            }
+
+            let csvContent = "Student,Dag,Fag,Valg\n";
+
+            allocations.forEach(item => {
+                csvContent += `"${item.student}","${item.pool}","${item.subject}","${item.choice}"\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "EduChoice_Resultater.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function editStudentAllocation(studentName) {
@@ -762,7 +787,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Multiple Simulations version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Export feature added!', 'color:#22c55e');
         }
 
         window.onload = init;
