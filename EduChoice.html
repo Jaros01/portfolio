@@ -38,11 +38,9 @@
 </head>
 <body class="bg-zinc-950 text-zinc-200">
 
-    <!-- ==================== LANDING PAGE ==================== -->
+    <!-- LANDING PAGE -->
     <div id="landing-page" class="min-h-screen landing-bg flex items-center justify-center px-6">
         <div class="max-w-2xl text-center">
-            
-            <!-- Logo & Title -->
             <div class="flex justify-center mb-6">
                 <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl">
                     <i class="fa-solid fa-graduation-cap text-white text-5xl"></i>
@@ -52,7 +50,6 @@
             <h1 class="text-6xl font-bold tracking-tight mb-4">EduChoice</h1>
             <p class="text-2xl text-zinc-400 mb-12">av EduQuest</p>
 
-            <!-- What is it -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-8 text-left">
                 <h2 class="text-2xl font-semibold mb-4 flex items-center gap-x-3">
                     <i class="fa-solid fa-info-circle text-emerald-400"></i>
@@ -63,7 +60,6 @@
                 </p>
             </div>
 
-            <!-- How it works -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10 text-left">
                 <h2 class="text-2xl font-semibold mb-6 flex items-center gap-x-3">
                     <i class="fa-solid fa-play text-emerald-400"></i>
@@ -91,13 +87,12 @@
                         <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
                         <div>
                             <p class="font-medium">Kjør smart fordeling</p>
-                            <p class="text-sm text-zinc-400">Systemet kjører 100 simuleringer og velger det mest rettferdige resultatet automatisk.</p>
+                            <p class="text-sm text-zinc-400">Systemet kjører 100 simuleringer og velger det mest rettferdige resultatet.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Start Button -->
             <button onclick="startDemo()"
                     class="px-12 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-semibold rounded-3xl flex items-center justify-center gap-x-3 mx-auto big-button touch-target shadow-lg">
                 <span>Start Demo</span>
@@ -108,11 +103,10 @@
         </div>
     </div>
 
-    <!-- ==================== MAIN APP ==================== -->
+    <!-- MAIN APP -->
     <div id="main-app" class="hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             
-            <!-- Header -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div class="flex items-center gap-x-4">
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg">
@@ -130,7 +124,6 @@
                 </div>
             </div>
 
-            <!-- Navigation -->
             <div class="flex gap-x-1 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
                 <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
                     <i class="fa-solid fa-cog"></i> <span>Admin</span>
@@ -234,14 +227,12 @@
     </div>
 
     <script>
-        // ==================== LANDING PAGE ====================
         function startDemo() {
             document.getElementById('landing-page').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             initApp();
         }
 
-        // ==================== MAIN APP ====================
         let pools = [];
         let students = [];
         let allocations = [];
@@ -539,19 +530,8 @@
         }
 
         function addRandomStudents(count) {
-            const firstNames = [
-                "Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie",
-                "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea",
-                "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya",
-                "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"
-            ];
-
-            const lastNames = [
-                "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", 
-                "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", 
-                "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen",
-                "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"
-            ];
+            const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea", "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya", "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"];
+            const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen", "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"];
 
             for (let i = 0; i < count; i++) {
                 const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -870,10 +850,10 @@
         function initApp() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Demo started with "elev" terminology!', 'color:#22c55e');
+            console.log('%c[EduChoice] Allocation button fixed and working!', 'color:#22c55e');
         }
 
-        console.log('%c[EduChoice] Landing page loaded with correct Norwegian terms', 'color:#22c55e');
+        console.log('%c[EduChoice] Ready with fixed allocation button', 'color:#22c55e');
     </script>
 </body>
 </html>
