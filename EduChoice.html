@@ -6,6 +6,8 @@
     <title>EduChoice • EduQuest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
@@ -34,7 +36,6 @@
 </head>
 <body class="bg-zinc-950 text-zinc-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div class="flex items-center gap-x-4">
@@ -49,7 +50,7 @@
             
             <div class="flex items-center gap-x-2 text-sm">
                 <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
-                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 elever</div>
+                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 studenter</div>
             </div>
         </div>
 
@@ -59,7 +60,7 @@
                 <i class="fa-solid fa-cog"></i> <span>Admin</span>
             </button>
             <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                <i class="fa-solid fa-users"></i> <span>Elever</span>
+                <i class="fa-solid fa-users"></i> <span>Studenter</span>
             </button>
             <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
                 <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
@@ -86,7 +87,7 @@
         <!-- STUDENTS SECTION -->
         <div id="section-students" class="hidden">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <h2 class="text-2xl sm:text-3xl font-semibold">Legg til elevpreferanser</h2>
+                <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
                 
                 <div class="flex items-center gap-2">
                     <input id="random-count" type="number" value="10" min="1" max="200" 
@@ -103,23 +104,23 @@
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Elevnavn</label>
+                            <label class="block text-sm font-medium mb-2">Studentnavn</label>
                             <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
                         </div>
                         <div id="student-preferences-form"></div>
-                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til elevpreferanser</button>
+                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til studentpreferanser</button>
                     </div>
                 </div>
             </div>
             
             <div class="mt-8">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold">Registrerte elever (<span id="student-count">0</span>)</h3>
+                    <h3 class="font-semibold">Registrerte studenter (<span id="student-count">0</span>)</h3>
                     
                     <button onclick="removeAllStudentsWithConfirm()" 
                             class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
                         <i class="fa-solid fa-trash"></i> 
-                        <span>Fjern alle elever</span>
+                        <span>Fjern alle studenter</span>
                     </button>
                 </div>
                 <div id="students-list" class="space-y-2"></div>
@@ -135,6 +136,10 @@
                         <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
                     </button>
                     
+                    <button onclick="downloadFaginndelingPDF()" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-file-pdf"></i> <span>Last ned PDF</span>
+                    </button>
+                    
                     <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
                     </button>
@@ -144,7 +149,7 @@
             <div id="allocation-summary" class="mb-6 hidden"></div>
             
             <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Elevoversikt</h3>
+                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
                 <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
             </div>
             
@@ -342,7 +347,7 @@
         function addStudent() {
             const name = document.getElementById('student-name').value.trim();
             if (!name) {
-                alert("Skriv inn elevnavn");
+                alert("Skriv inn studentnavn");
                 return;
             }
 
@@ -383,7 +388,7 @@
             countEl.textContent = students.length;
 
             if (students.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen elever lagt til ennå</p>`;
+                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen studenter lagt til ennå</p>`;
                 return;
             }
 
@@ -434,7 +439,7 @@
         function removeAllStudentsWithConfirm() {
             if (students.length === 0) return;
             
-            if (confirm("Er du sikker på at du vil fjerne ALLE elever? Dette kan ikke angres.")) {
+            if (confirm("Er du sikker på at du vil fjerne ALLE studenter? Dette kan ikke angres.")) {
                 students = [];
                 renderStudentList();
             }
@@ -447,14 +452,25 @@
             if (count < 1) count = 1;
             if (count > 200) count = 200;
 
-            if (confirm(`Vil du legge til ${count} tilfeldige elever?`)) {
+            if (confirm(`Vil du legge til ${count} tilfeldige studenter?`)) {
                 addRandomStudents(count);
             }
         }
 
         function addRandomStudents(count) {
-            const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea", "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya", "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"];
-            const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen", "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"];
+            const firstNames = [
+                "Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie",
+                "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea",
+                "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya",
+                "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"
+            ];
+
+            const lastNames = [
+                "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", 
+                "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", 
+                "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen",
+                "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"
+            ];
 
             for (let i = 0; i < count; i++) {
                 const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -491,7 +507,7 @@
 
         function runMultipleSimulationsWithConfirm() {
             if (students.length === 0) {
-                alert("Legg til noen elever først!");
+                alert("Legg til noen studenter først!");
                 return;
             }
 
@@ -646,12 +662,12 @@
             });
 
             const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
-                const lastNameA = a.name.split(' ').pop();
-                const lastNameB = b.name.split(' ').pop();
+                const lastNameA = a.split(' ').pop();
+                const lastNameB = b.split(' ').pop();
                 return lastNameA.localeCompare(lastNameB);
             });
 
-            let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Elev</th>`;
+            let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
             
             pools.forEach(pool => {
                 html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
@@ -734,6 +750,56 @@
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
+        // ==================== PROPER PDF USING SCREENSHOT ====================
+        async function downloadFaginndelingPDF() {
+            const element = document.getElementById('subject-enrollment');
+            
+            if (!element || allocations.length === 0) {
+                alert("Ingen resultater å laste ned!");
+                return;
+            }
+
+            // Show loading state
+            const originalText = event.currentTarget ? event.currentTarget.innerHTML : '';
+            
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    backgroundColor: '#18181b',
+                    logging: false
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                const imgWidth = pdfWidth - 20;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let position = 10;
+
+                // Add title
+                pdf.setFontSize(16);
+                pdf.setFont("helvetica", "bold");
+                pdf.text("EduChoice - Faginndeling", pdfWidth / 2, 8, { align: "center" });
+
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+
+                pdf.save("EduChoice_Faginndeling.pdf");
+
+            } catch (error) {
+                alert("Kunne ikke lage PDF. Prøv igjen.");
+                console.error(error);
+            }
+        }
+
         function resetAllocationsWithConfirm() {
             if (confirm("Er du sikker på at du vil tilbakestille alle resultater?")) {
                 resetAllocations();
@@ -773,7 +839,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Stable version loaded (pre-landing page)', 'color:#22c55e');
+            console.log('%c[EduChoice] Proper PDF using screenshot method loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
