@@ -115,7 +115,6 @@
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold">Registrerte studenter (<span id="student-count">0</span>)</h3>
                     
-                    <!-- NEW: Remove all students button with confirmation -->
                     <button onclick="removeAllStudentsWithConfirm()" 
                             class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
                         <i class="fa-solid fa-trash"></i> 
@@ -239,12 +238,15 @@
         }
 
         function renamePool(poolIndex, newName) {
-            pools[poolIndex].name = newName;
+            if (!newName.trim()) return;
+            pools[poolIndex].name = newName.trim();
         }
 
         function deletePool(poolIndex) {
-            pools.splice(poolIndex, 1);
-            renderPools();
+            if (confirm("Er du sikker på at du vil slette denne dagen?")) {
+                pools.splice(poolIndex, 1);
+                renderPools();
+            }
         }
 
         function addSubjectToPool(poolIndex) {
@@ -252,13 +254,14 @@
             const nameInput = document.getElementById(`subject-name-${pool.id}`);
             const maxInput = document.getElementById(`subject-max-${pool.id}`);
 
-            if (!nameInput.value.trim()) {
+            const name = nameInput.value.trim();
+            if (!name) {
                 alert("Skriv inn fagnavn");
                 return;
             }
 
             pool.subjects.push({
-                name: nameInput.value.trim(),
+                name: name,
                 max: parseInt(maxInput.value) || 25,
                 students: []
             });
@@ -437,8 +440,11 @@
         }
 
         function addRandomStudentsWithConfirm() {
-            const countInput = document.getElementById('random-count').value;
-            const count = parseInt(countInput) || 10;
+            const countInput = document.getElementById('random-count');
+            let count = parseInt(countInput.value) || 10;
+
+            if (count < 1) count = 1;
+            if (count > 200) count = 200;
 
             if (confirm(`Vil du legge til ${count} tilfeldige studenter?`)) {
                 addRandomStudents(count);
@@ -470,9 +476,11 @@
                 pools.forEach(pool => {
                     preferences[pool.id] = {};
                     
+                    if (pool.subjects.length === 0) return;
+
                     const allSubjects = [...pool.subjects];
                     const shuffled = allSubjects.sort(() => Math.random() - 0.5);
-                    const selectedSubjects = shuffled.slice(0, 3);
+                    const selectedSubjects = shuffled.slice(0, Math.min(3, allSubjects.length));
                     
                     const ranks = [1, 2, 3].sort(() => Math.random() - 0.5);
                     
@@ -525,6 +533,8 @@
 
                     shuffled.forEach(student => {
                         const poolPrefs = student.preferences[pool.id];
+                        if (!poolPrefs || Object.keys(poolPrefs).length === 0) return;
+
                         const sortedChoices = Object.entries(poolPrefs)
                             .sort((a, b) => a[1] - b[1])
                             .map(entry => entry[0]);
@@ -773,7 +783,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] "Dag" + Confirmation popups + Removed Excel export', 'color:#22c55e');
+            console.log('%c[EduChoice] Optimized & Robust version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
