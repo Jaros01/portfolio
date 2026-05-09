@@ -6,8 +6,6 @@
     <title>EduChoice • EduQuest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
@@ -32,135 +30,218 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 16px;
         }
+        
+        .landing-bg {
+            background: linear-gradient(135deg, #18181b 0%, #27253a 100%);
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-            <div class="flex items-center gap-x-4">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg">
-                    <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">EduChoice</h1>
-                    <p class="text-sm text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
+
+    <!-- ==================== LANDING PAGE ==================== -->
+    <div id="landing-page" class="min-h-screen landing-bg flex items-center justify-center px-6">
+        <div class="max-w-2xl text-center">
+            
+            <!-- Logo & Title -->
+            <div class="flex justify-center mb-6">
+                <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl">
+                    <i class="fa-solid fa-graduation-cap text-white text-5xl"></i>
                 </div>
             </div>
             
-            <div class="flex items-center gap-x-2 text-sm">
-                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
-                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 studenter</div>
+            <h1 class="text-6xl font-bold tracking-tight mb-4">EduChoice</h1>
+            <p class="text-2xl text-zinc-400 mb-12">av EduQuest</p>
+
+            <!-- What is it -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-8 text-left">
+                <h2 class="text-2xl font-semibold mb-4 flex items-center gap-x-3">
+                    <i class="fa-solid fa-info-circle text-emerald-400"></i>
+                    Hva er EduChoice?
+                </h2>
+                <p class="text-zinc-300 leading-relaxed">
+                    EduChoice er et enkelt og smart verktøy som hjelper folkehøyskoler å fordele valgfag (valgfag) til studenter på en rettferdig måte.
+                </p>
             </div>
-        </div>
 
-        <!-- Navigation -->
-        <div class="flex gap-x-1 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
-            <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
-                <i class="fa-solid fa-cog"></i> <span>Admin</span>
-            </button>
-            <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                <i class="fa-solid fa-users"></i> <span>Studenter</span>
-            </button>
-            <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
-            </button>
-        </div>
-
-        <!-- ADMIN SECTION -->
-        <div id="section-admin">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Dager og Fag</h2>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="addRandomSubjects()" class="flex-1 sm:flex-none px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
-                    </button>
-                    <button onclick="addNewPool()" class="flex-1 sm:flex-none px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-plus"></i> <span>Ny dag</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </div>
-
-        <!-- STUDENTS SECTION -->
-        <div id="section-students" class="hidden">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
+            <!-- How it works -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10 text-left">
+                <h2 class="text-2xl font-semibold mb-6 flex items-center gap-x-3">
+                    <i class="fa-solid fa-play text-emerald-400"></i>
+                    Slik fungerer demoen
+                </h2>
                 
-                <div class="flex items-center gap-2">
-                    <input id="random-count" type="number" value="10" min="1" max="200" 
-                           class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-center text-lg touch-target">
-                    <button onclick="addRandomStudentsWithConfirm()" 
-                            class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-dice"></i> 
-                        <span>Legg til tilfeldige</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="max-w-2xl">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
-                    <div class="space-y-6">
+                <div class="space-y-5">
+                    <div class="flex gap-4">
+                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Studentnavn</label>
-                            <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
+                            <p class="font-medium">Legg til dager og fag</p>
+                            <p class="text-sm text-zinc-400">Opprett dager (Mandag, Tirsdag, Onsdag) og legg til valgfag med begrenset antall plasser.</p>
                         </div>
-                        <div id="student-preferences-form"></div>
-                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til studentpreferanser</button>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</div>
+                        <div>
+                            <p class="font-medium">Legg til studenter og preferanser</p>
+                            <p class="text-sm text-zinc-400">Studentene rangerer sine 1., 2. og 3. valg for hvert fag.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
+                        <div>
+                            <p class="font-medium">Kjør smart fordeling</p>
+                            <p class="text-sm text-zinc-400">Systemet kjører 100 simuleringer og velger det mest rettferdige resultatet automatisk.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-8">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold">Registrerte studenter (<span id="student-count">0</span>)</h3>
-                    
-                    <button onclick="removeAllStudentsWithConfirm()" 
-                            class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-trash"></i> 
-                        <span>Fjern alle studenter</span>
-                    </button>
-                </div>
-                <div id="students-list" class="space-y-2"></div>
-            </div>
-        </div>
 
-        <!-- RESULTS SECTION -->
-        <div id="section-results" class="hidden">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="runMultipleSimulationsWithConfirm()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
-                    </button>
-                    
-                    <button onclick="downloadFaginndelingPDF()" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-file-pdf"></i> <span>Last ned PDF</span>
-                    </button>
-                    
-                    <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
-                    </button>
+            <!-- Start Button -->
+            <button onclick="startDemo()"
+                    class="px-12 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-semibold rounded-3xl flex items-center justify-center gap-x-3 mx-auto big-button touch-target shadow-lg">
+                <span>Start Demo</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            
+            <p class="text-xs text-zinc-500 mt-6">Dette er en fungerende demo • Ingen data lagres</p>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP ==================== -->
+    <div id="main-app" class="hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div class="flex items-center gap-x-4">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">EduChoice</h1>
+                        <p class="text-sm text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-x-2 text-sm">
+                    <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
+                    <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 studenter</div>
                 </div>
             </div>
-            
-            <div id="allocation-summary" class="mb-6 hidden"></div>
-            
-            <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
-                <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
+
+            <!-- Navigation -->
+            <div class="flex gap-x-1 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
+                <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-cog"></i> <span>Admin</span>
+                </button>
+                <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
+                    <i class="fa-solid fa-users"></i> <span>Studenter</span>
+                </button>
+                <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
+                    <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
+                </button>
             </div>
-            
-            <div>
-                <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
-                <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
+
+            <!-- ADMIN SECTION -->
+            <div id="section-admin">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                    <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Dager og Fag</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="addRandomSubjects()" class="flex-1 sm:flex-none px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
+                            <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
+                        </button>
+                        <button onclick="addNewPool()" class="flex-1 sm:flex-none px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
+                            <i class="fa-solid fa-plus"></i> <span>Ny dag</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- STUDENTS SECTION -->
+            <div id="section-students" class="hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                    <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
+                    
+                    <div class="flex items-center gap-2">
+                        <input id="random-count" type="number" value="10" min="1" max="200" 
+                               class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-center text-lg touch-target">
+                        <button onclick="addRandomStudentsWithConfirm()" 
+                                class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                            <i class="fa-solid fa-dice"></i> 
+                            <span>Legg til tilfeldige</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="max-w-2xl">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Studentnavn</label>
+                                <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
+                            </div>
+                            <div id="student-preferences-form"></div>
+                            <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til studentpreferanser</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold">Registrerte studenter (<span id="student-count">0</span>)</h3>
+                        
+                        <button onclick="removeAllStudentsWithConfirm()" 
+                                class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
+                            <i class="fa-solid fa-trash"></i> 
+                            <span>Fjern alle studenter</span>
+                        </button>
+                    </div>
+                    <div id="students-list" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <!-- RESULTS SECTION -->
+            <div id="section-results" class="hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                    <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="runMultipleSimulationsWithConfirm()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                            <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
+                        </button>
+                        
+                        <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
+                            <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="allocation-summary" class="mb-6 hidden"></div>
+                
+                <div class="mb-8">
+                    <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
+                    <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
+                    <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // ==================== LANDING PAGE ====================
+        function startDemo() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            initApp();
+        }
+
+        // ==================== MAIN APP ====================
         let pools = [];
         let students = [];
         let allocations = [];
@@ -750,56 +831,6 @@
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
-        // ==================== PROPER PDF USING SCREENSHOT ====================
-        async function downloadFaginndelingPDF() {
-            const element = document.getElementById('subject-enrollment');
-            
-            if (!element || allocations.length === 0) {
-                alert("Ingen resultater å laste ned!");
-                return;
-            }
-
-            // Show loading state
-            const originalText = event.currentTarget ? event.currentTarget.innerHTML : '';
-            
-            try {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    backgroundColor: '#18181b',
-                    logging: false
-                });
-
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-                const imgWidth = pdfWidth - 20;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                let position = 10;
-
-                // Add title
-                pdf.setFontSize(16);
-                pdf.setFont("helvetica", "bold");
-                pdf.text("EduChoice - Faginndeling", pdfWidth / 2, 8, { align: "center" });
-
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-
-                pdf.save("EduChoice_Faginndeling.pdf");
-
-            } catch (error) {
-                alert("Kunne ikke lage PDF. Prøv igjen.");
-                console.error(error);
-            }
-        }
-
         function resetAllocationsWithConfirm() {
             if (confirm("Er du sikker på at du vil tilbakestille alle resultater?")) {
                 resetAllocations();
@@ -836,13 +867,14 @@
             }
         }
 
-        function init() {
+        function initApp() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Proper PDF using screenshot method loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Demo started from landing page!', 'color:#22c55e');
         }
 
-        window.onload = init;
+        // Start with landing page
+        console.log('%c[EduChoice] Landing page loaded', 'color:#22c55e');
     </script>
 </body>
 </html>
