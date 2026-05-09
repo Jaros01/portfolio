@@ -9,22 +9,22 @@
     <style>
         .pool-card { transition: all 0.2s ease; }
         .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
-        
+       
         @media (max-width: 640px) {
             .nav-tab { padding-left: 0.75rem; padding-right: 0.75rem; font-size: 0.75rem; }
             .big-button { padding-top: 1rem; padding-bottom: 1rem; font-size: 1rem; }
         }
-        
+       
         .touch-target {
             min-height: 48px;
             min-width: 48px;
         }
-        
+       
         .day-box {
             background-color: #18181b;
             border: 1px solid #3f3f46;
         }
-        
+       
         .subject-grid {
             display: flex;
             flex-wrap: wrap;
@@ -45,10 +45,10 @@
                     <p class="text-sm text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
                 </div>
             </div>
-            
+           
             <div class="flex items-center gap-x-2 text-sm">
                 <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
-                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 studenter</div>
+                <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 elever</div>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
                 <i class="fa-solid fa-cog"></i> <span>Admin</span>
             </button>
             <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                <i class="fa-solid fa-users"></i> <span>Studenter</span>
+                <i class="fa-solid fa-users"></i> <span>Elever</span>
             </button>
             <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
                 <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
@@ -78,47 +78,47 @@
                     </button>
                 </div>
             </div>
-            
+           
             <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- STUDENTS SECTION -->
         <div id="section-students" class="hidden">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
-                
+                <h2 class="text-2xl sm:text-3xl font-semibold">Legg til elevpreferanser</h2>
+               
                 <div class="flex items-center gap-2">
-                    <input id="random-count" type="number" value="10" min="1" max="200" 
+                    <input id="random-count" type="number" value="10" min="1" max="200"
                            class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-center text-lg touch-target">
-                    <button onclick="addRandomStudentsWithConfirm()" 
+                    <button onclick="addRandomStudentsWithConfirm()"
                             class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-dice"></i> 
+                        <i class="fa-solid fa-dice"></i>
                         <span>Legg til tilfeldige</span>
                     </button>
                 </div>
             </div>
-            
+           
             <div class="max-w-2xl">
                 <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Studentnavn</label>
+                            <label class="block text-sm font-medium mb-2">Elevnavn</label>
                             <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
                         </div>
                         <div id="student-preferences-form"></div>
-                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til studentpreferanser</button>
+                        <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til elevpreferanser</button>
                     </div>
                 </div>
             </div>
-            
+           
             <div class="mt-8">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold">Registrerte studenter (<span id="student-count">0</span>)</h3>
-                    
-                    <button onclick="removeAllStudentsWithConfirm()" 
+                    <h3 class="font-semibold">Registrerte elever (<span id="student-count">0</span>)</h3>
+                   
+                    <button onclick="removeAllStudentsWithConfirm()"
                             class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                        <i class="fa-solid fa-trash"></i> 
-                        <span>Fjern alle studenter</span>
+                        <i class="fa-solid fa-trash"></i>
+                        <span>Fjern alle elever</span>
                     </button>
                 </div>
                 <div id="students-list" class="space-y-2"></div>
@@ -133,20 +133,20 @@
                     <button onclick="runMultipleSimulationsWithConfirm()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
                     </button>
-                    
+                   
                     <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
                         <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
                     </button>
                 </div>
             </div>
-            
+           
             <div id="allocation-summary" class="mb-6 hidden"></div>
-            
+           
             <div class="mb-8">
-                <h3 class="font-semibold text-xl mb-4">Studentoversikt</h3>
+                <h3 class="font-semibold text-xl mb-4">Elevoversikt</h3>
                 <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
             </div>
-            
+           
             <div>
                 <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
                 <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
@@ -177,17 +177,17 @@
 
                 let html = `
                     <div class="flex justify-between items-center mb-4">
-                        <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)" 
+                        <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)"
                                class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1 w-32 sm:w-40">
                         <button onclick="deletePool(${poolIndex})" class="text-red-400 hover:text-red-500 touch-target">
                             <i class="fa-solid fa-times text-lg"></i>
                         </button>
                     </div>
-                    
+                   
                     <div class="min-h-[160px] space-y-2 mb-4" id="pool-${pool.id}-subjects"></div>
-                    
+                   
                     <div class="flex gap-2">
-                        <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-sm touch-target" 
+                        <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-sm touch-target"
                                onkeydown="if (event.key === 'Enter') addSubjectToPool(${poolIndex})">
                         <input type="number" id="subject-max-${pool.id}" value="25" class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-3 text-sm text-center touch-target">
                         <button onclick="addSubjectToPool(${poolIndex})" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm touch-target">Legg til</button>
@@ -278,18 +278,18 @@
 
         function addRandomSubjects() {
             const subjectNames = [
-                "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring", 
-                "Yoga & Meditasjon", "Matlaging", "Kreativ Skriving", "Filmproduksjon", 
+                "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring",
+                "Yoga & Meditasjon", "Matlaging", "Kreativ Skriving", "Filmproduksjon",
                 "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill"
             ];
 
             pools.forEach(pool => {
                 const numberOfSubjects = Math.floor(Math.random() * 4) + 3;
-                
+               
                 for (let i = 0; i < numberOfSubjects; i++) {
                     const randomName = subjectNames[Math.floor(Math.random() * subjectNames.length)];
                     const randomSpots = Math.floor(Math.random() * 17) + 8;
-                    
+                   
                     if (!pool.subjects.some(s => s.name === randomName)) {
                         pool.subjects.push({
                             name: randomName,
@@ -341,7 +341,7 @@
         function addStudent() {
             const name = document.getElementById('student-name').value.trim();
             if (!name) {
-                alert("Skriv inn studentnavn");
+                alert("Skriv inn elevnavn");
                 return;
             }
 
@@ -382,7 +382,7 @@
             countEl.textContent = students.length;
 
             if (students.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen studenter lagt til ennå</p>`;
+                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen elever lagt til ennå</p>`;
                 return;
             }
 
@@ -394,13 +394,13 @@
 
             sortedStudents.forEach(student => {
                 let prefHtml = '';
-                
+               
                 Object.keys(student.preferences).forEach(poolId => {
                     const pool = pools.find(p => p.id == poolId);
                     if (pool) {
                         const prefs = student.preferences[poolId];
                         const sortedPrefs = Object.entries(prefs).sort((a, b) => a[1] - b[1]);
-                        
+                       
                         prefHtml += `<div class="mt-1 text-xs"><strong>${pool.name}:</strong> `;
                         sortedPrefs.forEach(([subject, rank], i) => {
                             prefHtml += `${rank}. ${subject}`;
@@ -432,8 +432,8 @@
 
         function removeAllStudentsWithConfirm() {
             if (students.length === 0) return;
-            
-            if (confirm("Er du sikker på at du vil fjerne ALLE studenter? Dette kan ikke angres.")) {
+           
+            if (confirm("Er du sikker på at du vil fjerne ALLE elever? Dette kan ikke angres.")) {
                 students = [];
                 renderStudentList();
             }
@@ -446,7 +446,7 @@
             if (count < 1) count = 1;
             if (count > 200) count = 200;
 
-            if (confirm(`Vil du legge til ${count} tilfeldige studenter?`)) {
+            if (confirm(`Vil du legge til ${count} tilfeldige elever?`)) {
                 addRandomStudents(count);
             }
         }
@@ -460,8 +460,8 @@
             ];
 
             const lastNames = [
-                "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", 
-                "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", 
+                "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen",
+                "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen",
                 "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen",
                 "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"
             ];
@@ -470,20 +470,20 @@
                 const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
                 const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
                 const name = `${firstName} ${lastName}`;
-                
+               
                 const preferences = {};
-                
+               
                 pools.forEach(pool => {
                     preferences[pool.id] = {};
-                    
+                   
                     if (pool.subjects.length === 0) return;
 
                     const allSubjects = [...pool.subjects];
                     const shuffled = allSubjects.sort(() => Math.random() - 0.5);
                     const selectedSubjects = shuffled.slice(0, Math.min(3, allSubjects.length));
-                    
+                   
                     const ranks = [1, 2, 3].sort(() => Math.random() - 0.5);
-                    
+                   
                     selectedSubjects.forEach((subject, i) => {
                         preferences[pool.id][subject.name] = ranks[i];
                     });
@@ -501,7 +501,7 @@
 
         function runMultipleSimulationsWithConfirm() {
             if (students.length === 0) {
-                alert("Legg til noen studenter først!");
+                alert("Legg til noen elever først!");
                 return;
             }
 
@@ -525,7 +525,7 @@
                 let firstChoices = 0, secondChoices = 0, thirdChoices = 0, noPlacement = 0;
 
                 pools.forEach(pool => {
-                    const studentsInPool = students.filter(student => 
+                    const studentsInPool = students.filter(student =>
                         student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
                     );
 
@@ -557,7 +557,7 @@
                                 if (poolPrefs[choice] === 1) firstChoices++;
                                 else if (poolPrefs[choice] === 2) secondChoices++;
                                 else if (poolPrefs[choice] === 3) thirdChoices++;
-                                
+                               
                                 break;
                             }
                         }
@@ -636,7 +636,7 @@
 
         function renderResults() {
             const overviewContainer = document.getElementById('student-overview');
-            
+           
             if (allocations.length === 0) {
                 overviewContainer.innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
                 document.getElementById('subject-enrollment').innerHTML = '';
@@ -644,7 +644,7 @@
             }
 
             const studentResults = {};
-            
+           
             allocations.forEach(item => {
                 if (!studentResults[item.student]) {
                     studentResults[item.student] = {};
@@ -656,23 +656,23 @@
             });
 
             const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
-                const lastNameA = a.split(' ').pop();
-                const lastNameB = b.split(' ').pop();
+                const lastNameA = a.name.split(' ').pop();
+                const lastNameB = b.name.split(' ').pop();
                 return lastNameA.localeCompare(lastNameB);
             });
 
-            let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Student</th>`;
-            
+            let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Elev</th>`;
+           
             pools.forEach(pool => {
                 html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
             });
-            
+           
             html += `<th class="py-3 px-4 text-center">Handlinger</th></tr></thead><tbody>`;
 
             sortedStudentNames.forEach(studentName => {
                 html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800">`;
                 html += `<td class="py-3 px-4 font-medium">${studentName}</td>`;
-                
+               
                 pools.forEach(pool => {
                     const result = studentResults[studentName][pool.name];
                     if (result) {
@@ -682,7 +682,7 @@
                         html += `<td class="py-3 px-4 text-zinc-500">—</td>`;
                     }
                 });
-                
+               
                 html += `<td class="py-3 px-4 text-center"><button onclick="editStudentAllocation('${studentName}')" class="text-indigo-400 hover:text-indigo-300 text-sm px-3 py-1">Endre</button></td>`;
                 html += `</tr>`;
             });
@@ -697,9 +697,9 @@
 
             sortedPools.forEach(pool => {
                 const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
-                
+               
                 let subjectsHtml = `<div class="subject-grid">`;
-                
+               
                 sortedSubjects.forEach(subject => {
                     const enrolledStudents = subject.students || [];
                     const sortedStudents = [...enrolledStudents].sort((a, b) => {
@@ -783,7 +783,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Optimized & Robust version loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Improved version with "elev" terminology loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
