@@ -136,7 +136,7 @@
             </div>
             
             <div>
-                <h3 class="font-semibold text-xl mb-4">Faginndeling (Sortert etter Dag → Fag)</h3>
+                <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
                 <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
             </div>
         </div>
@@ -639,7 +639,7 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // === NEW NEAT LAYOUT: 3 Boxes per Day ===
+            // === NEAT 3-BOX LAYOUT ===
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = '';
 
@@ -754,7 +754,7 @@
                 const pool = pools.find(p => p.name === poolName);
                 if (pool) {
                     pool.subjects.forEach(subject => {
-                        const selected = subject.name === alloc.subject ? 'selected' never : '';
+                        const selected = subject.name === alloc.subject ? 'selected' : '';
                         html += `<option value="${subject.name}" ${selected}>${subject.name}</option>`;
                     });
                 }
@@ -836,7 +836,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Neat 3-box layout loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Fixed version loaded successfully!', 'color:#22c55e');
         }
 
         window.onload = init;
