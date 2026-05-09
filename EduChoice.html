@@ -639,7 +639,7 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // === NEAT 3-BOX LAYOUT ===
+            // === 3-BOX LAYOUT ===
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = '';
 
@@ -836,7 +836,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Fixed version loaded successfully!', 'color:#22c55e');
+            console.log('%c[EduChoice] Clean 3-box version loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
