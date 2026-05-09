@@ -19,6 +19,10 @@
             min-height: 48px;
             min-width: 48px;
         }
+        
+        .print-friendly {
+            font-family: system-ui, -apple-system, sans-serif;
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200">
@@ -131,7 +135,7 @@
             </div>
             
             <div>
-                <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
+                <h3 class="font-semibold text-xl mb-4">Faginndeling (Sortert etter Dag → Fag)</h3>
                 <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
             </div>
         </div>
@@ -451,7 +455,6 @@
             renderStudentList();
         }
 
-        // ==================== MULTIPLE SIMULATIONS ====================
         function runMultipleSimulations() {
             if (students.length === 0) {
                 alert("Legg til noen studenter først!");
@@ -635,13 +638,17 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
+            // === IMPROVED FAGINDELIN G (Neat & Grouped by Dag) ===
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Dag</th><th class="py-3 px-4 text-left">Fag</th><th class="py-3 px-4 text-center">Påmeldt</th><th class="py-3 px-4 text-center">Maks</th><th class="py-3 px-4 text-center">Ledig</th></tr></thead><tbody>`;
 
             const sortedPools = [...pools].sort((a, b) => a.name.localeCompare(b.name));
 
             sortedPools.forEach(pool => {
-                pool.subjects.forEach(subject => {
+                // Sort subjects alphabetically within each day
+                const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
+                
+                sortedSubjects.forEach(subject => {
                     const enrolled = subject.students ? subject.students.length : 0;
                     const remaining = subject.max - enrolled;
                     const remainingColor = remaining > 0 ? 'text-emerald-400' : 'text-red-400';
@@ -662,16 +669,25 @@
             enrollmentContainer.innerHTML = enrollmentHtml;
         }
 
-        // ==================== EXPORT TO CSV ====================
+        // ==================== IMPROVED CSV EXPORT ====================
         function exportToCSV() {
             if (allocations.length === 0) {
                 alert("Ingen resultater å laste ned!");
                 return;
             }
 
-            let csvContent = "Student,Dag,Fag,Valg\n";
+            let csvContent = "EduChoice - Fordelingsresultater\n";
+            csvContent += "Student,Dag,Fag,Valg\n";
 
-            allocations.forEach(item => {
+            // Sort by Dag, then by subject name
+            const sortedAllocations = [...allocations].sort((a, b) => {
+                if (a.pool !== b.pool) {
+                    return a.pool.localeCompare(b.pool);
+                }
+                return a.subject.localeCompare(b.subject);
+            });
+
+            sortedAllocations.forEach(item => {
                 csvContent += `"${item.student}","${item.pool}","${item.subject}","${item.choice}"\n`;
             });
 
@@ -787,7 +803,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Export feature added!', 'color:#22c55e');
+            console.log('%c[EduChoice] Neat Faginndeling + Improved CSV loaded!', 'color:#22c55e');
         }
 
         window.onload = init;
