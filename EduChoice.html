@@ -86,12 +86,15 @@
         <div id="section-students" class="hidden">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 class="text-2xl sm:text-3xl font-semibold">Legg til studentpreferanser</h2>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="addRandomStudentsWithConfirm()" class="flex-1 sm:flex-none px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-dice"></i> <span>Legg til 10 tilfeldige studenter</span>
-                    </button>
-                    <button onclick="removeAllStudents()" class="flex-1 sm:flex-none px-5 py-3 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
-                        <i class="fa-solid fa-trash"></i> <span>Fjern alle studenter</span>
+                
+                <!-- NEW: Number input for random students -->
+                <div class="flex items-center gap-2">
+                    <input id="random-count" type="number" value="10" min="1" max="200" 
+                           class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-center text-lg touch-target">
+                    <button onclick="addRandomStudentsWithConfirm()" 
+                            class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
+                        <i class="fa-solid fa-dice"></i> 
+                        <span>Legg til tilfeldige</span>
                     </button>
                 </div>
             </div>
@@ -427,24 +430,41 @@
         }
 
         function addRandomStudentsWithConfirm() {
-            if (confirm("Vil du legge til 10 tilfeldige studenter?")) {
-                addRandomStudents(10);
+            const countInput = document.getElementById('random-count').value;
+            const count = parseInt(countInput) || 10;
+
+            if (confirm(`Vil du legge til ${count} tilfeldige studenter?`)) {
+                addRandomStudents(count);
             }
         }
 
         function addRandomStudents(count) {
-            const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias"];
-            const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide"];
+            // Expanded name lists for more variety
+            const firstNames = [
+                "Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie",
+                "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea",
+                "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya",
+                "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"
+            ];
+
+            const lastNames = [
+                "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", 
+                "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", 
+                "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen",
+                "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"
+            ];
 
             for (let i = 0; i < count; i++) {
-                const name = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+                const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const name = `${firstName} ${lastName}`;
                 
                 const preferences = {};
                 
                 pools.forEach(pool => {
                     preferences[pool.id] = {};
                     
-                    // Pick 3 random subjects from all available subjects
+                    // Pick 3 random subjects from all available
                     const allSubjects = [...pool.subjects];
                     const shuffled = allSubjects.sort(() => Math.random() - 0.5);
                     const selectedSubjects = shuffled.slice(0, 3);
@@ -649,7 +669,7 @@
             html += `</tbody></table></div>`;
             overviewContainer.innerHTML = html;
 
-            // === IMPROVED HORIZONTAL SUBJECT LAYOUT ===
+            // Horizontal subject layout
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = '';
 
@@ -846,7 +866,7 @@
         function init() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Fixed version with horizontal layout loaded!', 'color:#22c55e');
+            console.log('%c[EduChoice] Updated with custom number input + varied names!', 'color:#22c55e');
         }
 
         window.onload = init;
