@@ -19,19 +19,6 @@
         font-weight: 600;
       }
 
-      @media (max-width: 640px) {
-        .nav-tab {
-          padding-left: 0.75rem;
-          padding-right: 0.75rem;
-          font-size: 0.75rem;
-        }
-        .big-button {
-          padding-top: 1rem;
-          padding-bottom: 1rem;
-          font-size: 1rem;
-        }
-      }
-
       .touch-target {
         min-height: 48px;
         min-width: 48px;
@@ -40,12 +27,6 @@
       .day-box {
         background-color: #18181b;
         border: 1px solid #3f3f46;
-      }
-
-      .subject-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
       }
 
       .landing-bg {
@@ -58,6 +39,19 @@
 
       .success-toast {
         animation: slideUp 0.3s ease-out;
+      }
+
+      .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+      }
+
+      @media (max-width: 640px) {
+        .subject-grid {
+          grid-template-columns: 1fr !important;
+          gap: 16px !important;
+        }
       }
     </style>
   </head>
@@ -441,13 +435,25 @@
       </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast + Undo Button -->
     <div
-      id="toast"
-      class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-x-3 z-50"
+      id="toast-container"
+      class="hidden fixed bottom-6 right-6 z-50 flex items-center gap-x-3"
     >
-      <i class="fa-solid fa-check-circle"></i>
-      <span id="toast-message"></span>
+      <div
+        class="bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-x-3"
+      >
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-message"></span>
+      </div>
+      <button
+        id="undo-btn"
+        onclick="performUndo()"
+        class="bg-white text-zinc-950 px-4 py-2 rounded-2xl font-semibold text-sm hover:bg-zinc-100 flex items-center gap-x-2 shadow-xl"
+      >
+        <i class="fa-solid fa-undo"></i>
+        <span>Angre</span>
+      </button>
     </div>
 
     <script>
@@ -456,6 +462,7 @@
       let allocations = [];
       let currentEditingStudent = null;
       let lastAction = null;
+      let undoTimeout = null;
 
       function startDemo() {
         document.getElementById("landing-page").classList.add("hidden");
@@ -469,17 +476,38 @@
         }, 800);
       }
 
-      function showToast(message) {
-        const toast = document.getElementById("toast");
+      function showToast(message, showUndo = true) {
+        const container = document.getElementById("toast-container");
         const msg = document.getElementById("toast-message");
-        msg.textContent = message;
-        toast.classList.remove("hidden");
-        toast.classList.add("flex");
+        const undoBtn = document.getElementById("undo-btn");
 
-        setTimeout(() => {
-          toast.classList.remove("flex");
-          toast.classList.add("hidden");
-        }, 2000);
+        msg.textContent = message;
+        container.classList.remove("hidden");
+        container.classList.add("flex");
+
+        if (showUndo && lastAction) {
+          undoBtn.style.display = "flex";
+        } else {
+          undoBtn.style.display = "none";
+        }
+
+        // Auto-hide after 4 seconds
+        if (undoTimeout) clearTimeout(undoTimeout);
+        undoTimeout = setTimeout(() => {
+          container.classList.remove("flex");
+          container.classList.add("hidden");
+        }, 4000);
+      }
+
+      function performUndo() {
+        if (lastAction) {
+          lastAction();
+          lastAction = null;
+          const container = document.getElementById("toast-container");
+          container.classList.remove("flex");
+          container.classList.add("hidden");
+          showToast("Handling angret", false);
+        }
       }
 
       // Keyboard shortcut for undo (Ctrl+Z / Cmd+Z)
@@ -487,9 +515,7 @@
         if ((e.ctrlKey || e.metaKey) && e.key === "z") {
           e.preventDefault();
           if (lastAction) {
-            lastAction();
-            lastAction = null;
-            showToast("Handling angret");
+            performUndo();
           }
         }
       });
@@ -520,7 +546,7 @@
         ];
 
         renderPools();
-        showToast("Demo-data lastet inn automatisk");
+        showToast("Demo-data lastet inn automatisk", false);
       }
 
       function renderPools() {
@@ -595,7 +621,7 @@
           pools = JSON.parse(previousState);
           renderPools();
         };
-        showToast("Dag lagt til (Ctrl+Z for å angre)");
+        showToast("Dag lagt til");
       }
 
       function renamePool(poolIndex, newName) {
@@ -607,7 +633,7 @@
           pools[poolIndex].name = previousName;
           renderPools();
         };
-        showToast("Navn endret (Ctrl+Z for å angre)");
+        showToast("Navn endret");
       }
 
       function deletePool(poolIndex) {
@@ -619,7 +645,7 @@
           pools = JSON.parse(previousState);
           renderPools();
         };
-        showToast("Dag slettet (Ctrl+Z for å angre)");
+        showToast("Dag slettet");
       }
 
       function addSubjectToPool(poolIndex) {
@@ -647,7 +673,7 @@
           pools = JSON.parse(previousState);
           renderPools();
         };
-        showToast("Fag lagt til (Ctrl+Z for å angre)");
+        showToast("Fag lagt til");
       }
 
       function removeSubject(poolIndex, subjectIndex) {
@@ -659,7 +685,7 @@
           pools = JSON.parse(previousState);
           renderPools();
         };
-        showToast("Fag slettet (Ctrl+Z for å angre)");
+        showToast("Fag slettet");
       }
 
       function addRandomSubjects() {
@@ -718,7 +744,7 @@
           pools = JSON.parse(previousState);
           renderPools();
         };
-        showToast(`${totalAdded} fag lagt til (Ctrl+Z for å angre)`);
+        showToast(`${totalAdded} fag lagt til`);
       }
 
       function renderStudentForm() {
@@ -782,7 +808,7 @@
         });
         document.getElementById("student-name").value = "";
         renderStudentList();
-        showToast("Elev lagt til (Ctrl+Z for å angre)");
+        showToast("Elev lagt til");
         document.getElementById("student-name").focus();
 
         lastAction = () => {
@@ -849,7 +875,7 @@
           students = JSON.parse(previousState);
           renderStudentList();
         };
-        showToast("Elev fjernet (Ctrl+Z for å angre)");
+        showToast("Elev fjernet");
       }
 
       function removeAllStudents() {
@@ -861,7 +887,7 @@
           students = JSON.parse(previousState);
           renderStudentList();
         };
-        showToast("Alle elever fjernet (Ctrl+Z for å angre)");
+        showToast("Alle elever fjernet");
       }
 
       function addRandomStudentsWithConfirm() {
@@ -877,7 +903,7 @@
           students = JSON.parse(previousState);
           renderStudentList();
         };
-        showToast(`${count} elever lagt til (Ctrl+Z for å angre)`);
+        showToast(`${count} elever lagt til`);
       }
 
       function addRandomStudents(count) {
@@ -1010,7 +1036,7 @@
           pools = state.pools;
           renderResults();
         };
-        showToast("Fordeling kjørt (Ctrl+Z for å angre)");
+        showToast("Fordeling kjørt");
       }
 
       function runMultipleSimulations() {
@@ -1346,7 +1372,7 @@
           allocations = JSON.parse(previousState);
           renderResults();
         };
-        showToast("Fordeling endret (Ctrl+Z for å angre)");
+        showToast("Fordeling endret");
       }
 
       function closeEditModal() {
@@ -1372,7 +1398,7 @@
           pools = state.pools;
           renderResults();
         };
-        showToast("Resultater tilbakestilt (Ctrl+Z for å angre)");
+        showToast("Resultater tilbakestilt");
       }
 
       function showSection(section) {
@@ -1398,7 +1424,7 @@
       function initApp() {
         initDefaultPools();
         renderPools();
-        console.log("%c[EduChoice] v10 ready", "color:#22c55e");
+        console.log("%c[EduChoice] v12 - Mobile undo ready", "color:#22c55e");
       }
 
       console.log("%c[EduChoice] Ready", "color:#22c55e");
