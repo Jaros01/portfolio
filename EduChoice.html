@@ -53,6 +53,30 @@
           gap: 16px !important;
         }
       }
+
+      .pref-btn {
+        transition: all 0.1s ease;
+        font-weight: 600;
+      }
+
+      .pref-btn.active-1 {
+        background-color: #10b981;
+        color: white;
+      }
+      .pref-btn.active-2 {
+        background-color: #fbbf24;
+        color: #1f2937;
+      }
+      .pref-btn.active-3 {
+        background-color: #fb923c;
+        color: white;
+      }
+
+      .pref-btn.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
     </style>
   </head>
   <body class="bg-zinc-950 text-zinc-200">
@@ -117,7 +141,8 @@
               <div>
                 <p class="font-medium">Legg til elever og preferanser</p>
                 <p class="text-sm text-zinc-400">
-                  Elevene rangerer sine 1., 2. og 3. valg for hvert fag.
+                  Klikk på fagene for å velge 1., 2. eller 3. valg. Kun én av
+                  hver per dag.
                 </p>
               </div>
             </div>
@@ -268,7 +293,7 @@
             class="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 mb-6 text-sm text-zinc-300"
           >
             <strong>Slik bruker du Elever:</strong> Legg til elever og deres 1.,
-            2. og 3. valg. Bruk "Legg til tilfeldige elever" for å teste raskt.
+            2. og 3. valg. Kun én av hver per dag.
           </div>
 
           <div
@@ -312,7 +337,9 @@
                     onkeydown="if (event.key === 'Enter') addStudent()"
                   />
                 </div>
+
                 <div id="student-preferences-form"></div>
+
                 <button
                   onclick="addStudent()"
                   class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target"
@@ -463,6 +490,7 @@
       let currentEditingStudent = null;
       let lastAction = null;
       let undoTimeout = null;
+      let studentPreferences = {};
 
       function startDemo() {
         document.getElementById("landing-page").classList.add("hidden");
@@ -491,7 +519,6 @@
           undoBtn.style.display = "none";
         }
 
-        // Auto-hide after 4 seconds
         if (undoTimeout) clearTimeout(undoTimeout);
         undoTimeout = setTimeout(() => {
           container.classList.remove("flex");
@@ -510,7 +537,6 @@
         }
       }
 
-      // Keyboard shortcut for undo (Ctrl+Z / Cmd+Z)
       document.addEventListener("keydown", function (e) {
         if ((e.ctrlKey || e.metaKey) && e.key === "z") {
           e.preventDefault();
@@ -750,29 +776,128 @@
       function renderStudentForm() {
         const container = document.getElementById("student-preferences-form");
         container.innerHTML = "";
+        studentPreferences = {};
+
         if (pools.length === 0) {
           container.innerHTML = `<p class="text-zinc-500">Ingen pools lagt til ennå.</p>`;
           return;
         }
+
         pools.forEach((pool) => {
           if (pool.subjects.length === 0) return;
+
           let html = `<div class="mb-6">
-                    <div class="font-semibold mb-3 text-emerald-400">${pool.name}</div>`;
+                    <div class="font-semibold mb-3 text-emerald-400">${pool.name}</div>
+                    <div class="space-y-2">`;
+
           pool.subjects.forEach((subject, index) => {
             html += `
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="flex-1 text-sm">${subject.name}</div>
-                            <select id="pref-${pool.id}-${index}" class="bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-sm w-28 touch-target">
-                                <option value="">--</option>
-                                <option value="1">1. valg</option>
-                                <option value="2">2. valg</option>
-                                <option value="3">3. valg</option>
-                            </select>
+                        <div class="flex items-center justify-between bg-zinc-800 rounded-2xl px-4 py-3">
+                            <span class="text-sm">${subject.name}</span>
+                            <div class="flex gap-1">
+                                <button onclick="setPreference(${pool.id}, ${index}, 1)" 
+                                        class="pref-btn px-3 py-1 text-xs rounded-xl border border-emerald-600 text-emerald-400 hover:bg-emerald-600 hover:text-white"
+                                        id="pref-btn-${pool.id}-${index}-1">1.</button>
+                                <button onclick="setPreference(${pool.id}, ${index}, 2)" 
+                                        class="pref-btn px-3 py-1 text-xs rounded-xl border border-yellow-600 text-yellow-400 hover:bg-yellow-600 hover:text-zinc-900"
+                                        id="pref-btn-${pool.id}-${index}-2">2.</button>
+                                <button onclick="setPreference(${pool.id}, ${index}, 3)" 
+                                        class="pref-btn px-3 py-1 text-xs rounded-xl border border-orange-600 text-orange-400 hover:bg-orange-600 hover:text-white"
+                                        id="pref-btn-${pool.id}-${index}-3">3.</button>
+                            </div>
                         </div>
                     `;
           });
-          html += `</div>`;
+
+          html += `</div></div>`;
           container.innerHTML += html;
+        });
+      }
+
+      function setPreference(poolId, subjectIndex, rank) {
+        const pool = pools.find((p) => p.id === poolId);
+        const subject = pool.subjects[subjectIndex];
+
+        if (!studentPreferences[poolId]) studentPreferences[poolId] = {};
+
+        const currentRank = studentPreferences[poolId][subject.name] || 0;
+
+        if (currentRank === rank) {
+          studentPreferences[poolId][subject.name] = 0;
+          updateAllButtonsForPool(poolId);
+          return;
+        }
+
+        Object.keys(studentPreferences[poolId]).forEach((subjName) => {
+          if (studentPreferences[poolId][subjName] === rank) {
+            studentPreferences[poolId][subjName] = 0;
+          }
+        });
+
+        studentPreferences[poolId][subject.name] = rank;
+        updateAllButtonsForPool(poolId);
+      }
+
+      function updateAllButtonsForPool(poolId) {
+        const pool = pools.find((p) => p.id === poolId);
+        if (!pool) return;
+
+        const usedRanks = { 1: false, 2: false, 3: false };
+
+        Object.keys(studentPreferences[poolId] || {}).forEach((subjName) => {
+          const rank = studentPreferences[poolId][subjName];
+          if (rank > 0) usedRanks[rank] = true;
+        });
+
+        pool.subjects.forEach((subject, index) => {
+          const currentRank = studentPreferences[poolId]
+            ? studentPreferences[poolId][subject.name] || 0
+            : 0;
+
+          for (let r = 1; r <= 3; r++) {
+            const btn = document.getElementById(
+              `pref-btn-${poolId}-${index}-${r}`
+            );
+            if (!btn) continue;
+
+            // COMPLETE RESET - remove ALL possible classes first
+            btn.className = "pref-btn px-3 py-1 text-xs rounded-xl border";
+
+            // Add base border color
+            if (r === 1)
+              btn.classList.add("border-emerald-600", "text-emerald-400");
+            else if (r === 2)
+              btn.classList.add("border-yellow-600", "text-yellow-400");
+            else if (r === 3)
+              btn.classList.add("border-orange-600", "text-orange-400");
+
+            btn.disabled = false;
+
+            // Disable if rank is taken by another subject
+            if (usedRanks[r] && currentRank !== r) {
+              btn.classList.add("disabled", "opacity-30");
+              btn.disabled = true;
+            }
+
+            // Style active button
+            if (currentRank === r) {
+              btn.classList.remove(
+                "border-emerald-600",
+                "text-emerald-400",
+                "border-yellow-600",
+                "text-yellow-400",
+                "border-orange-600",
+                "text-orange-400"
+              );
+
+              if (r === 1)
+                btn.classList.add("active-1", "bg-emerald-600", "text-white");
+              else if (r === 2)
+                btn.classList.add("active-2", "bg-yellow-600", "text-zinc-900");
+              else if (r === 3)
+                btn.classList.add("active-3", "bg-orange-600", "text-white");
+            }
+          }
         });
       }
 
@@ -782,20 +907,49 @@
           alert("Skriv inn elevnavn");
           return;
         }
+
         const preferences = {};
         let hasPreferences = false;
+        let incompleteDays = [];
+
         pools.forEach((pool) => {
+          if (pool.subjects.length === 0) return;
+
           preferences[pool.id] = {};
-          pool.subjects.forEach((subject, index) => {
-            const select = document.getElementById(`pref-${pool.id}-${index}`);
-            if (select && select.value) {
-              preferences[pool.id][subject.name] = parseInt(select.value);
-              hasPreferences = true;
+          let first = 0,
+            second = 0,
+            third = 0;
+
+          Object.keys(studentPreferences[pool.id] || {}).forEach(
+            (subjectName) => {
+              const rank = studentPreferences[pool.id][subjectName];
+              if (rank > 0) {
+                preferences[pool.id][subjectName] = rank;
+                hasPreferences = true;
+
+                if (rank === 1) first++;
+                else if (rank === 2) second++;
+                else if (rank === 3) third++;
+              }
             }
-          });
+          );
+
+          if (first !== 1 || second !== 1 || third !== 1) {
+            incompleteDays.push(pool.name);
+          }
         });
+
         if (!hasPreferences) {
           alert("Velg minst én preferanse");
+          return;
+        }
+
+        if (incompleteDays.length > 0) {
+          alert(
+            `Du må velge nøyaktig én 1., én 2. og én 3. valg for hver dag.\nMangler for: ${incompleteDays.join(
+              ", "
+            )}`
+          );
           return;
         }
 
@@ -806,7 +960,9 @@
           name: name,
           preferences: preferences,
         });
+
         document.getElementById("student-name").value = "";
+        studentPreferences = {};
         renderStudentList();
         showToast("Elev lagt til");
         document.getElementById("student-name").focus();
@@ -815,6 +971,8 @@
           students = JSON.parse(previousState);
           renderStudentList();
         };
+
+        renderStudentForm();
       }
 
       function renderStudentList() {
@@ -1424,7 +1582,10 @@
       function initApp() {
         initDefaultPools();
         renderPools();
-        console.log("%c[EduChoice] v12 - Mobile undo ready", "color:#22c55e");
+        console.log(
+          "%c[EduChoice] v16 - Fixed yellow button bug",
+          "color:#22c55e"
+        );
       }
 
       console.log("%c[EduChoice] Ready", "color:#22c55e");
