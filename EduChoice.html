@@ -211,8 +211,16 @@
             <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
           </button>
         </div>
+
         <!-- ADMIN SECTION -->
         <div id="section-admin">
+          <div
+            class="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 mb-6 text-sm text-zinc-300"
+          >
+            <strong>Slik bruker du Admin:</strong> Legg til dager og valgfag.
+            Bruk "Legg til tilfeldige fag" for å fylle raskt.
+          </div>
+
           <div
             class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6"
           >
@@ -249,7 +257,7 @@
                   class="px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target"
                 >
                   <i class="fa-solid fa-magic"></i>
-                  <span>Legg til tilfeldige</span>
+                  <span>Legg til tilfeldige fag</span>
                 </button>
               </div>
             </div>
@@ -262,6 +270,13 @@
         </div>
         <!-- STUDENTS SECTION -->
         <div id="section-students" class="hidden">
+          <div
+            class="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 mb-6 text-sm text-zinc-300"
+          >
+            <strong>Slik bruker du Elever:</strong> Legg til elever og deres 1.,
+            2. og 3. valg. Bruk "Legg til tilfeldige elever" for å teste raskt.
+          </div>
+
           <div
             class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6"
           >
@@ -283,7 +298,7 @@
                 class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target"
               >
                 <i class="fa-solid fa-dice"></i>
-                <span>Legg til tilfeldige</span>
+                <span>Legg til tilfeldige elever</span>
               </button>
             </div>
           </div>
@@ -321,7 +336,7 @@
               </h3>
 
               <button
-                onclick="removeAllStudentsWithConfirm()"
+                onclick="removeAllStudents()"
                 class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target"
               >
                 <i class="fa-solid fa-trash"></i>
@@ -333,6 +348,13 @@
         </div>
         <!-- RESULTS SECTION -->
         <div id="section-results" class="hidden">
+          <div
+            class="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 mb-6 text-sm text-zinc-300"
+          >
+            <strong>Slik bruker du Resultater:</strong> Trykk "Kjør optimal
+            fordeling" for å se det beste resultatet fra 100 simuleringer.
+          </div>
+
           <div
             class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6"
           >
@@ -349,7 +371,7 @@
               </button>
 
               <button
-                onclick="resetAllocationsWithConfirm()"
+                onclick="resetAllocations()"
                 class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target"
               >
                 <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
@@ -429,6 +451,12 @@
     </div>
 
     <script>
+      let pools = [];
+      let students = [];
+      let allocations = [];
+      let currentEditingStudent = null;
+      let lastAction = null;
+
       function startDemo() {
         document.getElementById("landing-page").classList.add("hidden");
         document.getElementById("main-app").classList.remove("hidden");
@@ -451,13 +479,20 @@
         setTimeout(() => {
           toast.classList.remove("flex");
           toast.classList.add("hidden");
-        }, 2500);
+        }, 2000);
       }
 
-      let pools = [];
-      let students = [];
-      let allocations = [];
-      let currentEditingStudent = null;
+      // Keyboard shortcut for undo (Ctrl+Z / Cmd+Z)
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+          e.preventDefault();
+          if (lastAction) {
+            lastAction();
+            lastAction = null;
+            showToast("Handling angret");
+          }
+        }
+      });
 
       function initDefaultPools() {
         pools = [
@@ -546,6 +581,8 @@
       }
 
       function addNewPool() {
+        const previousState = JSON.stringify(pools);
+
         const newPool = {
           id: Date.now(),
           name: "Ny dag",
@@ -553,19 +590,36 @@
         };
         pools.push(newPool);
         renderPools();
-        showToast("Ny dag lagt til");
+
+        lastAction = () => {
+          pools = JSON.parse(previousState);
+          renderPools();
+        };
+        showToast("Dag lagt til (Ctrl+Z for å angre)");
       }
 
       function renamePool(poolIndex, newName) {
         if (!newName.trim()) return;
+        const previousName = pools[poolIndex].name;
         pools[poolIndex].name = newName.trim();
+
+        lastAction = () => {
+          pools[poolIndex].name = previousName;
+          renderPools();
+        };
+        showToast("Navn endret (Ctrl+Z for å angre)");
       }
 
       function deletePool(poolIndex) {
-        if (confirm("Er du sikker på at du vil slette denne dagen?")) {
-          pools.splice(poolIndex, 1);
+        const previousState = JSON.stringify(pools);
+        pools.splice(poolIndex, 1);
+        renderPools();
+
+        lastAction = () => {
+          pools = JSON.parse(previousState);
           renderPools();
-        }
+        };
+        showToast("Dag slettet (Ctrl+Z for å angre)");
       }
 
       function addSubjectToPool(poolIndex) {
@@ -577,6 +631,9 @@
           alert("Skriv inn fagnavn");
           return;
         }
+
+        const previousState = JSON.stringify(pools);
+
         pool.subjects.push({
           name: name,
           max: parseInt(maxInput.value) || 25,
@@ -585,11 +642,24 @@
         nameInput.value = "";
         renderSubjectsForPool(poolIndex);
         nameInput.focus();
+
+        lastAction = () => {
+          pools = JSON.parse(previousState);
+          renderPools();
+        };
+        showToast("Fag lagt til (Ctrl+Z for å angre)");
       }
 
       function removeSubject(poolIndex, subjectIndex) {
+        const previousState = JSON.stringify(pools);
         pools[poolIndex].subjects.splice(subjectIndex, 1);
         renderSubjectsForPool(poolIndex);
+
+        lastAction = () => {
+          pools = JSON.parse(previousState);
+          renderPools();
+        };
+        showToast("Fag slettet (Ctrl+Z for å angre)");
       }
 
       function addRandomSubjects() {
@@ -612,6 +682,7 @@
           "Brettspill",
         ];
 
+        const previousState = JSON.stringify(pools);
         let totalAdded = 0;
 
         pools.forEach((pool) => {
@@ -642,7 +713,12 @@
         });
 
         renderPools();
-        showToast(`${totalAdded} tilfeldige fag lagt til`);
+
+        lastAction = () => {
+          pools = JSON.parse(previousState);
+          renderPools();
+        };
+        showToast(`${totalAdded} fag lagt til (Ctrl+Z for å angre)`);
       }
 
       function renderStudentForm() {
@@ -696,6 +772,9 @@
           alert("Velg minst én preferanse");
           return;
         }
+
+        const previousState = JSON.stringify(students);
+
         students.push({
           id: Date.now(),
           name: name,
@@ -703,8 +782,13 @@
         });
         document.getElementById("student-name").value = "";
         renderStudentList();
-        showToast("Elev lagt til");
+        showToast("Elev lagt til (Ctrl+Z for å angre)");
         document.getElementById("student-name").focus();
+
+        lastAction = () => {
+          students = JSON.parse(previousState);
+          renderStudentList();
+        };
       }
 
       function renderStudentList() {
@@ -757,22 +841,27 @@
       }
 
       function removeStudent(id) {
+        const previousState = JSON.stringify(students);
         students = students.filter((s) => s.id !== id);
         renderStudentList();
+
+        lastAction = () => {
+          students = JSON.parse(previousState);
+          renderStudentList();
+        };
+        showToast("Elev fjernet (Ctrl+Z for å angre)");
       }
 
-      function removeAllStudentsWithConfirm() {
-        if (students.length === 0) return;
+      function removeAllStudents() {
+        const previousState = JSON.stringify(students);
+        students = [];
+        renderStudentList();
 
-        if (
-          confirm(
-            "Er du sikker på at du vil fjerne ALLE elever? Dette kan ikke angres."
-          )
-        ) {
-          students = [];
+        lastAction = () => {
+          students = JSON.parse(previousState);
           renderStudentList();
-          showToast("Alle elever fjernet");
-        }
+        };
+        showToast("Alle elever fjernet (Ctrl+Z for å angre)");
       }
 
       function addRandomStudentsWithConfirm() {
@@ -780,9 +869,15 @@
         let count = parseInt(countInput.value) || 10;
         if (count < 1) count = 1;
         if (count > 200) count = 200;
-        if (confirm(`Vil du legge til ${count} tilfeldige elever?`)) {
-          addRandomStudents(count);
-        }
+
+        const previousState = JSON.stringify(students);
+        addRandomStudents(count);
+
+        lastAction = () => {
+          students = JSON.parse(previousState);
+          renderStudentList();
+        };
+        showToast(`${count} elever lagt til (Ctrl+Z for å angre)`);
       }
 
       function addRandomStudents(count) {
@@ -898,7 +993,6 @@
           });
         }
         renderStudentList();
-        showToast(`${count} tilfeldige elever lagt til`);
       }
 
       function runMultipleSimulationsWithConfirm() {
@@ -906,13 +1000,17 @@
           alert("Legg til noen elever først!");
           return;
         }
-        if (
-          confirm(
-            "Vil du kjøre optimal fordeling? Dette vil overskrive tidligere resultater."
-          )
-        ) {
-          runMultipleSimulations();
-        }
+
+        const previousState = JSON.stringify({ allocations, pools });
+        runMultipleSimulations();
+
+        lastAction = () => {
+          const state = JSON.parse(previousState);
+          allocations = state.allocations;
+          pools = state.pools;
+          renderResults();
+        };
+        showToast("Fordeling kjørt (Ctrl+Z for å angre)");
       }
 
       function runMultipleSimulations() {
@@ -1013,8 +1111,6 @@
             simulationButton.disabled = false;
             simulationButton = null;
           }
-
-          showToast("Optimal fordeling fullført");
         }, 300);
       }
 
@@ -1215,6 +1311,8 @@
       function saveStudentEdit() {
         if (!currentEditingStudent) return;
 
+        const previousState = JSON.stringify(allocations);
+
         allocations = allocations.filter(
           (a) => a.student !== currentEditingStudent
         );
@@ -1243,7 +1341,12 @@
         closeEditModal();
         renderResults();
         showAllocationSummary(0, 100);
-        showToast("Fordeling oppdatert");
+
+        lastAction = () => {
+          allocations = JSON.parse(previousState);
+          renderResults();
+        };
+        showToast("Fordeling endret (Ctrl+Z for å angre)");
       }
 
       function closeEditModal() {
@@ -1251,15 +1354,8 @@
         currentEditingStudent = null;
       }
 
-      function resetAllocationsWithConfirm() {
-        if (
-          confirm("Er du sikker på at du vil tilbakestille alle resultater?")
-        ) {
-          resetAllocations();
-        }
-      }
-
       function resetAllocations() {
+        const previousState = JSON.stringify({ allocations, pools });
         pools.forEach((pool) => {
           pool.subjects.forEach((subject) => (subject.students = []));
         });
@@ -1269,7 +1365,14 @@
           "student-overview"
         ).innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
         document.getElementById("subject-enrollment").innerHTML = "";
-        showToast("Resultater tilbakestilt");
+
+        lastAction = () => {
+          const state = JSON.parse(previousState);
+          allocations = state.allocations;
+          pools = state.pools;
+          renderResults();
+        };
+        showToast("Resultater tilbakestilt (Ctrl+Z for å angre)");
       }
 
       function showSection(section) {
@@ -1295,7 +1398,7 @@
       function initApp() {
         initDefaultPools();
         renderPools();
-        console.log("%c[EduChoice] v7 ready", "color:#22c55e");
+        console.log("%c[EduChoice] v10 ready", "color:#22c55e");
       }
 
       console.log("%c[EduChoice] Ready", "color:#22c55e");
