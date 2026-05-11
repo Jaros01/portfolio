@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Quest • EduQuest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap");
+      body {
+        font-family: "Inter", system_ui, sans-serif;
+      }
+      .title-font {
+        font-family: "Space Grotesk", "Inter", sans-serif;
+        font-weight: 600;
+      }
+      .quest-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .quest-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      }
+      .answer-btn {
+        transition: all 0.2s ease;
+      }
+      .answer-btn:hover {
+        transform: translateY(-2px);
+      }
+      .answer-btn.correct {
+        background-color: #22c55e !important;
+        color: white !important;
+        border-color: #22c55e !important;
+        animation: pop 0.3s ease;
+      }
+      .answer-btn.wrong {
+        background-color: #ef4444 !important;
+        color: white !important;
+        border-color: #ef4444 !important;
+        animation: shake 0.4s ease;
+      }
+      @keyframes pop {
+        0% {
+          transform: scale(0.8);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-6px);
+        }
+        75% {
+          transform: translateX(6px);
+        }
+      }
+      .monster {
+        transition: transform 0.3s ease;
+      }
+      .monster.happy {
+        transform: scale(1.15) rotate(5deg);
+      }
+      .monster.sad {
+        transform: scale(0.9) rotate(-8deg);
+      }
+      .question-text {
+        min-height: 80px;
+      }
+      .progress-bar {
+        transition: width 0.4s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-950 text-zinc-200">
+    <!-- Header -->
+    <div class="border-b border-zinc-800 bg-zinc-900">
+      <div
+        class="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-x-3">
+          <div
+            class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center"
+          >
+            <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+          </div>
+          <div>
+            <span class="title-font text-xl font-semibold">EduQuest</span>
+            <span class="text-xs text-zinc-500 ml-1">Study Quest v2.0</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-4">
+          <div class="text-xs text-emerald-400 flex items-center gap-x-1">
+            <i class="fa-solid fa-globe"></i>
+            <span>Norwegian Curriculum v2.0</span>
+          </div>
+          <div class="px-3 py-1 bg-zinc-800 rounded-full text-xs">Demo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 py-8">
+      <!-- START SCREEN -->
+      <div id="start-screen">
+        <div class="text-center mb-10">
+          <div
+            class="inline-flex items-center gap-x-2 px-4 py-1 bg-zinc-900 rounded-3xl mb-4 text-sm"
+          >
+            <div
+              class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"
+            ></div>
+            <span class="font-medium text-emerald-400"
+              >60 questions • 5 subjects</span
+            >
+          </div>
+          <h2
+            class="title-font text-6xl font-semibold tracking-tighter leading-none mb-3"
+          >
+            Level up.<br />Study smarter.
+          </h2>
+          <p class="text-xl text-zinc-400 max-w-md mx-auto">
+            Gamified learning made for Norwegian students in 2026.
+          </p>
+        </div>
+
+        <div class="flex justify-center gap-x-4 mb-12">
+          <button
+            onclick="showHowToPlay()"
+            class="px-8 py-4 border border-zinc-700 hover:bg-zinc-900 rounded-3xl flex items-center gap-x-2 text-sm font-medium transition-all"
+          >
+            <i class="fa-solid fa-question-circle"></i>
+            <span>How to Play</span>
+          </button>
+          <button
+            onclick="showSubjectScreen()"
+            class="px-10 py-4 bg-white text-zinc-950 font-semibold rounded-3xl flex items-center gap-x-3 hover:bg-zinc-100 active:scale-[0.985] transition-all"
+          >
+            <span>Start New Quest</span>
+            <i class="fa-solid fa-play ml-1"></i>
+          </button>
+        </div>
+
+        <div class="text-center">
+          <div class="text-xs text-zinc-500 mb-2">
+            High Score:
+            <span id="global-high-score" class="font-mono text-emerald-400"
+              >1240</span
+            >
+            XP
+          </div>
+          <div class="text-[10px] text-zinc-600">
+            Demo version • Full version includes class codes, teacher dashboard
+            &amp; progress reports
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBJECT SELECTION -->
+      <div id="subject-screen" class="hidden">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h3 class="text-3xl font-semibold">Choose your quest</h3>
+            <p class="text-zinc-400">
+              12 questions • Beat the monster • Earn XP
+            </p>
+          </div>
+          <button
+            onclick="showStartScreen()"
+            class="px-5 py-2 border border-zinc-700 rounded-2xl hover:bg-zinc-900"
+          >
+            ← Back
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="subject-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- GAME SCREEN -->
+      <div id="game-screen" class="hidden">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <div class="flex items-center gap-x-3">
+              <span id="current-subject" class="font-semibold text-xl"></span>
+              <span
+                class="text-xs px-3 py-1 bg-zinc-800 rounded-full"
+                id="question-counter"
+                >1/12</span
+              >
+            </div>
+            <div class="flex items-center gap-x-4 mt-1">
+              <div class="flex items-center gap-x-1 text-sm">
+                <i class="fa-solid fa-heart text-red-500"></i>
+                <span id="lives">3</span>
+              </div>
+              <div class="flex items-center gap-x-1 text-sm">
+                <i class="fa-solid fa-fire text-orange-400"></i>
+                <span id="streak">0</span>
+              </div>
+              <div class="flex items-center gap-x-1 text-sm">
+                <i class="fa-solid fa-star text-yellow-400"></i>
+                <span id="xp">0</span> XP
+              </div>
+            </div>
+          </div>
+          <button
+            onclick="endGame()"
+            class="text-xs px-4 py-2 border border-zinc-700 rounded-xl hover:bg-zinc-900"
+          >
+            End Quest
+          </button>
+        </div>
+
+        <!-- Monster -->
+        <div class="flex justify-center mb-8">
+          <div
+            id="monster-container"
+            class="w-28 h-28 bg-zinc-900 border border-zinc-700 rounded-3xl flex items-center justify-center monster"
+          >
+            <i
+              id="monster-icon"
+              class="fa-solid fa-dragon text-6xl text-violet-400"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Question -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-6">
+          <div
+            id="question-text"
+            class="question-text text-2xl font-medium leading-tight mb-8"
+          ></div>
+
+          <div class="grid grid-cols-1 gap-3" id="answers-container">
+            <!-- Answer buttons populated by JS -->
+          </div>
+        </div>
+
+        <!-- Explanation (hidden until answered) -->
+        <div
+          id="explanation-box"
+          class="hidden bg-zinc-900 border border-zinc-700 rounded-2xl p-5 mb-6"
+        >
+          <div class="flex gap-3">
+            <i class="fa-solid fa-lightbulb text-yellow-400 mt-1"></i>
+            <div>
+              <div class="font-medium text-sm mb-1">Explanation</div>
+              <div id="explanation-text" class="text-sm text-zinc-400"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xs text-zinc-500">
+          <div>Local high score saved automatically</div>
+          <button
+            onclick="nextQuestion()"
+            id="next-btn"
+            class="hidden px-6 py-2 bg-white text-zinc-950 rounded-2xl text-sm font-medium"
+          >
+            Next Question →
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULTS SCREEN -->
+      <div id="results-screen" class="hidden text-center">
+        <div class="max-w-md mx-auto">
+          <div class="mb-8">
+            <i class="fa-solid fa-trophy text-6xl text-yellow-400 mb-4"></i>
+            <h3 class="text-4xl font-semibold mb-2">Quest Complete!</h3>
+            <p class="text-xl text-zinc-400">
+              You earned
+              <span
+                id="final-xp"
+                class="font-mono text-emerald-400 font-semibold"
+              ></span>
+              XP
+            </p>
+          </div>
+
+          <div
+            class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 mb-6 text-left"
+          >
+            <div class="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div class="text-2xl font-semibold" id="final-score"></div>
+                <div class="text-xs text-zinc-500">Final Score</div>
+              </div>
+              <div>
+                <div class="text-2xl font-semibold" id="final-streak"></div>
+                <div class="text-xs text-zinc-500">Best Streak</div>
+              </div>
+              <div>
+                <div class="text-2xl font-semibold" id="accuracy"></div>
+                <div class="text-xs text-zinc-500">Accuracy</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button
+              onclick="restartGame()"
+              class="flex-1 py-4 border border-zinc-700 rounded-3xl font-medium hover:bg-zinc-900"
+            >
+              Play Again
+            </button>
+            <button
+              onclick="copyResults()"
+              class="flex-1 py-4 bg-white text-zinc-950 rounded-3xl font-medium"
+            >
+              Copy Results
+            </button>
+          </div>
+
+          <div class="mt-6 text-xs text-zinc-500">
+            Want this for your class?
+            <span
+              class="text-emerald-400 cursor-pointer"
+              onclick="alert('Contact via portfolio for school licensing')"
+              >Book a demo</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Tailwind script
+      function initTailwind() {
+        document.documentElement.style.setProperty("--accent", "#6366f1");
+      }
+
+      // Game State
+      let currentGame = {
+        subject: "",
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        lives: 3,
+        streak: 0,
+        xp: 0,
+        answers: [],
+      };
+
+      // Question Bank - Norwegian Curriculum Style (v2.0)
+      const questionBank = {
+        matte: [
+          {
+            q: "Hva er 15 + 27?",
+            a: ["42", "32", "52", "37"],
+            correct: 0,
+            exp: "15 + 27 = 42. Husk å legge sammen tierne og enerne separat.",
+          },
+          {
+            q: "Hva er 8 × 7?",
+            a: ["54", "56", "49", "63"],
+            correct: 1,
+            exp: "8 × 7 = 56. Dette er en av de viktigste multiplikasjonstabellene.",
+          },
+          {
+            q: "Hva er 3/4 av 80?",
+            a: ["20", "60", "40", "30"],
+            correct: 1,
+            exp: "3/4 av 80 = (3 × 80) / 4 = 60. Del på 4 og gang med 3.",
+          },
+          {
+            q: "Hvilket tall er et primtall?",
+            a: ["15", "21", "17", "25"],
+            correct: 2,
+            exp: "17 er et primtall fordi det bare kan deles på 1 og seg selv.",
+          },
+          {
+            q: "Hva er 144 ÷ 12?",
+            a: ["10", "11", "12", "13"],
+            correct: 2,
+            exp: "144 ÷ 12 = 12. 12 × 12 = 144.",
+          },
+          {
+            q: "Hva er 25% av 200?",
+            a: ["25", "50", "75", "100"],
+            correct: 1,
+            exp: "25% av 200 = 200 × 0.25 = 50.",
+          },
+          {
+            q: "Hva er arealet av et rektangel som er 8 cm langt og 5 cm bredt?",
+            a: ["26 cm²", "40 cm²", "13 cm²", "35 cm²"],
+            correct: 1,
+            exp: "Areal = lengde × bredde = 8 × 5 = 40 cm².",
+          },
+          {
+            q: "Hva er 9²?",
+            a: ["72", "81", "99", "18"],
+            correct: 1,
+            exp: "9² = 9 × 9 = 81.",
+          },
+          {
+            q: "Hvilken brøk er størst: 3/5 eller 2/3?",
+            a: ["3/5", "2/3", "De er like", "Kan ikke sammenligne"],
+            correct: 1,
+            exp: "2/3 ≈ 0.67, 3/5 = 0.60. 2/3 er størst.",
+          },
+          {
+            q: "Hva er 50% av 90?",
+            a: ["30", "45", "50", "60"],
+            correct: 1,
+            exp: "50% av 90 = 45.",
+          },
+          {
+            q: "Hva er 7 × 8 - 12?",
+            a: ["44", "56", "32", "48"],
+            correct: 0,
+            exp: "7 × 8 = 56, 56 - 12 = 44.",
+          },
+          {
+            q: "Hva er 1000 ÷ 8?",
+            a: ["115", "125", "135", "145"],
+            correct: 1,
+            exp: "1000 ÷ 8 = 125.",
+          },
+        ],
+        norsk: [
+          {
+            q: "Hva er riktig skrivemåte?",
+            a: [
+              "å gå på skolen",
+              "å gå på skulen",
+              "å gå på skoolen",
+              "å gå på skool",
+            ],
+            correct: 0,
+            exp: "Riktig er 'å gå på skolen' på bokmål.",
+          },
+          {
+            q: "Hva betyr ordet 'entusiastisk'?",
+            a: ["Trist", "Engasjert og ivrig", "Sint", "Trett"],
+            correct: 1,
+            exp: "Entusiastisk betyr å være svært engasjert og ivrig.",
+          },
+          {
+            q: "Hvilket ord er et substantiv?",
+            a: ["Løpe", "Rask", "Hus", "Veldig"],
+            correct: 2,
+            exp: "'Hus' er et substantiv (ting).",
+          },
+          {
+            q: "Hva er riktig: 'Han ___ til skolen i går'?",
+            a: ["går", "gikk", "gå", "går"],
+            correct: 1,
+            exp: "Fortid av 'å gå' er 'gikk'.",
+          },
+          {
+            q: "Hvilken setning har riktig tegnsetting?",
+            a: [
+              "Hva heter du.",
+              "Hva heter du?",
+              "Hva heter du!",
+              "Hva heter du",
+            ],
+            correct: 1,
+            exp: "Spørsmål avsluttes med spørsmålstegn.",
+          },
+          {
+            q: "Hva er antonymet til 'stor'?",
+            a: ["Enorm", "Liten", "Høy", "Bred"],
+            correct: 1,
+            exp: "Antonym til 'stor' er 'liten'.",
+          },
+          {
+            q: "Hvilket ord er et adjektiv?",
+            a: ["Bok", "Lese", "Interessant", "Fort"],
+            correct: 2,
+            exp: "'Interessant' beskriver noe (adjektiv).",
+          },
+          {
+            q: "Hva betyr 'å reflektere' i denne sammenhengen?",
+            a: ["Å tenke nøye over noe", "Å løpe fort", "Å spise", "Å sove"],
+            correct: 0,
+            exp: "Å reflektere betyr å tenke grundig over noe.",
+          },
+          {
+            q: "Hvilken setning er grammatisk riktig?",
+            a: [
+              "Jeg har gått på skolen",
+              "Jeg har gå på skolen",
+              "Jeg har går på skolen",
+              "Jeg har gående på skolen",
+            ],
+            correct: 0,
+            exp: "Riktig perfektum er 'Jeg har gått'.",
+          },
+          {
+            q: "Hva er 'å være på bølgelengde' en metafor for?",
+            a: [
+              "Å være uenig",
+              "Å forstå hverandre godt",
+              "Å være sulten",
+              "Å være kald",
+            ],
+            correct: 1,
+            exp: "Det betyr å forstå hverandre og ha god kommunikasjon.",
+          },
+          {
+            q: "Hvilket ord har samme betydning som 'glad'?",
+            a: ["Trist", "Lykkelig", "Sint", "Redd"],
+            correct: 1,
+            exp: "'Lykkelig' er et synonym til 'glad'.",
+          },
+          {
+            q: "Hva er riktig flertall av 'en bok'?",
+            a: ["En bøker", "To bøker", "To bok", "To boker"],
+            correct: 1,
+            exp: "Flertall av 'bok' er 'bøker'.",
+          },
+        ],
+        engelsk: [
+          {
+            q: "What is the past tense of 'go'?",
+            a: ["Goed", "Went", "Gone", "Going"],
+            correct: 1,
+            exp: "The past tense of 'go' is 'went'.",
+          },
+          {
+            q: "Which word is a noun?",
+            a: ["Run", "Beautiful", "School", "Quickly"],
+            correct: 2,
+            exp: "'School' is a noun (a place).",
+          },
+          {
+            q: "Choose the correct sentence:",
+            a: [
+              "She don't like apples",
+              "She doesn't like apples",
+              "She not like apples",
+              "She no like apples",
+            ],
+            correct: 1,
+            exp: "Correct negative: 'She doesn't like apples'.",
+          },
+          {
+            q: "What does 'excited' mean?",
+            a: ["Sad", "Very happy and enthusiastic", "Angry", "Tired"],
+            correct: 1,
+            exp: "'Excited' means feeling very happy and enthusiastic.",
+          },
+          {
+            q: "Which is the correct spelling?",
+            a: ["Recieve", "Receive", "Recive", "Receve"],
+            correct: 1,
+            exp: "Correct spelling is 'receive' (i before e except after c).",
+          },
+          {
+            q: "What is the opposite of 'difficult'?",
+            a: ["Hard", "Easy", "Complicated", "Challenging"],
+            correct: 1,
+            exp: "The opposite of 'difficult' is 'easy'.",
+          },
+          {
+            q: "Choose the correct form: 'I ___ to the cinema yesterday.'",
+            a: ["go", "goes", "went", "going"],
+            correct: 2,
+            exp: "Past simple of 'go' is 'went'.",
+          },
+          {
+            q: "What does 'to improve' mean?",
+            a: [
+              "To make something worse",
+              "To make something better",
+              "To destroy",
+              "To forget",
+            ],
+            correct: 1,
+            exp: "'To improve' means to make something better.",
+          },
+          {
+            q: "Which sentence is correct?",
+            a: [
+              "He have two brothers",
+              "He has two brothers",
+              "He having two brothers",
+              "He haves two brothers",
+            ],
+            correct: 1,
+            exp: "Third person singular: 'He has'.",
+          },
+          {
+            q: "What is a synonym for 'happy'?",
+            a: ["Sad", "Joyful", "Angry", "Bored"],
+            correct: 1,
+            exp: "'Joyful' means the same as 'happy'.",
+          },
+          {
+            q: "Choose the correct article: '___ apple a day keeps the doctor away.'",
+            a: ["A", "An", "The", "No article"],
+            correct: 1,
+            exp: "'An' because 'apple' starts with a vowel sound.",
+          },
+          {
+            q: "What does 'environment' mean?",
+            a: [
+              "A type of food",
+              "The natural world around us",
+              "A sport",
+              "A musical instrument",
+            ],
+            correct: 1,
+            exp: "'Environment' refers to the natural world and surroundings.",
+          },
+        ],
+        samfunnsfag: [
+          {
+            q: "Hva er hovedstaden i Norge?",
+            a: ["Bergen", "Oslo", "Trondheim", "Stavanger"],
+            correct: 1,
+            exp: "Oslo har vært hovedstad siden 1814.",
+          },
+          {
+            q: "Når ble Norge selvstendig fra Sverige?",
+            a: ["1814", "1905", "1945", "1972"],
+            correct: 1,
+            exp: "Norge ble selvstendig i 1905 etter unionsoppløsningen.",
+          },
+          {
+            q: "Hva heter den norske grunnloven?",
+            a: [
+              "Grunnloven av 1814",
+              "Eidsvollsloven",
+              "Kongedømmet Norge",
+              "Stortinget",
+            ],
+            correct: 0,
+            exp: "Grunnloven ble vedtatt på Eidsvoll i 1814.",
+          },
+          {
+            q: "Hvilket hav ligger vest for Norge?",
+            a: ["Østersjøen", "Nordsjøen", "Barentshavet", "Skagerrak"],
+            correct: 1,
+            exp: "Nordsjøen ligger vest for Norge.",
+          },
+          {
+            q: "Hva er den største innsjøen i Norge?",
+            a: ["Mjøsa", "Femunden", "Røssvatnet", "Tyrifjorden"],
+            correct: 0,
+            exp: "Mjøsa er Norges største innsjø.",
+          },
+          {
+            q: "Hvilket år ble EU-medlemskapet avvist i folkeavstemning?",
+            a: ["1972", "1994", "2009", "2014"],
+            correct: 1,
+            exp: "I 1994 stemte norske velgere nei til EU.",
+          },
+          {
+            q: "Hva betyr 'velferdsstat'?",
+            a: [
+              "En stat uten skatter",
+              "En stat som gir innbyggerne trygghet og tjenester",
+              "En stat styrt av kongen",
+              "En stat uten regjering",
+            ],
+            correct: 1,
+            exp: "Velferdsstaten sikrer innbyggerne grunnleggende trygghet og tjenester.",
+          },
+          {
+            q: "Hvem er Norges statsoverhode?",
+            a: [
+              "Statsministeren",
+              "Kongen",
+              "Stortingspresidenten",
+              "Høyesterettsjustitiarius",
+            ],
+            correct: 1,
+            exp: "Kongen er Norges statsoverhode.",
+          },
+          {
+            q: "Hva er den offisielle religionen i Norge?",
+            a: [
+              "Islam",
+              "Den norske kirke (kristendom)",
+              "Buddhisme",
+              "Ingen offisiell religion",
+            ],
+            correct: 1,
+            exp: "Den norske kirke er den største trossamfunnet.",
+          },
+          {
+            q: "Hvilken by er kjent som 'oljehovedstaden'?",
+            a: ["Oslo", "Bergen", "Stavanger", "Trondheim"],
+            correct: 2,
+            exp: "Stavanger er sentrum for norsk oljeindustri.",
+          },
+          {
+            q: "Hva er 'Stortinget'?",
+            a: [
+              "Den norske regjeringen",
+              "Det norske parlamentet",
+              "Høyesterett",
+              "Kongen",
+            ],
+            correct: 1,
+            exp: "Stortinget er Norges nasjonalforsamling.",
+          },
+          {
+            q: "Når feirer vi Grunnlovsdagen i Norge?",
+            a: ["1. mai", "17. mai", "1. juni", "25. desember"],
+            correct: 1,
+            exp: "17. mai er Grunnlovsdagen.",
+          },
+        ],
+        naturfag: [
+          {
+            q: "Hva er den kjemiske formelen for vann?",
+            a: ["CO₂", "H₂O", "O₂", "NaCl"],
+            correct: 1,
+            exp: "Vann er H₂O – to hydrogenatomer og ett oksygenatom.",
+          },
+          {
+            q: "Hvilken planet er nærmest solen?",
+            a: ["Venus", "Jorden", "Merkur", "Mars"],
+            correct: 2,
+            exp: "Merkur er den innerste planeten.",
+          },
+          {
+            q: "Hva kaller vi prosessen der planter lager mat ved hjelp av sollys?",
+            a: ["Respirasjon", "Fotosyntese", "Fordøyelse", "Fordampning"],
+            correct: 1,
+            exp: "Fotosyntese er prosessen der planter lager glukose ved hjelp av sollys.",
+          },
+          {
+            q: "Hvilket organ pumper blod i kroppen?",
+            a: ["Lungene", "Hjernen", "Hjertet", "Magen"],
+            correct: 2,
+            exp: "Hjertet pumper blod rundt i kroppen.",
+          },
+          {
+            q: "Hva er den største organet i menneskekroppen?",
+            a: ["Hjernen", "Lungene", "Huden", "Leveren"],
+            correct: 2,
+            exp: "Huden er det største organet.",
+          },
+          {
+            q: "Hvilken gass puster vi inn mest av?",
+            a: ["Oksygen", "Karbondioksid", "Nitrogen", "Hydrogen"],
+            correct: 2,
+            exp: "Luften inneholder ca. 78% nitrogen.",
+          },
+          {
+            q: "Hva er en celle?",
+            a: [
+              "En type mat",
+              "Den minste levende enheten",
+              "Et organ",
+              "En type energi",
+            ],
+            correct: 1,
+            exp: "Celler er de minste levende enhetene i alle levende organismer.",
+          },
+          {
+            q: "Hvilken type energi kommer fra solen?",
+            a: [
+              "Kjerneenergi",
+              "Solenergi / termisk energi",
+              "Vindenergi",
+              "Vannkraft",
+            ],
+            correct: 1,
+            exp: "Solen sender ut termisk og lysenergi.",
+          },
+          {
+            q: "Hva skjer med vann når det koker?",
+            a: [
+              "Det blir til is",
+              "Det blir til damp (fordampning)",
+              "Det forsvinner",
+              "Det blir hardt",
+            ],
+            correct: 1,
+            exp: "Ved koking går vann over til gassform (vanndamp).",
+          },
+          {
+            q: "Hvilket dyr er et pattedyr?",
+            a: ["Hai", "Ørn", "Hval", "Slange"],
+            correct: 2,
+            exp: "Hval er et pattedyr – den føder levende unger og ammer dem.",
+          },
+          {
+            q: "Hva er tyngdekraften?",
+            a: [
+              "En type lys",
+              "Kraften som trekker ting mot jorden",
+              "En type lyd",
+              "En kjemisk reaksjon",
+            ],
+            correct: 1,
+            exp: "Tyngdekraften trekker alle ting mot jordens sentrum.",
+          },
+          {
+            q: "Hva er den vanligste gassen i jordens atmosfære?",
+            a: ["Oksygen", "Karbondioksid", "Nitrogen", "Argon"],
+            correct: 2,
+            exp: "Nitrogen utgjør ca. 78% av atmosfæren.",
+          },
+        ],
+      };
+
+      function showStartScreen() {
+        document.getElementById("start-screen").classList.remove("hidden");
+        document.getElementById("subject-screen").classList.add("hidden");
+        document.getElementById("game-screen").classList.add("hidden");
+        document.getElementById("results-screen").classList.add("hidden");
+
+        // Update high score display
+        const highScore = localStorage.getItem("studyQuestHighScore") || 1240;
+        document.getElementById("global-high-score").textContent = highScore;
+      }
+
+      function showSubjectScreen() {
+        document.getElementById("start-screen").classList.add("hidden");
+        document.getElementById("subject-screen").classList.remove("hidden");
+
+        const grid = document.getElementById("subject-grid");
+        grid.innerHTML = "";
+
+        const subjects = [
+          {
+            key: "matte",
+            name: "Matte",
+            icon: "fa-calculator",
+            color: "orange",
+          },
+          { key: "norsk", name: "Norsk", icon: "fa-book", color: "emerald" },
+          { key: "engelsk", name: "Engelsk", icon: "fa-globe", color: "sky" },
+          {
+            key: "samfunnsfag",
+            name: "Samfunnsfag",
+            icon: "fa-landmark",
+            color: "rose",
+          },
+          {
+            key: "naturfag",
+            name: "Naturfag",
+            icon: "fa-flask",
+            color: "teal",
+          },
+        ];
+
+        subjects.forEach((subject) => {
+          const card = document.createElement("div");
+          card.className = `quest-card cursor-pointer bg-zinc-900 border border-zinc-800 hover:border-${subject.color}-500 rounded-3xl p-6 flex gap-4`;
+          card.innerHTML = `
+                    <div class="w-14 h-14 bg-${subject.color}-500/10 text-${
+            subject.color
+          }-400 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid ${subject.icon} text-3xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-semibold text-xl">${
+                              subject.name
+                            }</h4>
+                            <span class="text-xs px-3 py-1 bg-${
+                              subject.color
+                            }-500/10 text-${
+            subject.color
+          }-400 rounded-full">12 questions</span>
+                        </div>
+                        <p class="text-sm text-zinc-400 mt-1">${getSubjectDescription(
+                          subject.key
+                        )}</p>
+                    </div>
+                `;
+          card.onclick = () => startGame(subject.key);
+          grid.appendChild(card);
+        });
+      }
+
+      function getSubjectDescription(key) {
+        const descriptions = {
+          matte: "Arithmetic, fractions & problem solving",
+          norsk: "Grammar, vocabulary & spelling",
+          engelsk: "Grammar, vocabulary & reading",
+          samfunnsfag: "History, society & geography",
+          naturfag: "Biology, chemistry & physics",
+        };
+        return descriptions[key];
+      }
+
+      function startGame(subject) {
+        currentGame = {
+          subject: subject,
+          questions: [...questionBank[subject]]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 12),
+          currentIndex: 0,
+          score: 0,
+          lives: 3,
+          streak: 0,
+          xp: 0,
+          answers: [],
+        };
+
+        document.getElementById("subject-screen").classList.add("hidden");
+        document.getElementById("game-screen").classList.remove("hidden");
+
+        document.getElementById("current-subject").textContent =
+          subject.charAt(0).toUpperCase() + subject.slice(1);
+        document.getElementById("lives").textContent = currentGame.lives;
+        document.getElementById("streak").textContent = currentGame.streak;
+        document.getElementById("xp").textContent = currentGame.xp;
+
+        showQuestion();
+      }
+
+      function showQuestion() {
+        const game = currentGame;
+        const q = game.questions[game.currentIndex];
+
+        document.getElementById("question-counter").textContent = `${
+          game.currentIndex + 1
+        }/12`;
+        document.getElementById("question-text").innerHTML = q.q;
+        document.getElementById("explanation-box").classList.add("hidden");
+        document.getElementById("next-btn").classList.add("hidden");
+
+        const container = document.getElementById("answers-container");
+        container.innerHTML = "";
+
+        q.a.forEach((answer, index) => {
+          const btn = document.createElement("button");
+          btn.className = `answer-btn w-full text-left px-6 py-4 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-2xl text-lg`;
+          btn.innerHTML = `<span class="font-medium">${answer}</span>`;
+          btn.onclick = () => checkAnswer(index, btn);
+          container.appendChild(btn);
+        });
+
+        // Reset monster
+        const monster = document.getElementById("monster-container");
+        monster.classList.remove("happy", "sad");
+      }
+
+      function checkAnswer(selectedIndex, buttonElement) {
+        const game = currentGame;
+        const q = game.questions[game.currentIndex];
+        const isCorrect = selectedIndex === q.correct;
+
+        // Disable all buttons
+        const buttons = document.querySelectorAll("#answers-container button");
+        buttons.forEach((btn) => (btn.disabled = true));
+
+        if (isCorrect) {
+          buttonElement.classList.add("correct");
+          game.score += 10;
+          game.streak++;
+          game.xp += 15 + game.streak * 2;
+
+          document.getElementById("monster-container").classList.add("happy");
+          document.getElementById("streak").textContent = game.streak;
+          document.getElementById("xp").textContent = game.xp;
+
+          // Confetti effect for streaks
+          if (game.streak >= 3) {
+            createConfetti();
+          }
+        } else {
+          buttonElement.classList.add("wrong");
+          game.lives--;
+          game.streak = 0;
+          document.getElementById("monster-container").classList.add("sad");
+          document.getElementById("lives").textContent = game.lives;
+          document.getElementById("streak").textContent = game.streak;
+
+          // Highlight correct answer
+          buttons[q.correct].classList.add("correct");
+        }
+
+        game.answers.push({
+          question: q.q,
+          selected: q.a[selectedIndex],
+          correct: q.a[q.correct],
+          isCorrect: isCorrect,
+        });
+
+        // Show explanation
+        document.getElementById("explanation-text").innerHTML = q.exp;
+        document.getElementById("explanation-box").classList.remove("hidden");
+
+        // Show next button
+        document.getElementById("next-btn").classList.remove("hidden");
+        document.getElementById("next-btn").onclick = nextQuestion;
+
+        // Check for game over
+        if (game.lives <= 0) {
+          setTimeout(() => endGame(true), 1500);
+        }
+      }
+
+      function createConfetti() {
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => {
+            const confetti = document.createElement("div");
+            confetti.style.position = "fixed";
+            confetti.style.left = Math.random() * 100 + "vw";
+            confetti.style.top = "-20px";
+            confetti.style.width = "8px";
+            confetti.style.height = "8px";
+            confetti.style.backgroundColor = ["#22c55e", "#eab308", "#3b82f6"][
+              Math.floor(Math.random() * 3)
+            ];
+            confetti.style.borderRadius = "50%";
+            confetti.style.zIndex = "9999";
+            confetti.style.pointerEvents = "none";
+            document.body.appendChild(confetti);
+
+            const duration = Math.random() * 2000 + 1500;
+            confetti.animate(
+              [
+                { transform: "translateY(0) rotate(0deg)", opacity: 1 },
+                {
+                  transform: `translateY(${
+                    window.innerHeight + 100
+                  }px) rotate(${Math.random() * 720 - 360}deg)`,
+                  opacity: 0,
+                },
+              ],
+              {
+                duration: duration,
+                easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+              }
+            ).onfinish = () => confetti.remove();
+          }, i * 20);
+        }
+      }
+
+      function nextQuestion() {
+        currentGame.currentIndex++;
+
+        if (currentGame.currentIndex >= currentGame.questions.length) {
+          endGame();
+        } else {
+          showQuestion();
+        }
+      }
+
+      function endGame(early = false) {
+        const game = currentGame;
+
+        document.getElementById("game-screen").classList.add("hidden");
+        document.getElementById("results-screen").classList.remove("hidden");
+
+        const finalXP = game.xp;
+        const accuracy =
+          game.answers.length > 0
+            ? Math.round(
+                (game.answers.filter((a) => a.isCorrect).length /
+                  game.answers.length) *
+                  100
+              )
+            : 0;
+
+        document.getElementById("final-xp").textContent = finalXP;
+        document.getElementById("final-score").textContent = game.score;
+        document.getElementById("final-streak").textContent = game.streak;
+        document.getElementById("accuracy").textContent = accuracy + "%";
+
+        // Save high score
+        const currentHigh = parseInt(
+          localStorage.getItem("studyQuestHighScore") || "0"
+        );
+        if (finalXP > currentHigh) {
+          localStorage.setItem("studyQuestHighScore", finalXP);
+        }
+
+        // Save last game stats
+        localStorage.setItem(
+          "studyQuestLastGame",
+          JSON.stringify({
+            subject: game.subject,
+            xp: finalXP,
+            accuracy: accuracy,
+            date: new Date().toISOString(),
+          })
+        );
+      }
+
+      function restartGame() {
+        document.getElementById("results-screen").classList.add("hidden");
+        showSubjectScreen();
+      }
+
+      function copyResults() {
+        const game = currentGame;
+        const text = `Study Quest Result\nSubject: ${
+          game.subject
+        }\nXP Earned: ${game.xp}\nAccuracy: ${Math.round(
+          (game.answers.filter((a) => a.isCorrect).length /
+            game.answers.length) *
+            100
+        )}%\nBest Streak: ${game.streak}\n\nPlay Study Quest at my portfolio!`;
+
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            const originalText = event.target.innerHTML;
+            event.target.innerHTML =
+              '<i class="fa-solid fa-check mr-2"></i>Copied!';
+            setTimeout(() => {
+              if (event.target) event.target.innerHTML = originalText;
+            }, 2000);
+          })
+          .catch(() => {
+            alert("Results copied to clipboard:\n\n" + text);
+          });
+      }
+
+      function showHowToPlay() {
+        alert(`How to Play Study Quest:
+
+1. Choose a subject (Matte, Norsk, Engelsk, Samfunnsfag or Naturfag)
+2. Answer 12 questions
+3. Build your streak for bonus XP
+4. Keep your lives - wrong answers cost 1 life
+5. Earn XP and beat your high score!
+
+Tip: Read the explanations after each answer to learn faster.`);
+      }
+
+      // Initialize
+      function init() {
+        initTailwind();
+        showStartScreen();
+
+        // Load last high score
+        const highScore = localStorage.getItem("studyQuestHighScore") || 1240;
+        document.getElementById("global-high-score").textContent = highScore;
+
+        // Keyboard support
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            const gameScreen = document.getElementById("game-screen");
+            if (!gameScreen.classList.contains("hidden")) {
+              endGame();
+            }
+          }
+        });
+
+        console.log(
+          "%c[Study Quest v2.0] EduQuest initialized successfully",
+          "color:#22c55e"
+        );
+      }
+
+      window.onload = init;
+    </script>
+  </body>
+</html>
