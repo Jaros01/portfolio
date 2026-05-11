@@ -91,7 +91,7 @@
                         <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
                         <div>
                             <p class="font-medium">Kjør smart fordeling</p>
-                            <p class="text-sm text-zinc-400">Systemet kjører 50 simuleringer og velger det mest rettferdige resultatet automatisk.</p>
+                            <p class="text-sm text-zinc-400">Systemet kjører 100 simuleringer og velger det mest rettferdige resultatet automatisk.</p>
                         </div>
                     </div>
                 </div>
@@ -146,12 +146,17 @@
             <div id="section-admin">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                     <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Dager og Fag</h2>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="addRandomSubjects()" class="flex-1 sm:flex-none px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
-                            <i class="fa-solid fa-magic"></i> <span>Legg til tilfeldige fag</span>
-                        </button>
-                        <button onclick="addNewPool()" class="flex-1 sm:flex-none px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm font-medium flex items-center justify-center gap-x-2 big-button touch-target">
-                            <i class="fa-solid fa-plus"></i> <span>Ny dag</span>
+                    
+                    <!-- NEW: Random subjects with user input -->
+                    <div class="flex items-center gap-3">
+                        <div>
+                            <label class="block text-xs text-zinc-400 mb-1">Antall fag per dag</label>
+                            <input id="random-subjects-count" type="number" value="4" min="1" max="15" 
+                                   class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-center text-lg touch-target">
+                        </div>
+                        <button onclick="addRandomSubjects()" 
+                                class="px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target mt-4">
+                            <i class="fa-solid fa-magic"></i> <span>Legg til</span>
                         </button>
                     </div>
                 </div>
@@ -380,20 +385,24 @@
             renderSubjectsForPool(poolIndex);
         }
 
+        // NEW: Uses the input field value
         function addRandomSubjects() {
+            const countInput = document.getElementById('random-subjects-count');
+            const count = parseInt(countInput.value) || 4;
+
             const subjectNames = [
                 "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring",
                 "Yoga & Meditasjon", "Matlaging", "Kreativ Skriving", "Filmproduksjon",
-                "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill"
+                "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill",
+                "Sykling", "Kajakk", "Seiling", "Kunsthistorie", "Psykologi", "Filosofi"
             ];
 
             pools.forEach(pool => {
-                const numberOfSubjects = Math.floor(Math.random() * 4) + 3;
-               
-                for (let i = 0; i < numberOfSubjects; i++) {
+                for (let i = 0; i < count; i++) {
                     const randomName = subjectNames[Math.floor(Math.random() * subjectNames.length)];
                     const randomSpots = Math.floor(Math.random() * 17) + 8;
-                   
+                    
+                    // Avoid duplicates
                     if (!pool.subjects.some(s => s.name === randomName)) {
                         pool.subjects.push({
                             name: randomName,
@@ -405,7 +414,7 @@
             });
 
             renderPools();
-            alert("Tilfeldige fag lagt til!");
+            alert(`${count} tilfeldige fag lagt til hver dag!`);
         }
 
         function renderStudentForm() {
@@ -604,7 +613,7 @@
         }
 
         function runMultipleSimulations() {
-            const SIMULATIONS = 50;
+            const SIMULATIONS = 100; // ← Changed back to 100
             let bestScore = -Infinity;
             let bestAllocations = [];
             let bestPools = JSON.parse(JSON.stringify(pools));
@@ -762,7 +771,6 @@
 
             let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Elev</th>`;
            
-            // Use pools in original order (no sorting)
             pools.forEach(pool => {
                 html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
             });
@@ -793,7 +801,6 @@
             const enrollmentContainer = document.getElementById('subject-enrollment');
             let enrollmentHtml = '';
 
-            // Use pools in original order (no sorting)
             pools.forEach(pool => {
                 const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
                
@@ -906,7 +913,7 @@
             
             closeEditModal();
             renderResults();
-            showAllocationSummary(0, 50);
+            showAllocationSummary(0, 100);
         }
 
         function closeEditModal() {
@@ -953,10 +960,10 @@
         function initApp() {
             initDefaultPools();
             renderPools();
-            console.log('%c[EduChoice] Days now appear in correct order!', 'color:#22c55e');
+            console.log('%c[EduChoice] Updated with per-day random subjects + 100 simulations!', 'color:#22c55e');
         }
 
-        console.log('%c[EduChoice] Ready with correct day ordering', 'color:#22c55e');
+        console.log('%c[EduChoice] Ready', 'color:#22c55e');
     </script>
 </body>
 </html>
