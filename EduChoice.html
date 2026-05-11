@@ -1,290 +1,501 @@
 <!DOCTYPE html>
 <html lang="no">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduChoice • EduQuest</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduChoice • Demo - Fredrikstad Folkehøyskole</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
     <style>
-        .pool-card { transition: all 0.2s ease; }
-        .nav-active { border-bottom: 3px solid #6366f1; color: white; font-weight: 600; }
-       
-        @media (max-width: 640px) {
-            .nav-tab { padding-left: 0.75rem; padding-right: 0.75rem; font-size: 0.75rem; }
-            .big-button { padding-top: 1rem; padding-bottom: 1rem; font-size: 1rem; }
+      .pool-card {
+        transition: all 0.2s ease;
+      }
+      .nav-active {
+        border-bottom: 3px solid #6366f1;
+        color: white;
+        font-weight: 600;
+      }
+
+      @media (max-width: 640px) {
+        .nav-tab {
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+          font-size: 0.75rem;
         }
-       
-        .touch-target {
-            min-height: 48px;
-            min-width: 48px;
+        .big-button {
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+          font-size: 1rem;
         }
-       
-        .day-box {
-            background-color: #18181b;
-            border: 1px solid #3f3f46;
-        }
-       
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-        
-        .landing-bg {
-            background: linear-gradient(135deg, #18181b 0%, #27253a 100%);
-        }
-        
-        .modal {
-            animation: fadeIn 0.2s ease-out;
-        }
+      }
+
+      .touch-target {
+        min-height: 48px;
+        min-width: 48px;
+      }
+
+      .day-box {
+        background-color: #18181b;
+        border: 1px solid #3f3f46;
+      }
+
+      .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .landing-bg {
+        background: linear-gradient(135deg, #18181b 0%, #27253a 100%);
+      }
+
+      .modal {
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      .success-toast {
+        animation: slideUp 0.3s ease-out;
+      }
     </style>
-</head>
-<body class="bg-zinc-950 text-zinc-200">
-
+  </head>
+  <body class="bg-zinc-950 text-zinc-200">
     <!-- LANDING PAGE -->
-    <div id="landing-page" class="min-h-screen landing-bg flex items-center justify-center px-6">
-        <div class="max-w-2xl text-center">
-            <div class="flex justify-center mb-6">
-                <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl">
-                    <i class="fa-solid fa-graduation-cap text-white text-5xl"></i>
-                </div>
-            </div>
-            
-            <h1 class="text-6xl font-bold tracking-tight mb-4">EduChoice</h1>
-            <p class="text-2xl text-zinc-400 mb-12">av EduQuest</p>
-
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-8 text-left">
-                <h2 class="text-2xl font-semibold mb-4 flex items-center gap-x-3">
-                    <i class="fa-solid fa-info-circle text-emerald-400"></i>
-                    Hva er EduChoice?
-                </h2>
-                <p class="text-zinc-300 leading-relaxed">
-                    EduChoice er et enkelt og smart verktøy som hjelper folkehøyskoler å fordele valgfag til elever på en rettferdig måte.
-                </p>
-            </div>
-
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10 text-left">
-                <h2 class="text-2xl font-semibold mb-6 flex items-center gap-x-3">
-                    <i class="fa-solid fa-play text-emerald-400"></i>
-                    Slik fungerer demoen
-                </h2>
-                
-                <div class="space-y-5">
-                    <div class="flex gap-4">
-                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</div>
-                        <div>
-                            <p class="font-medium">Legg til dager og fag</p>
-                            <p class="text-sm text-zinc-400">Opprett dager og legg til valgfag med begrenset antall plasser.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-4">
-                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</div>
-                        <div>
-                            <p class="font-medium">Legg til elever og preferanser</p>
-                            <p class="text-sm text-zinc-400">Elevene rangerer sine 1., 2. og 3. valg for hvert fag.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-4">
-                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
-                        <div>
-                            <p class="font-medium">Kjør smart fordeling</p>
-                            <p class="text-sm text-zinc-400">Systemet kjører 100 simuleringer og velger det mest rettferdige resultatet automatisk.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="startDemo()"
-                    class="px-12 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-semibold rounded-3xl flex items-center justify-center gap-x-3 mx-auto big-button touch-target shadow-lg">
-                <span>Start Demo</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-            
-            <p class="text-xs text-zinc-500 mt-6">Dette er en fungerende demo • Ingen data lagres</p>
+    <div
+      id="landing-page"
+      class="min-h-screen landing-bg flex items-center justify-center px-6"
+    >
+      <div class="max-w-2xl text-center">
+        <div class="flex justify-center mb-6">
+          <div
+            class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl"
+          >
+            <i class="fa-solid fa-graduation-cap text-white text-5xl"></i>
+          </div>
         </div>
-    </div>
 
+        <h1 class="text-6xl font-bold tracking-tight mb-4">EduChoice</h1>
+        <p class="text-2xl text-zinc-400 mb-12">av EduQuest</p>
+        <div
+          class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-8 text-left"
+        >
+          <h2 class="text-2xl font-semibold mb-4 flex items-center gap-x-3">
+            <i class="fa-solid fa-info-circle text-emerald-400"></i>
+            Hva er EduChoice?
+          </h2>
+          <p class="text-zinc-300 leading-relaxed">
+            EduChoice er et enkelt og smart verktøy som hjelper folkehøyskoler å
+            fordele valgfag til elever på en rettferdig måte.
+          </p>
+        </div>
+        <div
+          class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10 text-left"
+        >
+          <h2 class="text-2xl font-semibold mb-6 flex items-center gap-x-3">
+            <i class="fa-solid fa-play text-emerald-400"></i>
+            Slik fungerer demoen
+          </h2>
+
+          <div class="space-y-5">
+            <div class="flex gap-4">
+              <div
+                class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold"
+              >
+                1
+              </div>
+              <div>
+                <p class="font-medium">Legg til dager og fag</p>
+                <p class="text-sm text-zinc-400">
+                  Opprett dager og legg til valgfag med begrenset antall
+                  plasser.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div
+                class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold"
+              >
+                2
+              </div>
+              <div>
+                <p class="font-medium">Legg til elever og preferanser</p>
+                <p class="text-sm text-zinc-400">
+                  Elevene rangerer sine 1., 2. og 3. valg for hvert fag.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div
+                class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold"
+              >
+                3
+              </div>
+              <div>
+                <p class="font-medium">Kjør smart fordeling</p>
+                <p class="text-sm text-zinc-400">
+                  Systemet kjører 100 simuleringer og velger det mest
+                  rettferdige resultatet automatisk.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          onclick="startDemo()"
+          class="px-12 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-semibold rounded-3xl flex items-center justify-center gap-x-3 mx-auto big-button touch-target shadow-lg"
+        >
+          <span>Start Demo</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <p class="text-xs text-zinc-500 mt-6">
+          Dette er en fungerende demo • Ingen data lagres
+        </p>
+      </div>
+    </div>
     <!-- MAIN APP -->
     <div id="main-app" class="hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-            
-            <!-- Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <div class="flex items-center gap-x-4">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg">
-                        <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">EduChoice</h1>
-                        <p class="text-sm text-zinc-400">av EduQuest • Fredrikstad Folkehøyskole</p>
-                    </div>
-                </div>
-               
-                <div class="flex items-center gap-x-2 text-sm">
-                    <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
-                    <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 elever</div>
-                </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <!-- Header -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
+        >
+          <div class="flex items-center gap-x-4">
+            <div
+              class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-lg"
+            >
+              <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
             </div>
+            <div>
+              <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">
+                EduChoice
+              </h1>
+              <p class="text-sm text-zinc-400">
+                av EduQuest • Fredrikstad Folkehøyskole
+              </p>
+            </div>
+          </div>
 
-            <!-- Navigation -->
-            <div class="flex gap-x-1 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto">
-                <button onclick="showSection('admin')" id="nav-admin" class="nav-active nav-tab px-4 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap">
-                    <i class="fa-solid fa-cog"></i> <span>Admin</span>
-                </button>
-                <button onclick="showSection('students')" id="nav-students" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                    <i class="fa-solid fa-users"></i> <span>Elever</span>
-                </button>
-                <button onclick="showSection('results')" id="nav-results" class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap">
-                    <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
-                </button>
-            </div>
-
-            <!-- ADMIN SECTION -->
-            <div id="section-admin">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                    <h2 class="text-2xl sm:text-3xl font-semibold">Administrer Dager og Fag</h2>
-                    
-                    <!-- NEW: Random subjects with user input -->
-                    <div class="flex items-center gap-3">
-                        <div>
-                            <label class="block text-xs text-zinc-400 mb-1">Antall fag per dag</label>
-                            <input id="random-subjects-count" type="number" value="4" min="1" max="15" 
-                                   class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-center text-lg touch-target">
-                        </div>
-                        <button onclick="addRandomSubjects()" 
-                                class="px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target mt-4">
-                            <i class="fa-solid fa-magic"></i> <span>Legg til</span>
-                        </button>
-                    </div>
-                </div>
-               
-                <div id="pools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-
-            <!-- STUDENTS SECTION -->
-            <div id="section-students" class="hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                    <h2 class="text-2xl sm:text-3xl font-semibold">Legg til elevpreferanser</h2>
-                   
-                    <div class="flex items-center gap-2">
-                        <input id="random-count" type="number" value="10" min="1" max="200"
-                               class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-center text-lg touch-target">
-                        <button onclick="addRandomStudentsWithConfirm()"
-                                class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target">
-                            <i class="fa-solid fa-dice"></i>
-                            <span>Legg til tilfeldige</span>
-                        </button>
-                    </div>
-                </div>
-               
-                <div class="max-w-2xl">
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
-                        <div class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Elevnavn</label>
-                                <input id="student-name" type="text" placeholder="Ola Nordmann" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target" onkeydown="if (event.key === 'Enter') addStudent()">
-                            </div>
-                            <div id="student-preferences-form"></div>
-                            <button onclick="addStudent()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target">Legg til elevpreferanser</button>
-                        </div>
-                    </div>
-                </div>
-               
-                <div class="mt-8">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold">Registrerte elever (<span id="student-count">0</span>)</h3>
-                       
-                        <button onclick="removeAllStudentsWithConfirm()"
-                                class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target">
-                            <i class="fa-solid fa-trash"></i>
-                            <span>Fjern alle elever</span>
-                        </button>
-                    </div>
-                    <div id="students-list" class="space-y-2"></div>
-                </div>
-            </div>
-
-            <!-- RESULTS SECTION -->
-            <div id="section-results" class="hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                    <h2 class="text-2xl sm:text-3xl font-semibold">Fordelingsresultater</h2>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="runMultipleSimulationsWithConfirm()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                            <i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>
-                        </button>
-                       
-                        <button onclick="resetAllocationsWithConfirm()" class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target">
-                            <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
-                        </button>
-                    </div>
-                </div>
-               
-                <div id="allocation-summary" class="mb-6 hidden"></div>
-               
-                <div class="mb-8">
-                    <h3 class="font-semibold text-xl mb-4">Elevoversikt</h3>
-                    <div id="student-overview" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"></div>
-                </div>
-               
-                <div>
-                    <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
-                    <div id="subject-enrollment" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"></div>
-                </div>
-            </div>
+          <div class="flex items-center gap-x-2 text-sm">
+            <div class="px-3 py-1 bg-zinc-900 rounded-2xl">Vår 2026</div>
+            <div class="px-3 py-1 bg-zinc-900 rounded-2xl">~100 elever</div>
+          </div>
         </div>
+        <!-- Navigation -->
+        <div
+          class="flex gap-x-1 mb-8 border-b border-zinc-800 pb-1 overflow-x-auto"
+        >
+          <button
+            onclick="showSection('admin')"
+            id="nav-admin"
+            class="nav-active nav-tab px-4 py-3 rounded-t-2xl flex items-center gap-x-2 text-sm font-medium whitespace-nowrap"
+          >
+            <i class="fa-solid fa-cog"></i> <span>Admin</span>
+          </button>
+          <button
+            onclick="showSection('students')"
+            id="nav-students"
+            class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap"
+          >
+            <i class="fa-solid fa-users"></i> <span>Elever</span>
+          </button>
+          <button
+            onclick="showSection('results')"
+            id="nav-results"
+            class="nav-tab px-4 py-3 text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm font-medium rounded-t-2xl whitespace-nowrap"
+          >
+            <i class="fa-solid fa-chart-bar"></i> <span>Resultater</span>
+          </button>
+        </div>
+        <!-- ADMIN SECTION -->
+        <div id="section-admin">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6"
+          >
+            <h2 class="text-2xl sm:text-3xl font-semibold">
+              Administrer Dager og Fag
+            </h2>
+
+            <div
+              class="flex flex-col sm:flex-row items-start sm:items-end gap-4"
+            >
+              <button
+                onclick="addNewPool()"
+                class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target"
+              >
+                <i class="fa-solid fa-plus"></i> <span>Legg til dag</span>
+              </button>
+
+              <div class="flex items-end gap-2">
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1"
+                    >Antall fag per dag</label
+                  >
+                  <input
+                    id="random-subjects-count"
+                    type="number"
+                    value="4"
+                    min="1"
+                    max="15"
+                    class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-center text-lg touch-target"
+                  />
+                </div>
+                <button
+                  onclick="addRandomSubjects()"
+                  class="px-5 py-3 bg-orange-600 hover:bg-orange-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target"
+                >
+                  <i class="fa-solid fa-magic"></i>
+                  <span>Legg til tilfeldige</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="pools-container"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          ></div>
+        </div>
+        <!-- STUDENTS SECTION -->
+        <div id="section-students" class="hidden">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6"
+          >
+            <h2 class="text-2xl sm:text-3xl font-semibold">
+              Legg til elevpreferanser
+            </h2>
+
+            <div class="flex items-center gap-2">
+              <input
+                id="random-count"
+                type="number"
+                value="10"
+                min="1"
+                max="200"
+                class="w-20 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-center text-lg touch-target"
+              />
+              <button
+                onclick="addRandomStudentsWithConfirm()"
+                class="px-5 py-3 bg-purple-600 hover:bg-purple-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 big-button touch-target"
+              >
+                <i class="fa-solid fa-dice"></i>
+                <span>Legg til tilfeldige</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="max-w-2xl">
+            <div
+              class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8"
+            >
+              <div class="space-y-6">
+                <div>
+                  <label class="block text-sm font-medium mb-2">Elevnavn</label>
+                  <input
+                    id="student-name"
+                    type="text"
+                    placeholder="Ola Nordmann"
+                    class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg touch-target"
+                    onkeydown="if (event.key === 'Enter') addStudent()"
+                  />
+                </div>
+                <div id="student-preferences-form"></div>
+                <button
+                  onclick="addStudent()"
+                  class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg big-button touch-target"
+                >
+                  Legg til elevpreferanser
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold">
+                Registrerte elever (<span id="student-count">0</span>)
+              </h3>
+
+              <button
+                onclick="removeAllStudentsWithConfirm()"
+                class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-2xl text-sm font-medium flex items-center gap-x-2 touch-target"
+              >
+                <i class="fa-solid fa-trash"></i>
+                <span>Fjern alle elever</span>
+              </button>
+            </div>
+            <div id="students-list" class="space-y-2"></div>
+          </div>
+        </div>
+        <!-- RESULTS SECTION -->
+        <div id="section-results" class="hidden">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6"
+          >
+            <h2 class="text-2xl sm:text-3xl font-semibold">
+              Fordelingsresultater
+            </h2>
+            <div class="flex flex-wrap gap-2">
+              <button
+                onclick="runMultipleSimulationsWithConfirm()"
+                class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target"
+              >
+                <i class="fa-solid fa-magic"></i>
+                <span>Kjør optimal fordeling</span>
+              </button>
+
+              <button
+                onclick="resetAllocationsWithConfirm()"
+                class="px-4 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold flex items-center gap-x-2 big-button touch-target"
+              >
+                <i class="fa-solid fa-undo"></i> <span>Tilbakestill</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="allocation-summary" class="mb-6 hidden"></div>
+
+          <div class="mb-8">
+            <h3 class="font-semibold text-xl mb-4">Elevoversikt</h3>
+            <div
+              id="student-overview"
+              class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[300px]"
+            ></div>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-xl mb-4">Faginndeling</h3>
+            <div
+              id="subject-enrollment"
+              class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-6 min-h-[200px]"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- EDIT MODAL -->
+    <div
+      id="edit-modal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div
+        class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 w-full max-w-md mx-4"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-semibold">Endre fordeling</h3>
+          <button
+            onclick="closeEditModal()"
+            class="text-zinc-400 hover:text-white text-2xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div
+          id="edit-student-name"
+          class="font-semibold text-lg mb-6 text-emerald-400"
+        ></div>
+
+        <div id="edit-form" class="space-y-5"></div>
+
+        <div class="flex gap-3 mt-8">
+          <button
+            onclick="saveStudentEdit()"
+            class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold"
+          >
+            Lagre endringer
+          </button>
+          <button
+            onclick="closeEditModal()"
+            class="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold"
+          >
+            Avbryt
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- EDIT MODAL -->
-    <div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 w-full max-w-md mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-semibold">Endre fordeling</h3>
-                <button onclick="closeEditModal()" class="text-zinc-400 hover:text-white text-2xl">&times;</button>
-            </div>
-            
-            <div id="edit-student-name" class="font-semibold text-lg mb-6 text-emerald-400"></div>
-            
-            <div id="edit-form" class="space-y-5"></div>
-            
-            <div class="flex gap-3 mt-8">
-                <button onclick="saveStudentEdit()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold">Lagre endringer</button>
-                <button onclick="closeEditModal()" class="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-2xl font-semibold">Avbryt</button>
-            </div>
-        </div>
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-x-3 z-50"
+    >
+      <i class="fa-solid fa-check-circle"></i>
+      <span id="toast-message"></span>
     </div>
 
     <script>
-        function startDemo() {
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            initApp();
-        }
+      function startDemo() {
+        document.getElementById("landing-page").classList.add("hidden");
+        document.getElementById("main-app").classList.remove("hidden");
+        initApp();
 
-        let pools = [];
-        let students = [];
-        let allocations = [];
-        let currentEditingStudent = null;
+        setTimeout(() => {
+          if (pools.length > 0 && pools[0].subjects.length === 0) {
+            loadDemoData();
+          }
+        }, 800);
+      }
 
-        function initDefaultPools() {
-            pools = [
-                { id: 1, name: "Mandag", subjects: [] },
-                { id: 2, name: "Tirsdag", subjects: [] },
-                { id: 3, name: "Onsdag", subjects: [] }
-            ];
-        }
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        const msg = document.getElementById("toast-message");
+        msg.textContent = message;
+        toast.classList.remove("hidden");
+        toast.classList.add("flex");
 
-        function renderPools() {
-            const container = document.getElementById('pools-container');
-            container.innerHTML = '';
+        setTimeout(() => {
+          toast.classList.remove("flex");
+          toast.classList.add("hidden");
+        }, 2500);
+      }
 
-            pools.forEach((pool, poolIndex) => {
-                const poolDiv = document.createElement('div');
-                poolDiv.className = 'pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6';
+      let pools = [];
+      let students = [];
+      let allocations = [];
+      let currentEditingStudent = null;
 
-                let html = `
+      function initDefaultPools() {
+        pools = [
+          { id: 1, name: "Mandag", subjects: [] },
+          { id: 2, name: "Tirsdag", subjects: [] },
+          { id: 3, name: "Onsdag", subjects: [] },
+        ];
+      }
+
+      function loadDemoData() {
+        pools[0].subjects = [
+          { name: "Fotografi", max: 12, students: [] },
+          { name: "Klatring", max: 10, students: [] },
+          { name: "Teater", max: 14, students: [] },
+        ];
+        pools[1].subjects = [
+          { name: "Matlaging", max: 15, students: [] },
+          { name: "Musikkproduksjon", max: 8, students: [] },
+          { name: "Dans", max: 12, students: [] },
+        ];
+        pools[2].subjects = [
+          { name: "Friluftsliv", max: 16, students: [] },
+          { name: "Filmproduksjon", max: 10, students: [] },
+          { name: "Kreativ Skriving", max: 12, students: [] },
+        ];
+
+        renderPools();
+        showToast("Demo-data lastet inn automatisk");
+      }
+
+      function renderPools() {
+        const container = document.getElementById("pools-container");
+        container.innerHTML = "";
+        pools.forEach((pool, poolIndex) => {
+          const poolDiv = document.createElement("div");
+          poolDiv.className =
+            "pool-card bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6";
+          let html = `
                     <div class="flex justify-between items-center mb-4">
                         <input type="text" value="${pool.name}" onchange="renamePool(${poolIndex}, this.value)"
                                class="font-semibold text-xl bg-transparent border-b border-zinc-700 focus:outline-none px-2 py-1 w-32 sm:w-40">
@@ -292,9 +503,9 @@
                             <i class="fa-solid fa-times text-lg"></i>
                         </button>
                     </div>
-                   
+                  
                     <div class="min-h-[160px] space-y-2 mb-4" id="pool-${pool.id}-subjects"></div>
-                   
+                  
                     <div class="flex gap-2">
                         <input type="text" id="subject-name-${pool.id}" placeholder="Fagnavn" class="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-sm touch-target"
                                onkeydown="if (event.key === 'Enter') addSubjectToPool(${poolIndex})">
@@ -302,28 +513,26 @@
                         <button onclick="addSubjectToPool(${poolIndex})" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-sm touch-target">Legg til</button>
                     </div>
                 `;
+          poolDiv.innerHTML = html;
+          container.appendChild(poolDiv);
+          renderSubjectsForPool(poolIndex);
+        });
+      }
 
-                poolDiv.innerHTML = html;
-                container.appendChild(poolDiv);
-                renderSubjectsForPool(poolIndex);
-            });
+      function renderSubjectsForPool(poolIndex) {
+        const pool = pools[poolIndex];
+        const container = document.getElementById(`pool-${pool.id}-subjects`);
+        if (!container) return;
+        container.innerHTML = "";
+        if (pool.subjects.length === 0) {
+          container.innerHTML = `<p class="text-zinc-500 text-sm italic py-2">Ingen fag lagt til</p>`;
+          return;
         }
-
-        function renderSubjectsForPool(poolIndex) {
-            const pool = pools[poolIndex];
-            const container = document.getElementById(`pool-${pool.id}-subjects`);
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (pool.subjects.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-sm italic py-2">Ingen fag lagt til</p>`;
-                return;
-            }
-
-            pool.subjects.forEach((subject, subjectIndex) => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-zinc-800 px-4 py-2.5 rounded-2xl text-sm';
-                div.innerHTML = `
+        pool.subjects.forEach((subject, subjectIndex) => {
+          const div = document.createElement("div");
+          div.className =
+            "flex justify-between items-center bg-zinc-800 px-4 py-2.5 rounded-2xl text-sm";
+          div.innerHTML = `
                     <div>
                         <span class="font-medium">${subject.name}</span>
                         <span class="text-xs bg-zinc-700 px-2 py-0.5 rounded-full ml-2">${subject.max} plasser</span>
@@ -332,108 +541,123 @@
                         <i class="fa-solid fa-times"></i>
                     </button>
                 `;
-                container.appendChild(div);
-            });
-        }
+          container.appendChild(div);
+        });
+      }
 
-        function addNewPool() {
-            const newPool = {
-                id: Date.now(),
-                name: "Ny dag",
-                subjects: []
-            };
-            pools.push(newPool);
-            renderPools();
-        }
+      function addNewPool() {
+        const newPool = {
+          id: Date.now(),
+          name: "Ny dag",
+          subjects: [],
+        };
+        pools.push(newPool);
+        renderPools();
+        showToast("Ny dag lagt til");
+      }
 
-        function renamePool(poolIndex, newName) {
-            if (!newName.trim()) return;
-            pools[poolIndex].name = newName.trim();
-        }
+      function renamePool(poolIndex, newName) {
+        if (!newName.trim()) return;
+        pools[poolIndex].name = newName.trim();
+      }
 
-        function deletePool(poolIndex) {
-            if (confirm("Er du sikker på at du vil slette denne dagen?")) {
-                pools.splice(poolIndex, 1);
-                renderPools();
+      function deletePool(poolIndex) {
+        if (confirm("Er du sikker på at du vil slette denne dagen?")) {
+          pools.splice(poolIndex, 1);
+          renderPools();
+        }
+      }
+
+      function addSubjectToPool(poolIndex) {
+        const pool = pools[poolIndex];
+        const nameInput = document.getElementById(`subject-name-${pool.id}`);
+        const maxInput = document.getElementById(`subject-max-${pool.id}`);
+        const name = nameInput.value.trim();
+        if (!name) {
+          alert("Skriv inn fagnavn");
+          return;
+        }
+        pool.subjects.push({
+          name: name,
+          max: parseInt(maxInput.value) || 25,
+          students: [],
+        });
+        nameInput.value = "";
+        renderSubjectsForPool(poolIndex);
+        nameInput.focus();
+      }
+
+      function removeSubject(poolIndex, subjectIndex) {
+        pools[poolIndex].subjects.splice(subjectIndex, 1);
+        renderSubjectsForPool(poolIndex);
+      }
+
+      function addRandomSubjects() {
+        const countInput = document.getElementById("random-subjects-count");
+        const count = parseInt(countInput.value) || 4;
+        const subjectNames = [
+          "Fotografi",
+          "Keramikk",
+          "Musikkproduksjon",
+          "Teater",
+          "Klatring",
+          "Yoga & Meditasjon",
+          "Matlaging",
+          "Kreativ Skriving",
+          "Filmproduksjon",
+          "Dans",
+          "Friluftsliv",
+          "Hagearbeid",
+          "Digital Kunst",
+          "Brettspill",
+        ];
+
+        let totalAdded = 0;
+
+        pools.forEach((pool) => {
+          let addedThisPool = 0;
+          let attempts = 0;
+          const maxAttempts = 50;
+
+          while (addedThisPool < count && attempts < maxAttempts) {
+            attempts++;
+            const randomName =
+              subjectNames[Math.floor(Math.random() * subjectNames.length)];
+            const randomSpots = Math.floor(Math.random() * 17) + 8;
+
+            const isDuplicate = pool.subjects.some(
+              (s) => s.name.toLowerCase() === randomName.toLowerCase()
+            );
+
+            if (!isDuplicate) {
+              pool.subjects.push({
+                name: randomName,
+                max: randomSpots,
+                students: [],
+              });
+              addedThisPool++;
+              totalAdded++;
             }
+          }
+        });
+
+        renderPools();
+        showToast(`${totalAdded} tilfeldige fag lagt til`);
+      }
+
+      function renderStudentForm() {
+        const container = document.getElementById("student-preferences-form");
+        container.innerHTML = "";
+        if (pools.length === 0) {
+          container.innerHTML = `<p class="text-zinc-500">Ingen pools lagt til ennå.</p>`;
+          return;
         }
-
-        function addSubjectToPool(poolIndex) {
-            const pool = pools[poolIndex];
-            const nameInput = document.getElementById(`subject-name-${pool.id}`);
-            const maxInput = document.getElementById(`subject-max-${pool.id}`);
-
-            const name = nameInput.value.trim();
-            if (!name) {
-                alert("Skriv inn fagnavn");
-                return;
-            }
-
-            pool.subjects.push({
-                name: name,
-                max: parseInt(maxInput.value) || 25,
-                students: []
-            });
-
-            nameInput.value = '';
-            renderSubjectsForPool(poolIndex);
-            nameInput.focus();
-        }
-
-        function removeSubject(poolIndex, subjectIndex) {
-            pools[poolIndex].subjects.splice(subjectIndex, 1);
-            renderSubjectsForPool(poolIndex);
-        }
-
-        // NEW: Uses the input field value
-        function addRandomSubjects() {
-            const countInput = document.getElementById('random-subjects-count');
-            const count = parseInt(countInput.value) || 4;
-
-            const subjectNames = [
-                "Fotografi", "Keramikk", "Musikkproduksjon", "Teater", "Klatring",
-                "Yoga & Meditasjon", "Matlaging", "Kreativ Skriving", "Filmproduksjon",
-                "Dans", "Friluftsliv", "Hagearbeid", "Digital Kunst", "Brettspill",
-                "Sykling", "Kajakk", "Seiling", "Kunsthistorie", "Psykologi", "Filosofi"
-            ];
-
-            pools.forEach(pool => {
-                for (let i = 0; i < count; i++) {
-                    const randomName = subjectNames[Math.floor(Math.random() * subjectNames.length)];
-                    const randomSpots = Math.floor(Math.random() * 17) + 8;
-                    
-                    // Avoid duplicates
-                    if (!pool.subjects.some(s => s.name === randomName)) {
-                        pool.subjects.push({
-                            name: randomName,
-                            max: randomSpots,
-                            students: []
-                        });
-                    }
-                }
-            });
-
-            renderPools();
-            alert(`${count} tilfeldige fag lagt til hver dag!`);
-        }
-
-        function renderStudentForm() {
-            const container = document.getElementById('student-preferences-form');
-            container.innerHTML = '';
-
-            if (pools.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500">Ingen pools lagt til ennå.</p>`;
-                return;
-            }
-
-            pools.forEach((pool) => {
-                if (pool.subjects.length === 0) return;
-
-                let html = `<div class="mb-6">
+        pools.forEach((pool) => {
+          if (pool.subjects.length === 0) return;
+          let html = `<div class="mb-6">
                     <div class="font-semibold mb-3 text-emerald-400">${pool.name}</div>`;
-
-                pool.subjects.forEach((subject, index) => {
-                    html += `
+          pool.subjects.forEach((subject, index) => {
+            html += `
                         <div class="flex items-center gap-3 mb-2">
                             <div class="flex-1 text-sm">${subject.name}</div>
                             <select id="pref-${pool.id}-${index}" class="bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2 text-sm w-28 touch-target">
@@ -444,88 +668,82 @@
                             </select>
                         </div>
                     `;
-                });
+          });
+          html += `</div>`;
+          container.innerHTML += html;
+        });
+      }
 
-                html += `</div>`;
-                container.innerHTML += html;
-            });
+      function addStudent() {
+        const name = document.getElementById("student-name").value.trim();
+        if (!name) {
+          alert("Skriv inn elevnavn");
+          return;
         }
-
-        function addStudent() {
-            const name = document.getElementById('student-name').value.trim();
-            if (!name) {
-                alert("Skriv inn elevnavn");
-                return;
+        const preferences = {};
+        let hasPreferences = false;
+        pools.forEach((pool) => {
+          preferences[pool.id] = {};
+          pool.subjects.forEach((subject, index) => {
+            const select = document.getElementById(`pref-${pool.id}-${index}`);
+            if (select && select.value) {
+              preferences[pool.id][subject.name] = parseInt(select.value);
+              hasPreferences = true;
             }
-
-            const preferences = {};
-            let hasPreferences = false;
-
-            pools.forEach(pool => {
-                preferences[pool.id] = {};
-                pool.subjects.forEach((subject, index) => {
-                    const select = document.getElementById(`pref-${pool.id}-${index}`);
-                    if (select && select.value) {
-                        preferences[pool.id][subject.name] = parseInt(select.value);
-                        hasPreferences = true;
-                    }
-                });
-            });
-
-            if (!hasPreferences) {
-                alert("Velg minst én preferanse");
-                return;
-            }
-
-            students.push({
-                id: Date.now(),
-                name: name,
-                preferences: preferences
-            });
-
-            document.getElementById('student-name').value = '';
-            renderStudentList();
-            document.getElementById('student-name').focus();
+          });
+        });
+        if (!hasPreferences) {
+          alert("Velg minst én preferanse");
+          return;
         }
+        students.push({
+          id: Date.now(),
+          name: name,
+          preferences: preferences,
+        });
+        document.getElementById("student-name").value = "";
+        renderStudentList();
+        showToast("Elev lagt til");
+        document.getElementById("student-name").focus();
+      }
 
-        function renderStudentList() {
-            const container = document.getElementById('students-list');
-            const countEl = document.getElementById('student-count');
-            container.innerHTML = '';
-            countEl.textContent = students.length;
+      function renderStudentList() {
+        const container = document.getElementById("students-list");
+        const countEl = document.getElementById("student-count");
+        container.innerHTML = "";
+        countEl.textContent = students.length;
+        if (students.length === 0) {
+          container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen elever lagt til ennå</p>`;
+          return;
+        }
+        const sortedStudents = [...students].sort((a, b) => {
+          const lastNameA = a.name.split(" ").pop();
+          const lastNameB = b.name.split(" ").pop();
+          return lastNameA.localeCompare(lastNameB);
+        });
+        sortedStudents.forEach((student) => {
+          let prefHtml = "";
 
-            if (students.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-sm">Ingen elever lagt til ennå</p>`;
-                return;
+          Object.keys(student.preferences).forEach((poolId) => {
+            const pool = pools.find((p) => p.id == poolId);
+            if (pool) {
+              const prefs = student.preferences[poolId];
+              const sortedPrefs = Object.entries(prefs).sort(
+                (a, b) => a[1] - b[1]
+              );
+
+              prefHtml += `<div class="mt-1 text-xs"><strong>${pool.name}:</strong> `;
+              sortedPrefs.forEach(([subject, rank], i) => {
+                prefHtml += `${rank}. ${subject}`;
+                if (i < sortedPrefs.length - 1) prefHtml += " • ";
+              });
+              prefHtml += `</div>`;
             }
-
-            const sortedStudents = [...students].sort((a, b) => {
-                const lastNameA = a.name.split(' ').pop();
-                const lastNameB = b.name.split(' ').pop();
-                return lastNameA.localeCompare(lastNameB);
-            });
-
-            sortedStudents.forEach(student => {
-                let prefHtml = '';
-               
-                Object.keys(student.preferences).forEach(poolId => {
-                    const pool = pools.find(p => p.id == poolId);
-                    if (pool) {
-                        const prefs = student.preferences[poolId];
-                        const sortedPrefs = Object.entries(prefs).sort((a, b) => a[1] - b[1]);
-                       
-                        prefHtml += `<div class="mt-1 text-xs"><strong>${pool.name}:</strong> `;
-                        sortedPrefs.forEach(([subject, rank], i) => {
-                            prefHtml += `${rank}. ${subject}`;
-                            if (i < sortedPrefs.length - 1) prefHtml += ' • ';
-                        });
-                        prefHtml += `</div>`;
-                    }
-                });
-
-                const div = document.createElement('div');
-                div.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3';
-                div.innerHTML = `
+          });
+          const div = document.createElement("div");
+          div.className =
+            "bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3";
+          div.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
                             <span class="font-medium">${student.name}</span>
@@ -534,309 +752,413 @@
                         <button onclick="removeStudent(${student.id})" class="text-red-400 hover:text-red-500 text-sm ml-3 touch-target">Fjern</button>
                     </div>
                 `;
-                container.appendChild(div);
+          container.appendChild(div);
+        });
+      }
+
+      function removeStudent(id) {
+        students = students.filter((s) => s.id !== id);
+        renderStudentList();
+      }
+
+      function removeAllStudentsWithConfirm() {
+        if (students.length === 0) return;
+
+        if (
+          confirm(
+            "Er du sikker på at du vil fjerne ALLE elever? Dette kan ikke angres."
+          )
+        ) {
+          students = [];
+          renderStudentList();
+          showToast("Alle elever fjernet");
+        }
+      }
+
+      function addRandomStudentsWithConfirm() {
+        const countInput = document.getElementById("random-count");
+        let count = parseInt(countInput.value) || 10;
+        if (count < 1) count = 1;
+        if (count > 200) count = 200;
+        if (confirm(`Vil du legge til ${count} tilfeldige elever?`)) {
+          addRandomStudents(count);
+        }
+      }
+
+      function addRandomStudents(count) {
+        const firstNames = [
+          "Ola",
+          "Kari",
+          "Per",
+          "Anna",
+          "Lars",
+          "Maria",
+          "Jonas",
+          "Emma",
+          "Henrik",
+          "Sofie",
+          "Magnus",
+          "Ida",
+          "Nils",
+          "Julie",
+          "Elias",
+          "Mia",
+          "Alexander",
+          "Sara",
+          "Lucas",
+          "Lea",
+          "William",
+          "Nora",
+          "Oliver",
+          "Ella",
+          "Liam",
+          "Linnea",
+          "Noah",
+          "Astrid",
+          "Elias",
+          "Freya",
+          "Isak",
+          "Hanna",
+          "Matias",
+          "Thea",
+          "Filip",
+          "Selma",
+          "Adrian",
+          "Alma",
+          "Sebastian",
+          "Ingrid",
+        ];
+        const lastNames = [
+          "Hansen",
+          "Johansen",
+          "Olsen",
+          "Larsen",
+          "Andersen",
+          "Nilsen",
+          "Kristiansen",
+          "Jensen",
+          "Berg",
+          "Haugen",
+          "Moen",
+          "Bakken",
+          "Strand",
+          "Solberg",
+          "Eide",
+          "Haug",
+          "Sørensen",
+          "Foss",
+          "Myhre",
+          "Lund",
+          "Sandvik",
+          "Berge",
+          "Holm",
+          "Knutsen",
+          "Pettersen",
+          "Aasen",
+          "Vik",
+          "Birkeland",
+          "Hagen",
+          "Dahl",
+          "Rønning",
+          "Sivertsen",
+          "Tveit",
+          "Wold",
+          "Ødegaard",
+        ];
+        for (let i = 0; i < count; i++) {
+          const firstName =
+            firstNames[Math.floor(Math.random() * firstNames.length)];
+          const lastName =
+            lastNames[Math.floor(Math.random() * lastNames.length)];
+          const name = `${firstName} ${lastName}`;
+
+          const preferences = {};
+
+          pools.forEach((pool) => {
+            preferences[pool.id] = {};
+
+            if (pool.subjects.length === 0) return;
+            const allSubjects = [...pool.subjects];
+            const shuffled = allSubjects.sort(() => Math.random() - 0.5);
+            const selectedSubjects = shuffled.slice(
+              0,
+              Math.min(3, allSubjects.length)
+            );
+
+            const ranks = [1, 2, 3].sort(() => Math.random() - 0.5);
+
+            selectedSubjects.forEach((subject, i) => {
+              preferences[pool.id][subject.name] = ranks[i];
             });
+          });
+          students.push({
+            id: Date.now() + i,
+            name: name,
+            preferences: preferences,
+          });
+        }
+        renderStudentList();
+        showToast(`${count} tilfeldige elever lagt til`);
+      }
+
+      function runMultipleSimulationsWithConfirm() {
+        if (students.length === 0) {
+          alert("Legg til noen elever først!");
+          return;
+        }
+        if (
+          confirm(
+            "Vil du kjøre optimal fordeling? Dette vil overskrive tidligere resultater."
+          )
+        ) {
+          runMultipleSimulations();
+        }
+      }
+
+      function runMultipleSimulations() {
+        const button = event.currentTarget;
+        if (button) {
+          simulationButton = button;
+          button.disabled = true;
+          button.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Kjører 100 simuleringer...`;
         }
 
-        function removeStudent(id) {
-            students = students.filter(s => s.id !== id);
-            renderStudentList();
-        }
+        const SIMULATIONS = 100;
+        let bestScore = -Infinity;
+        let bestAllocations = [];
+        let bestPools = JSON.parse(JSON.stringify(pools));
 
-        function removeAllStudentsWithConfirm() {
-            if (students.length === 0) return;
-           
-            if (confirm("Er du sikker på at du vil fjerne ALLE elever? Dette kan ikke angres.")) {
-                students = [];
-                renderStudentList();
-            }
-        }
-
-        function addRandomStudentsWithConfirm() {
-            const countInput = document.getElementById('random-count');
-            let count = parseInt(countInput.value) || 10;
-
-            if (count < 1) count = 1;
-            if (count > 200) count = 200;
-
-            if (confirm(`Vil du legge til ${count} tilfeldige elever?`)) {
-                addRandomStudents(count);
-            }
-        }
-
-        function addRandomStudents(count) {
-            const firstNames = ["Ola", "Kari", "Per", "Anna", "Lars", "Maria", "Jonas", "Emma", "Henrik", "Sofie", "Magnus", "Ida", "Nils", "Julie", "Elias", "Mia", "Alexander", "Sara", "Lucas", "Lea", "William", "Nora", "Oliver", "Ella", "Liam", "Linnea", "Noah", "Astrid", "Elias", "Freya", "Isak", "Hanna", "Matias", "Thea", "Filip", "Selma", "Adrian", "Alma", "Sebastian", "Ingrid"];
-            const lastNames = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Kristiansen", "Jensen", "Berg", "Haugen", "Moen", "Bakken", "Strand", "Solberg", "Eide", "Haug", "Sørensen", "Foss", "Myhre", "Lund", "Sandvik", "Berge", "Holm", "Knutsen", "Pettersen", "Aasen", "Vik", "Birkeland", "Hagen", "Dahl", "Rønning", "Sivertsen", "Tveit", "Wold", "Ødegaard"];
-
-            for (let i = 0; i < count; i++) {
-                const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-                const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-                const name = `${firstName} ${lastName}`;
-               
-                const preferences = {};
-               
-                pools.forEach(pool => {
-                    preferences[pool.id] = {};
-                   
-                    if (pool.subjects.length === 0) return;
-
-                    const allSubjects = [...pool.subjects];
-                    const shuffled = allSubjects.sort(() => Math.random() - 0.5);
-                    const selectedSubjects = shuffled.slice(0, Math.min(3, allSubjects.length));
-                   
-                    const ranks = [1, 2, 3].sort(() => Math.random() - 0.5);
-                   
-                    selectedSubjects.forEach((subject, i) => {
-                        preferences[pool.id][subject.name] = ranks[i];
+        setTimeout(() => {
+          for (let sim = 0; sim < SIMULATIONS; sim++) {
+            pools.forEach((pool) => {
+              pool.subjects.forEach((subject) => (subject.students = []));
+            });
+            let currentAllocations = [];
+            let firstChoices = 0,
+              secondChoices = 0,
+              thirdChoices = 0,
+              noPlacement = 0;
+            pools.forEach((pool) => {
+              const studentsInPool = students.filter(
+                (student) =>
+                  student.preferences[pool.id] &&
+                  Object.keys(student.preferences[pool.id]).length > 0
+              );
+              const shuffled = [...studentsInPool].sort(
+                () => Math.random() - 0.5
+              );
+              shuffled.forEach((student) => {
+                const poolPrefs = student.preferences[pool.id];
+                if (!poolPrefs || Object.keys(poolPrefs).length === 0) return;
+                const sortedChoices = Object.entries(poolPrefs)
+                  .sort((a, b) => a[1] - b[1])
+                  .map((entry) => entry[0]);
+                let assigned = false;
+                for (let choice of sortedChoices) {
+                  const subject = pool.subjects.find((s) => s.name === choice);
+                  if (subject && subject.students.length < subject.max) {
+                    subject.students.push(student.name);
+                    currentAllocations.push({
+                      student: student.name,
+                      pool: pool.name,
+                      subject: choice,
+                      choice: poolPrefs[choice],
+                      poolId: pool.id,
                     });
-                });
+                    assigned = true;
+                    if (poolPrefs[choice] === 1) firstChoices++;
+                    else if (poolPrefs[choice] === 2) secondChoices++;
+                    else if (poolPrefs[choice] === 3) thirdChoices++;
 
-                students.push({
-                    id: Date.now() + i,
-                    name: name,
-                    preferences: preferences
-                });
-            }
-
-            renderStudentList();
-        }
-
-        function runMultipleSimulationsWithConfirm() {
-            if (students.length === 0) {
-                alert("Legg til noen elever først!");
-                return;
-            }
-
-            if (confirm("Vil du kjøre optimal fordeling? Dette vil overskrive tidligere resultater.")) {
-                runMultipleSimulations();
-            }
-        }
-
-        function runMultipleSimulations() {
-            const SIMULATIONS = 100; // ← Changed back to 100
-            let bestScore = -Infinity;
-            let bestAllocations = [];
-            let bestPools = JSON.parse(JSON.stringify(pools));
-
-            for (let sim = 0; sim < SIMULATIONS; sim++) {
-                pools.forEach(pool => {
-                    pool.subjects.forEach(subject => subject.students = []);
-                });
-
-                let currentAllocations = [];
-                let firstChoices = 0, secondChoices = 0, thirdChoices = 0, noPlacement = 0;
-
-                pools.forEach(pool => {
-                    const studentsInPool = students.filter(student => 
-                        student.preferences[pool.id] && Object.keys(student.preferences[pool.id]).length > 0
-                    );
-
-                    const shuffled = [...studentsInPool].sort(() => Math.random() - 0.5);
-
-                    shuffled.forEach(student => {
-                        const poolPrefs = student.preferences[pool.id];
-                        if (!poolPrefs || Object.keys(poolPrefs).length === 0) return;
-
-                        const sortedChoices = Object.entries(poolPrefs)
-                            .sort((a, b) => a[1] - b[1])
-                            .map(entry => entry[0]);
-
-                        let assigned = false;
-
-                        for (let choice of sortedChoices) {
-                            const subject = pool.subjects.find(s => s.name === choice);
-                            if (subject && subject.students.length < subject.max) {
-                                subject.students.push(student.name);
-                                currentAllocations.push({
-                                    student: student.name,
-                                    pool: pool.name,
-                                    subject: choice,
-                                    choice: poolPrefs[choice],
-                                    poolId: pool.id
-                                });
-                                assigned = true;
-
-                                if (poolPrefs[choice] === 1) firstChoices++;
-                                else if (poolPrefs[choice] === 2) secondChoices++;
-                                else if (poolPrefs[choice] === 3) thirdChoices++;
-                                
-                                break;
-                            }
-                        }
-
-                        if (!assigned) {
-                            currentAllocations.push({
-                                student: student.name,
-                                pool: pool.name,
-                                subject: "Ingen ledig plass",
-                                choice: "-",
-                                poolId: pool.id
-                            });
-                            noPlacement++;
-                        }
-                    });
-                });
-
-                const score = (firstChoices * 10) + (secondChoices * 5) + (thirdChoices * 2) - (noPlacement * 10);
-
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestAllocations = currentAllocations;
-                    bestPools = JSON.parse(JSON.stringify(pools));
+                    break;
+                  }
                 }
-            }
-
-            allocations = bestAllocations;
-            pools = bestPools;
-
-            document.getElementById('section-admin').classList.add('hidden');
-            document.getElementById('section-students').classList.add('hidden');
-            document.getElementById('section-results').classList.remove('hidden');
-
-            document.querySelectorAll('[id^="nav-"]').forEach(nav => nav.classList.remove('nav-active'));
-            document.getElementById('nav-results').classList.add('nav-active');
-
-            renderResults();
-            showAllocationSummary(bestScore, SIMULATIONS);
-        }
-
-        function showAllocationSummary(score, simulations) {
-            const summaryContainer = document.getElementById('allocation-summary');
-            summaryContainer.classList.remove('hidden');
-
-            let firstChoice = 0, secondChoice = 0, thirdChoice = 0, noSpot = 0;
-
-            allocations.forEach(item => {
-                if (item.choice === 1) firstChoice++;
-                else if (item.choice === 2) secondChoice++;
-                else if (item.choice === 3) thirdChoice++;
-                else noSpot++;
+                if (!assigned) {
+                  currentAllocations.push({
+                    student: student.name,
+                    pool: pool.name,
+                    subject: "Ingen ledig plass",
+                    choice: "-",
+                    poolId: pool.id,
+                  });
+                  noPlacement++;
+                }
+              });
             });
+            const score =
+              firstChoices * 10 +
+              secondChoices * 5 +
+              thirdChoices * 2 -
+              noPlacement * 10;
+            if (score > bestScore) {
+              bestScore = score;
+              bestAllocations = currentAllocations;
+              bestPools = JSON.parse(JSON.stringify(pools));
+            }
+          }
+          allocations = bestAllocations;
+          pools = bestPools;
+          document.getElementById("section-admin").classList.add("hidden");
+          document.getElementById("section-students").classList.add("hidden");
+          document.getElementById("section-results").classList.remove("hidden");
+          document
+            .querySelectorAll('[id^="nav-"]')
+            .forEach((nav) => nav.classList.remove("nav-active"));
+          document.getElementById("nav-results").classList.add("nav-active");
+          renderResults();
+          showAllocationSummary(bestScore, SIMULATIONS);
 
-            summaryContainer.innerHTML = `
-                <div class="bg-zinc-900 border border-emerald-600 rounded-3xl p-5">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-semibold text-lg">Optimal fordeling funnet</h3>
-                        <span class="text-xs bg-emerald-600 px-3 py-1 rounded-full">${simulations} simuleringer</span>
+          if (simulationButton) {
+            simulationButton.innerHTML = `<i class="fa-solid fa-magic"></i> <span>Kjør optimal fordeling</span>`;
+            simulationButton.disabled = false;
+            simulationButton = null;
+          }
+
+          showToast("Optimal fordeling fullført");
+        }, 300);
+      }
+
+      function showAllocationSummary(score, simulations) {
+        const summaryContainer = document.getElementById("allocation-summary");
+        summaryContainer.classList.remove("hidden");
+        let firstChoice = 0,
+          secondChoice = 0,
+          thirdChoice = 0,
+          noSpot = 0;
+        allocations.forEach((item) => {
+          if (item.choice === 1) firstChoice++;
+          else if (item.choice === 2) secondChoice++;
+          else if (item.choice === 3) thirdChoice++;
+          else noSpot++;
+        });
+
+        summaryContainer.innerHTML = `
+                <div class="bg-zinc-900 border border-emerald-600 rounded-3xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="font-semibold text-xl">Optimal fordeling funnet</h3>
+                            <p class="text-sm text-emerald-400">${simulations} simuleringer • Beste resultat valgt</p>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                        <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-3">
-                            <div class="text-2xl font-bold text-emerald-400">${firstChoice}</div>
-                            <div class="text-xs text-emerald-400">Fikk 1. valg</div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-emerald-900/30 border border-emerald-600 rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-emerald-400">${firstChoice}</div>
+                            <div class="text-xs text-emerald-400 mt-1">Fikk 1. valg</div>
                         </div>
-                        <div class="bg-yellow-900/30 border border-yellow-600 rounded-2xl p-3">
-                            <div class="text-2xl font-bold text-yellow-400">${secondChoice}</div>
-                            <div class="text-xs text-yellow-400">Fikk 2. valg</div>
+                        <div class="bg-yellow-900/30 border border-yellow-600 rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-yellow-400">${secondChoice}</div>
+                            <div class="text-xs text-yellow-400 mt-1">Fikk 2. valg</div>
                         </div>
-                        <div class="bg-orange-900/30 border border-orange-600 rounded-2xl p-3">
-                            <div class="text-2xl font-bold text-orange-400">${thirdChoice}</div>
-                            <div class="text-xs text-orange-400">Fikk 3. valg</div>
+                        <div class="bg-orange-900/30 border border-orange-600 rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-orange-400">${thirdChoice}</div>
+                            <div class="text-xs text-orange-400 mt-1">Fikk 3. valg</div>
                         </div>
-                        <div class="bg-red-900/30 border border-red-600 rounded-2xl p-3">
-                            <div class="text-2xl font-bold text-red-400">${noSpot}</div>
-                            <div class="text-xs text-red-400">Ingen plass</div>
+                        <div class="bg-red-900/30 border border-red-600 rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-red-400">${noSpot}</div>
+                            <div class="text-xs text-red-400 mt-1">Ingen plass</div>
                         </div>
                     </div>
-                    <div class="text-xs text-emerald-400 mt-3 text-center">Beste resultat valgt automatisk</div>
                 </div>
             `;
+      }
+
+      function renderResults() {
+        const overviewContainer = document.getElementById("student-overview");
+
+        if (allocations.length === 0) {
+          overviewContainer.innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
+          document.getElementById("subject-enrollment").innerHTML = "";
+          return;
         }
+        const studentResults = {};
 
-        function renderResults() {
-            const overviewContainer = document.getElementById('student-overview');
-           
-            if (allocations.length === 0) {
-                overviewContainer.innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
-                document.getElementById('subject-enrollment').innerHTML = '';
-                return;
+        allocations.forEach((item) => {
+          if (!studentResults[item.student]) {
+            studentResults[item.student] = {};
+          }
+          studentResults[item.student][item.pool] = {
+            subject: item.subject,
+            choice: item.choice,
+          };
+        });
+        const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
+          const lastNameA = a.split(" ").pop();
+          const lastNameB = b.split(" ").pop();
+          return lastNameA.localeCompare(lastNameB);
+        });
+        let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Elev</th>`;
+
+        pools.forEach((pool) => {
+          html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
+        });
+
+        html += `<th class="py-3 px-4 text-center">Handlinger</th></tr></thead><tbody>`;
+        sortedStudentNames.forEach((studentName) => {
+          html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800">`;
+          html += `<td class="py-3 px-4 font-medium">${studentName}</td>`;
+
+          pools.forEach((pool) => {
+            const result = studentResults[studentName][pool.name];
+            if (result) {
+              const choiceColor =
+                result.choice === 1
+                  ? "text-emerald-400"
+                  : result.choice === 2
+                  ? "text-yellow-400"
+                  : result.choice === 3
+                  ? "text-orange-400"
+                  : "text-zinc-400";
+              html += `<td class="py-3 px-4">${result.subject} <span class="${choiceColor} text-xs">(${result.choice})</span></td>`;
+            } else {
+              html += `<td class="py-3 px-4 text-zinc-500">—</td>`;
             }
+          });
 
-            const studentResults = {};
-           
-            allocations.forEach(item => {
-                if (!studentResults[item.student]) {
-                    studentResults[item.student] = {};
-                }
-                studentResults[item.student][item.pool] = {
-                    subject: item.subject,
-                    choice: item.choice
-                };
+          html += `<td class="py-3 px-4 text-center"><button onclick="editStudentAllocation('${studentName}')" class="text-indigo-400 hover:text-indigo-300 text-sm px-3 py-1">Endre</button></td>`;
+          html += `</tr>`;
+        });
+        html += `</tbody></table></div>`;
+        overviewContainer.innerHTML = html;
+        const enrollmentContainer =
+          document.getElementById("subject-enrollment");
+        let enrollmentHtml = "";
+        pools.forEach((pool) => {
+          const sortedSubjects = [...pool.subjects].sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+
+          let subjectsHtml = `<div class="subject-grid">`;
+
+          sortedSubjects.forEach((subject) => {
+            const enrolledStudents = subject.students || [];
+            const sortedStudents = [...enrolledStudents].sort((a, b) => {
+              const lastNameA = a.split(" ").pop();
+              const lastNameB = b.split(" ").pop();
+              return lastNameA.localeCompare(lastNameB);
             });
-
-            const sortedStudentNames = Object.keys(studentResults).sort((a, b) => {
-                const lastNameA = a.split(' ').pop();
-                const lastNameB = b.split(' ').pop();
-                return lastNameA.localeCompare(lastNameB);
-            });
-
-            let html = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-zinc-700"><th class="py-3 px-4 text-left">Elev</th>`;
-           
-            pools.forEach(pool => {
-                html += `<th class="py-3 px-4 text-left">${pool.name}</th>`;
-            });
-           
-            html += `<th class="py-3 px-4 text-center">Handlinger</th></tr></thead><tbody>`;
-
-            sortedStudentNames.forEach(studentName => {
-                html += `<tr class="border-b border-zinc-800 hover:bg-zinc-800">`;
-                html += `<td class="py-3 px-4 font-medium">${studentName}</td>`;
-               
-                pools.forEach(pool => {
-                    const result = studentResults[studentName][pool.name];
-                    if (result) {
-                        const choiceColor = result.choice === 1 ? 'text-emerald-400' : result.choice === 2 ? 'text-yellow-400' : result.choice === 3 ? 'text-orange-400' : 'text-zinc-400';
-                        html += `<td class="py-3 px-4">${result.subject} <span class="${choiceColor} text-xs">(${result.choice})</span></td>`;
-                    } else {
-                        html += `<td class="py-3 px-4 text-zinc-500">—</td>`;
-                    }
-                });
-               
-                html += `<td class="py-3 px-4 text-center"><button onclick="editStudentAllocation('${studentName}')" class="text-indigo-400 hover:text-indigo-300 text-sm px-3 py-1">Endre</button></td>`;
-                html += `</tr>`;
-            });
-
-            html += `</tbody></table></div>`;
-            overviewContainer.innerHTML = html;
-
-            const enrollmentContainer = document.getElementById('subject-enrollment');
-            let enrollmentHtml = '';
-
-            pools.forEach(pool => {
-                const sortedSubjects = [...pool.subjects].sort((a, b) => a.name.localeCompare(b.name));
-               
-                let subjectsHtml = `<div class="subject-grid">`;
-               
-                sortedSubjects.forEach(subject => {
-                    const enrolledStudents = subject.students || [];
-                    const sortedStudents = [...enrolledStudents].sort((a, b) => {
-                        const lastNameA = a.split(' ').pop();
-                        const lastNameB = b.split(' ').pop();
-                        return lastNameA.localeCompare(lastNameB);
-                    });
-
-                    let studentList = '';
-                    if (sortedStudents.length > 0) {
-                        studentList = '<ul class="list-disc list-inside text-sm text-zinc-300 mt-1">';
-                        sortedStudents.forEach(student => {
-                            studentList += `<li>${student}</li>`;
-                        });
-                        studentList += '</ul>';
-                    } else {
-                        studentList = '<p class="text-sm text-zinc-500 italic mt-1">Ingen påmeldte</p>';
-                    }
-
-                    subjectsHtml += `
+            let studentList = "";
+            if (sortedStudents.length > 0) {
+              studentList =
+                '<ul class="list-disc list-inside text-sm text-zinc-300 mt-1">';
+              sortedStudents.forEach((student) => {
+                studentList += `<li>${student}</li>`;
+              });
+              studentList += "</ul>";
+            } else {
+              studentList =
+                '<p class="text-sm text-zinc-500 italic mt-1">Ingen påmeldte</p>';
+            }
+            subjectsHtml += `
                         <div class="border-l-4 border-emerald-600 pl-4">
                             <div class="font-semibold text-emerald-400">${subject.name}</div>
                             <div class="text-xs text-zinc-500 mb-1">${enrolledStudents.length} / ${subject.max} plasser</div>
                             ${studentList}
                         </div>
                     `;
-                });
-
-                subjectsHtml += `</div>`;
-
-                enrollmentHtml += `
+          });
+          subjectsHtml += `</div>`;
+          enrollmentHtml += `
                     <div class="day-box rounded-3xl p-6 mb-6">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-2xl font-bold text-white">${pool.name}</h3>
@@ -845,125 +1167,138 @@
                         ${subjectsHtml}
                     </div>
                 `;
-            });
+        });
+        enrollmentContainer.innerHTML = enrollmentHtml;
+      }
 
-            enrollmentContainer.innerHTML = enrollmentHtml;
-        }
+      function editStudentAllocation(studentName) {
+        currentEditingStudent = studentName;
 
-        function editStudentAllocation(studentName) {
-            currentEditingStudent = studentName;
-            
-            const modal = document.getElementById('edit-modal');
-            const nameEl = document.getElementById('edit-student-name');
-            const formContainer = document.getElementById('edit-form');
-            
-            nameEl.textContent = studentName;
-            formContainer.innerHTML = '';
-            
-            const studentAssignments = allocations.filter(a => a.student === studentName);
-            
-            pools.forEach(pool => {
-                const currentAssignment = studentAssignments.find(a => a.poolId === pool.id);
-                const currentSubject = currentAssignment ? currentAssignment.subject : '';
-                
-                let html = `
+        const modal = document.getElementById("edit-modal");
+        const nameEl = document.getElementById("edit-student-name");
+        const formContainer = document.getElementById("edit-form");
+
+        nameEl.textContent = studentName;
+        formContainer.innerHTML = "";
+
+        const studentAssignments = allocations.filter(
+          (a) => a.student === studentName
+        );
+
+        pools.forEach((pool) => {
+          const currentAssignment = studentAssignments.find(
+            (a) => a.poolId === pool.id
+          );
+          const currentSubject = currentAssignment
+            ? currentAssignment.subject
+            : "";
+
+          let html = `
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">${pool.name}</label>
                         <select id="edit-pool-${pool.id}" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 text-sm touch-target">
                             <option value="">-- Velg fag --</option>
                 `;
-                
-                pool.subjects.forEach(subject => {
-                    const selected = subject.name === currentSubject ? 'selected' : '';
-                    html += `<option value="${subject.name}" ${selected}>${subject.name}</option>`;
-                });
-                
-                html += `</select></div>`;
-                formContainer.innerHTML += html;
+
+          pool.subjects.forEach((subject) => {
+            const selected = subject.name === currentSubject ? "selected" : "";
+            html += `<option value="${subject.name}" ${selected}>${subject.name}</option>`;
+          });
+
+          html += `</select></div>`;
+          formContainer.innerHTML += html;
+        });
+
+        modal.classList.remove("hidden");
+      }
+
+      function saveStudentEdit() {
+        if (!currentEditingStudent) return;
+
+        allocations = allocations.filter(
+          (a) => a.student !== currentEditingStudent
+        );
+
+        pools.forEach((pool) => {
+          const select = document.getElementById(`edit-pool-${pool.id}`);
+          if (select && select.value) {
+            allocations.push({
+              student: currentEditingStudent,
+              pool: pool.name,
+              subject: select.value,
+              choice: 1,
+              poolId: pool.id,
             });
-            
-            modal.classList.remove('hidden');
-        }
 
-        function saveStudentEdit() {
-            if (!currentEditingStudent) return;
-            
-            allocations = allocations.filter(a => a.student !== currentEditingStudent);
-            
-            pools.forEach(pool => {
-                const select = document.getElementById(`edit-pool-${pool.id}`);
-                if (select && select.value) {
-                    allocations.push({
-                        student: currentEditingStudent,
-                        pool: pool.name,
-                        subject: select.value,
-                        choice: 1,
-                        poolId: pool.id
-                    });
-                    
-                    const subject = pool.subjects.find(s => s.name === select.value);
-                    if (subject) {
-                        if (!subject.students) subject.students = [];
-                        if (!subject.students.includes(currentEditingStudent)) {
-                            subject.students.push(currentEditingStudent);
-                        }
-                    }
-                }
-            });
-            
-            closeEditModal();
-            renderResults();
-            showAllocationSummary(0, 100);
-        }
-
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.add('hidden');
-            currentEditingStudent = null;
-        }
-
-        function resetAllocationsWithConfirm() {
-            if (confirm("Er du sikker på at du vil tilbakestille alle resultater?")) {
-                resetAllocations();
+            const subject = pool.subjects.find((s) => s.name === select.value);
+            if (subject) {
+              if (!subject.students) subject.students = [];
+              if (!subject.students.includes(currentEditingStudent)) {
+                subject.students.push(currentEditingStudent);
+              }
             }
+          }
+        });
+
+        closeEditModal();
+        renderResults();
+        showAllocationSummary(0, 100);
+        showToast("Fordeling oppdatert");
+      }
+
+      function closeEditModal() {
+        document.getElementById("edit-modal").classList.add("hidden");
+        currentEditingStudent = null;
+      }
+
+      function resetAllocationsWithConfirm() {
+        if (
+          confirm("Er du sikker på at du vil tilbakestille alle resultater?")
+        ) {
+          resetAllocations();
         }
+      }
 
-        function resetAllocations() {
-            pools.forEach(pool => {
-                pool.subjects.forEach(subject => subject.students = []);
-            });
-            allocations = [];
-            document.getElementById('allocation-summary').classList.add('hidden');
-            document.getElementById('student-overview').innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
-            document.getElementById('subject-enrollment').innerHTML = '';
+      function resetAllocations() {
+        pools.forEach((pool) => {
+          pool.subjects.forEach((subject) => (subject.students = []));
+        });
+        allocations = [];
+        document.getElementById("allocation-summary").classList.add("hidden");
+        document.getElementById(
+          "student-overview"
+        ).innerHTML = `<p class="text-zinc-400">Ingen fordeling er kjørt ennå.</p>`;
+        document.getElementById("subject-enrollment").innerHTML = "";
+        showToast("Resultater tilbakestilt");
+      }
+
+      function showSection(section) {
+        document.getElementById("section-admin").classList.add("hidden");
+        document.getElementById("section-students").classList.add("hidden");
+        document.getElementById("section-results").classList.add("hidden");
+        document
+          .getElementById("section-" + section)
+          .classList.remove("hidden");
+        document
+          .querySelectorAll('[id^="nav-"]')
+          .forEach((nav) => nav.classList.remove("nav-active"));
+        document.getElementById("nav-" + section).classList.add("nav-active");
+        if (section === "students") {
+          renderStudentForm();
+          renderStudentList();
         }
-
-        function showSection(section) {
-            document.getElementById('section-admin').classList.add('hidden');
-            document.getElementById('section-students').classList.add('hidden');
-            document.getElementById('section-results').classList.add('hidden');
-
-            document.getElementById('section-' + section).classList.remove('hidden');
-
-            document.querySelectorAll('[id^="nav-"]').forEach(nav => nav.classList.remove('nav-active'));
-            document.getElementById('nav-' + section).classList.add('nav-active');
-
-            if (section === 'students') {
-                renderStudentForm();
-                renderStudentList();
-            }
-
-            if (section === 'results' && allocations.length > 0) {
-                renderResults();
-            }
+        if (section === "results" && allocations.length > 0) {
+          renderResults();
         }
+      }
 
-        function initApp() {
-            initDefaultPools();
-            renderPools();
-            console.log('%c[EduChoice] Updated with per-day random subjects + 100 simulations!', 'color:#22c55e');
-        }
+      function initApp() {
+        initDefaultPools();
+        renderPools();
+        console.log("%c[EduChoice] v7 ready", "color:#22c55e");
+      }
 
-        console.log('%c[EduChoice] Ready', 'color:#22c55e');
+      console.log("%c[EduChoice] Ready", "color:#22c55e");
     </script>
-</body>
+  </body>
 </html>
